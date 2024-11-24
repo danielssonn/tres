@@ -1,0 +1,772 @@
+{
+  "productCatalog": {
+    "organization": {
+      "name": "Corporate Banking",
+      "division": "Treasury Services",
+      "version": "2.0",
+      "lastUpdated": "2024-11-23"
+    },
+    "products": [
+      {
+        "productId": "TREAS_SWIFT_001",
+        "productName": "SWIFT Direct Access",
+        "productCategory": "Treasury",
+        "productType": "Connectivity",
+        "version": "2.0",
+        "status": "active",
+        "features": {
+          "baseFeatures": [
+            {
+              "featureId": "SWIFT_MSG",
+              "name": "SWIFT Messaging",
+              "description": "Standard SWIFT messaging capabilities",
+              "isRequired": true,
+              "enrollmentModules": [
+                "connectivity",
+                "message_setup"
+              ]
+            },
+            {
+              "featureId": "SWIFT_GPI",
+              "name": "SWIFT GPI",
+              "description": "Global Payment Innovation service",
+              "isRequired": false,
+              "enrollmentModules": [
+                "gpi_setup"
+              ]
+            }
+          ],
+          "addOnFeatures": [
+            {
+              "featureId": "SANCTIONS_SCREEN",
+              "name": "Sanctions Screening",
+              "description": "Automated sanctions screening service",
+              "isRequired": false,
+              "enrollmentModules": [
+                "compliance_setup"
+              ]
+            }
+          ]
+        },
+        "eligibilityRules": {
+          "rmaEligibility": {
+            "requirements": {
+              "basic": {
+                "type": "Standard RMA",
+                "mandatoryCategories": [
+                  {
+                    "category": "1",
+                    "description": "Customer Payments and Cheques",
+                    "requirement": "Required",
+                    "lifecycle": {
+                      "status": "Active",
+                      "approval": {
+                        "requested": {
+                          "date": "2024-01-15",
+                          "by": {
+                            "userId": "JOHN.DOE",
+                            "role": "Product Manager",
+                            "entity": "Bank"
+                          }
+                        },
+                        "approved": {
+                          "date": "2024-01-20",
+                          "by": {
+                            "userId": "MARY.SMITH",
+                            "role": "RMA Officer",
+                            "entity": "Bank"
+                          }
+                        },
+                        "counterpartyApproved": {
+                          "date": "2024-01-25",
+                          "by": {
+                            "bic": "ABCDUS33",
+                            "referenceId": "RMA2024125"
+                          }
+                        }
+                      },
+                      "review": {
+                        "lastReview": {
+                          "date": "2024-06-15",
+                          "by": {
+                            "userId": "PETER.JONES",
+                            "role": "Compliance Officer",
+                            "entity": "Bank"
+                          },
+                          "outcome": "Continued",
+                          "nextReviewDue": "2025-06-15"
+                        }
+                      },
+                      "history": [
+                        {
+                          "action": "Created",
+                          "date": "2024-01-15",
+                          "by": "JOHN.DOE",
+                          "details": "Initial RMA request"
+                        },
+                        {
+                          "action": "Approved",
+                          "date": "2024-01-20",
+                          "by": "MARY.SMITH",
+                          "details": "Internal approval completed"
+                        },
+                        {
+                          "action": "CounterpartyApproved",
+                          "date": "2024-01-25",
+                          "details": "Counterparty granted RMA"
+                        },
+                        {
+                          "action": "Reviewed",
+                          "date": "2024-06-15",
+                          "by": "PETER.JONES",
+                          "details": "Semi-annual review completed"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "category": "2",
+                    "description": "Financial Institution Transfers",
+                    "requirement": "Required",
+                    "lifecycle": {
+                      "status": "Active",
+                      "approval": {
+                        "requested": {
+                          "date": "2024-01-15",
+                          "by": {
+                            "userId": "JOHN.DOE",
+                            "role": "Product Manager",
+                            "entity": "Bank"
+                          }
+                        },
+                        "approved": {
+                          "date": "2024-01-20",
+                          "by": {
+                            "userId": "MARY.SMITH",
+                            "role": "RMA Officer",
+                            "entity": "Bank"
+                          },
+                          "conditions": [
+                            {
+                              "type": "VolumeLimit",
+                              "value": "1000000",
+                              "period": "Daily"
+                            }
+                          ]
+                        },
+                        "counterpartyApproved": {
+                          "date": "2024-01-25",
+                          "by": {
+                            "bic": "ABCDUS33",
+                            "referenceId": "RMA2024126"
+                          }
+                        }
+                      },
+                      "review": {
+                        "lastReview": {
+                          "date": "2024-06-15",
+                          "by": {
+                            "userId": "PETER.JONES",
+                            "role": "Compliance Officer",
+                            "entity": "Bank"
+                          },
+                          "outcome": "Continued",
+                          "nextReviewDue": "2025-06-15"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "category": "9",
+                    "description": "Cash Management & Status",
+                    "requirement": "Required",
+                    "lifecycle": {
+                      "status": "PendingApproval",
+                      "approval": {
+                        "requested": {
+                          "date": "2024-01-15",
+                          "by": {
+                            "userId": "JOHN.DOE",
+                            "role": "Product Manager",
+                            "entity": "Bank"
+                          }
+                        },
+                        "approvalChain": [
+                          {
+                            "sequence": 1,
+                            "role": "RMA Officer",
+                            "status": "Pending"
+                          },
+                          {
+                            "sequence": 2,
+                            "role": "Compliance Officer",
+                            "status": "Not Started"
+                          },
+                          {
+                            "sequence": 3,
+                            "role": "Treasury Head",
+                            "status": "Not Started"
+                          }
+                        ]
+                      },
+                      "tracking": {
+                        "currentStage": "Internal Approval",
+                        "nextAction": "RMA Officer Review",
+                        "dueDate": "2024-01-22"
+                      }
+                    }
+                  }
+                ],
+                "lifecycleManagement": {
+                  "reviewSchedule": {
+                    "frequency": "Semi-Annual",
+                    "triggers": [
+                      "Volume Threshold Exceeded",
+                      "Risk Event",
+                      "Compliance Alert"
+                    ]
+                  },
+                  "statusTypes": [
+                    "Draft",
+                    "PendingInternalApproval",
+                    "PendingCounterpartyApproval",
+                    "Active",
+                    "UnderReview",
+                    "Suspended",
+                    "Terminated"
+                  ],
+                  "auditTrail": {
+                    "retention": "7 years",
+                    "required": [
+                      "All status changes",
+                      "Approval actions",
+                      "Review completions",
+                      "Condition modifications"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "companySize": {
+            "minAnnualRevenue": 100000000,
+            "minTransactionVolume": 10000
+          },
+          "geographicPresence": {
+            "allowedRegions": [
+              "NA",
+              "EMEA",
+              "APAC"
+            ],
+            "restrictedCountries": [
+              "sanctioned_countries"
+            ]
+          },
+          "creditRating": {
+            "minimumRating": "BBB",
+            "ratingAgencies": [
+              "S&P",
+              "Moodys"
+            ]
+          }
+        },
+        "pricingRules": {
+          "basePrice": {
+            "setupFee": 10000,
+            "monthlyFee": 5000,
+            "transactionFees": {
+              "messageType": {
+                "MT101": 0.50,
+                "MT940": 0.25
+              }
+            }
+          },
+          "volumeDiscounts": [
+            {
+              "threshold": 100000,
+              "discountPercent": 10
+            },
+            {
+              "threshold": 500000,
+              "discountPercent": 20
+            }
+          ]
+        }
+      },
+      {
+        "productId": "CORP_DD_001",
+        "productName": "Corporate Demand Deposit",
+        "productCategory": "Deposits",
+        "productType": "Account",
+        "version": "1.0",
+        "status": "active",
+        "features": {
+          "baseFeatures": [
+            {
+              "featureId": "DD_BASE",
+              "name": "Basic Demand Deposit",
+              "description": "Standard corporate checking account",
+              "isRequired": true,
+              "enrollmentModules": [
+                "account_setup",
+                "service_config"
+              ]
+            },
+            {
+              "featureId": "DD_SWEEP",
+              "name": "Automated Sweeps",
+              "description": "End-of-day balance sweeping",
+              "isRequired": false,
+              "enrollmentModules": [
+                "sweep_setup"
+              ]
+            }
+          ],
+          "addOnFeatures": [
+            {
+              "featureId": "DD_INTEREST",
+              "name": "Interest Computation",
+              "description": "Tiered interest calculation",
+              "isRequired": false,
+              "enrollmentModules": [
+                "interest_setup"
+              ]
+            }
+          ]
+        },
+        "accountRules": {
+          "currencies": [
+            "USD",
+            "EUR",
+            "GBP"
+          ],
+          "interestRules": {
+            "interestType": "tiered",
+            "tiers": [
+              {
+                "minBalance": 1000000,
+                "maxBalance": 4999999,
+                "rate": 0.5
+              },
+              {
+                "minBalance": 5000000,
+                "rate": 0.75
+              }
+            ],
+            "computation": {
+              "basis": "daily",
+              "payment": "monthly"
+            }
+          }
+        },
+        "eligibilityRules": {
+          "companySize": {
+            "minAnnualRevenue": 50000000,
+            "minAverageBalance": 1000000
+          },
+          "documentation": {
+            "required": [
+              "boardResolution",
+              "taxDocuments",
+              "financialStatements"
+            ]
+          }
+        },
+        "pricingRules": {
+          "basePrice": {
+            "maintenanceFee": {
+              "amount": 100,
+              "frequency": "monthly",
+              "waiverCriteria": {
+                "minimumBalance": 1000000
+              }
+            }
+          },
+          "transactionFees": {
+            "incomingWire": 15,
+            "outgoingWire": 25,
+            "stopPayment": 30
+          }
+        }
+      },
+      {
+        "productId": "TREAS_ACH_001",
+        "productName": "ACH Services",
+        "productCategory": "Treasury",
+        "productType": "Payments",
+        "version": "1.0",
+        "status": "active",
+        "features": {
+          "baseFeatures": [
+            {
+              "featureId": "ACH_ORIGINATION",
+              "name": "ACH Origination",
+              "description": "Standard ACH origination services",
+              "isRequired": true,
+              "enrollmentModules": [
+                "ach_setup",
+                "file_format"
+              ]
+            },
+            {
+              "featureId": "ACH_RECEIPT",
+              "name": "ACH Receipt",
+              "description": "Receive ACH transactions",
+              "isRequired": false,
+              "enrollmentModules": [
+                "receipt_setup"
+              ]
+            }
+          ],
+          "addOnFeatures": [
+            {
+              "featureId": "ACH_SAME_DAY",
+              "name": "Same Day ACH",
+              "description": "Same day processing capability",
+              "isRequired": false,
+              "enrollmentModules": [
+                "sameday_setup"
+              ]
+            },
+            {
+              "featureId": "ACH_POSITIVE_PAY",
+              "name": "ACH Positive Pay",
+              "description": "ACH debit blocking and filtering",
+              "isRequired": false,
+              "enrollmentModules": [
+                "positive_pay_setup"
+              ]
+            },
+            {
+              "featureId": "ACH_API",
+              "name": "ACH API Access",
+              "description": "Direct API integration for ACH",
+              "isRequired": false,
+              "enrollmentModules": [
+                "api_setup"
+              ]
+            }
+          ]
+        },
+        "achRules": {
+          "limits": {
+            "daily": {
+              "credit": 10000000,
+              "debit": 5000000
+            },
+            "perTransaction": {
+              "credit": 1000000,
+              "debit": 500000
+            }
+          },
+          "timing": {
+            "standardACH": {
+              "cutoffTime": "16:00",
+              "timezone": "EST",
+              "settlementDays": 2
+            },
+            "sameDay": {
+              "cutoffTimes": [
+                "10:30",
+                "14:45"
+              ],
+              "timezone": "EST",
+              "additionalFee": 0.50
+            }
+          },
+          "secCodes": {
+            "allowed": [
+              "CCD",
+              "CTX",
+              "PPD",
+              "WEB",
+              "TEL"
+            ],
+            "default": "CCD"
+          }
+        },
+        "eligibilityRules": {
+          "companySize": {
+            "minAnnualRevenue": 25000000,
+            "minTransactionVolume": 5000
+          },
+          "operationalRequirements": {
+            "minimumAccountBalance": 100000,
+            "requiredDocuments": [
+              "achAgreement",
+              "corporateResolution",
+              "fraudPreventionCertification"
+            ]
+          }
+        },
+        "pricingRules": {
+          "basePrice": {
+            "setupFee": 500,
+            "monthlyFee": 100,
+            "transactionFees": {
+              "standard": {
+                "credit": 0.15,
+                "debit": 0.20
+              },
+              "sameDay": {
+                "credit": 0.50,
+                "debit": 0.55
+              },
+              "return": 5.00
+            }
+          }
+        }
+      },
+      {
+        "productId": "TREAS_STMT_001",
+        "productName": "Statement Services",
+        "productCategory": "Treasury",
+        "productType": "Information",
+        "version": "1.1",
+        "status": "active",
+        "features": {
+          "baseFeatures": [
+            {
+              "featureId": "STMT_BASIC",
+              "name": "Basic Statements",
+              "description": "Standard account statements",
+              "isRequired": true,
+              "enrollmentModules": [
+                "statement_setup",
+                "delivery_config"
+              ]
+            },
+            {
+              "featureId": "STMT_INTRADAY",
+              "name": "Intraday Statements",
+              "description": "Multiple statements during business day",
+              "isRequired": false,
+              "enrollmentModules": [
+                "intraday_setup"
+              ]
+            }
+          ],
+          "addOnFeatures": [
+            {
+              "featureId": "STMT_SWIFT",
+              "name": "SWIFT MT940/MT942",
+              "description": "SWIFT format statements",
+              "isRequired": false,
+              "enrollmentModules": [
+                "swift_format_setup"
+              ],
+              "dependencies": {
+                "products": [
+                  "TREAS_SWIFT_001"
+                ]
+              }
+            },
+            {
+              "featureId": "STMT_MACHINE",
+              "name": "Machine Readable Statements",
+              "description": "Structured data formats for automated processing",
+              "isRequired": false,
+              "enrollmentModules": [
+                "machine_readable_setup"
+              ],
+              "subFeatures": [
+                {
+                  "featureId": "STMT_MACHINE_ISO20022",
+                  "name": "ISO 20022 camt Formats",
+                  "formats": [
+                    "camt.052",
+                    "camt.053",
+                    "camt.054"
+                  ]
+                },
+                {
+                  "featureId": "STMT_MACHINE_JSON",
+                  "name": "JSON Statement Format",
+                  "formats": [
+                    "JSON_BASIC",
+                    "JSON_EXTENDED"
+                  ]
+                },
+                {
+                  "featureId": "STMT_MACHINE_BAI",
+                  "name": "BAI Format",
+                  "formats": [
+                    "BAI2",
+                    "BAI3"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "statementRules": {
+          "formats": {
+            "standard": [
+              "PDF",
+              "CSV",
+              "XML"
+            ],
+            "swift": [
+              "MT940",
+              "MT942"
+            ],
+            "machineReadable": {
+              "iso20022": {
+                "types": [
+                  "camt.052",
+                  "camt.053",
+                  "camt.054"
+                ],
+                "versions": [
+                  "2019",
+                  "2020"
+                ]
+              },
+              "json": {
+                "schemas": [
+                  "basic",
+                  "extended"
+                ]
+              },
+              "bai": {
+                "versions": [
+                  "BAI2",
+                  "BAI3"
+                ]
+              }
+            }
+          },
+          "frequency": {
+            "endOfDay": {
+              "options": [
+                "daily",
+                "weekly",
+                "monthly"
+              ],
+              "cutoffTime": "19:00",
+              "timezone": "EST"
+            },
+            "intraday": {
+              "intervals": [
+                "hourly",
+                "every_2_hours",
+                "every_4_hours"
+              ]
+            }
+          },
+          "delivery": {
+            "channels": {
+              "secure_email": {
+                "maxSize": "10MB",
+                "encryption": "TLS_1.2"
+              },
+              "swift": {
+                "messageTypes": [
+                  "MT940",
+                  "MT942"
+                ],
+                "compression": true
+              },
+              "api_streaming": {
+                "protocols": [
+                  "webhook",
+                  "kafka",
+                  "api_push"
+                ],
+                "formats": [
+                  "JSON",
+                  "XML",
+                  "ISO20022"
+                ]
+              }
+            }
+          }
+        }
+      }
+    ],
+    "crossProductRules": {
+      "bundleDiscounts": [
+        {
+          "name": "Treasury Bundle",
+          "products": [
+            "TREAS_SWIFT_001",
+            "TREAS_ACH_001",
+            "TREAS_STMT_001"
+          ],
+          "discountPercent": 15
+        },
+        {
+          "name": "Complete Bundle",
+          "products": [
+            "TREAS_SWIFT_001",
+            "TREAS_ACH_001",
+            "TREAS_STMT_001",
+            "CORP_DD_001"
+          ],
+          "discountPercent": 20
+        }
+      ],
+      "dependencies": [
+        {
+          "primaryProduct": "TREAS_STMT_001",
+          "feature": "STMT_SWIFT",
+          "requiredProduct": "TREAS_SWIFT_001"
+        },
+        {
+          "primaryProduct": "TREAS_ACH_001",
+          "requires": "CORP_DD_001"
+        }
+      ]
+    }
+  },
+  "enrollmentWorkflow": {
+    "stages": {
+      "common": [
+        {
+          "stageId": "company_profile",
+          "name": "Company Profile",
+          "sequence": 1,
+          "isRequired": true,
+          "components": [
+            {
+              "componentId": "legal_entity",
+              "type": "form",
+              "fields": [
+                {
+                  "name": "legalName",
+                  "type": "string",
+                  "required": true,
+                  "validation": "company_registry_check"
+                },
+                {
+                  "name": "taxId",
+                  "type": "string",
+                  "required": true,
+                  "validation": "tax_id_format"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "integrations": {
+    "coreBanking": {
+      "endpoints": {
+        "customerCreate": "/api/v1/customer",
+        "accountSetup": "/api/v1/account",
+        "achProcessing": "/api/v1/ach/process",
+        "statements": "/api/v1/statements"
+      }
+    },
+    "documentManagement": {
+      "templates": {
+        "SWIFT": "SWIFT_SERVICE_AGREEMENT_V1",
+        "ACH": "ACH_ORIGINATION_AGREEMENT_V1",
+        "Deposits": "DEPOSIT_ACCOUNT_AGREEMENT_V1",
+        "Statements": "STATEMENT_SERVICES_AGREEMENT_V1"
+      }
+    }
+  }
+}
