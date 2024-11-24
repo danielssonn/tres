@@ -1,0 +1,409 @@
+{
+  "productCatalog": {
+    "productId": "TREAS_DIG_001",
+    "productName": "Digital Treasury Solutions",
+    "productCategory": "Treasury",
+    "productType": "Digital",
+    "version": "1.0",
+    "status": "active",
+    "features": {
+      "baseFeatures": [
+        {
+          "featureId": "H2H_CONNECT",
+          "name": "Host-to-Host Connectivity",
+          "description": "Direct system integration channel",
+          "isRequired": false,
+          "enrollmentModules": [
+            "h2h_setup",
+            "security_config"
+          ],
+          "capabilities": {
+            "connectivity": {
+              "protocols": [
+                {
+                  "name": "SFTP",
+                  "features": [
+                    "Secure file transfer",
+                    "Automated processing",
+                    "File encryption",
+                    "Format validation"
+                  ]
+                },
+                {
+                  "name": "SWIFT FileAct",
+                  "features": [
+                    "SWIFT network integration",
+                    "Store and forward",
+                    "Large file handling",
+                    "Network security"
+                  ]
+                }
+              ],
+              "fileFormats": [
+                {
+                  "type": "Standard",
+                  "formats": [
+                    "ISO20022",
+                    "MT",
+                    "BAI2",
+                    "EDIFACT"
+                  ]
+                },
+                {
+                  "type": "Custom",
+                  "formats": [
+                    "CSV",
+                    "XML",
+                    "Fixed Width",
+                    "JSON"
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "featureId": "API_SERVICES",
+          "name": "API Banking Services",
+          "description": "Real-time API integration",
+          "isRequired": false,
+          "enrollmentModules": [
+            "api_setup",
+            "cert_management"
+          ],
+          "capabilities": {
+            "apiTypes": [
+              {
+                "category": "Payment",
+                "apis": [
+                  {
+                    "name": "Payment Initiation",
+                    "versions": [
+                      "v1",
+                      "v2"
+                    ],
+                    "methods": [
+                      "POST",
+                      "GET"
+                    ],
+                    "auth": "OAuth2",
+                    "rateLimit": "1000/hour"
+                  },
+                  {
+                    "name": "Payment Status",
+                    "versions": [
+                      "v1"
+                    ],
+                    "methods": [
+                      "GET"
+                    ],
+                    "auth": "OAuth2",
+                    "rateLimit": "5000/hour"
+                  }
+                ]
+              },
+              {
+                "category": "Account",
+                "apis": [
+                  {
+                    "name": "Balance Inquiry",
+                    "versions": [
+                      "v1",
+                      "v2"
+                    ],
+                    "methods": [
+                      "GET"
+                    ],
+                    "auth": "OAuth2",
+                    "rateLimit": "10000/hour"
+                  },
+                  {
+                    "name": "Transaction History",
+                    "versions": [
+                      "v1"
+                    ],
+                    "methods": [
+                      "GET"
+                    ],
+                    "auth": "OAuth2",
+                    "rateLimit": "1000/hour"
+                  }
+                ]
+              }
+            ],
+            "security": {
+              "authentication": [
+                "OAuth2",
+                "API Keys",
+                "Certificates"
+              ],
+              "encryption": "TLS 1.2+",
+              "signing": "Digital Signatures"
+            }
+          }
+        },
+        {
+          "featureId": "ERP_CONNECT",
+          "name": "ERP Integration",
+          "description": "Direct ERP system connectivity",
+          "isRequired": false,
+          "enrollmentModules": [
+            "erp_setup",
+            "mapping_config"
+          ],
+          "capabilities": {
+            "supported": {
+              "systems": [
+                {
+                  "name": "SAP",
+                  "modules": [
+                    "FI",
+                    "TR",
+                    "MM"
+                  ],
+                  "integrations": [
+                    "Process Integration",
+                    "Direct Connection"
+                  ]
+                },
+                {
+                  "name": "Oracle",
+                  "modules": [
+                    "Financials",
+                    "Treasury",
+                    "Payments"
+                  ],
+                  "integrations": [
+                    "SOA",
+                    "Direct Connect"
+                  ]
+                }
+              ],
+              "services": [
+                "Payment Factory Integration",
+                "Bank Statement Processing",
+                "Treasury Integration",
+                "Trade Finance"
+              ]
+            }
+          }
+        }
+      ],
+      "addOnFeatures": [
+        {
+          "featureId": "DIG_ONBOARD",
+          "name": "Digital Onboarding",
+          "description": "Digital account and service onboarding",
+          "isRequired": false,
+          "enrollmentModules": [
+            "onboard_setup"
+          ],
+          "capabilities": {
+            "services": [
+              "Document Upload",
+              "eSignature",
+              "KYC Verification",
+              "Account Opening"
+            ],
+            "workflow": [
+              "Status Tracking",
+              "Document Management",
+              "Approval Workflow",
+              "Audit Trail"
+            ]
+          }
+        },
+        {
+          "featureId": "EBAM",
+          "name": "Electronic Bank Account Management",
+          "description": "Digital account and mandate management",
+          "isRequired": false,
+          "enrollmentModules": [
+            "ebam_setup"
+          ],
+          "capabilities": {
+            "accountManagement": [
+              "Account Opening",
+              "Account Closure",
+              "Signature Management",
+              "Mandate Updates"
+            ],
+            "reporting": [
+              "Account Overview",
+              "Change History",
+              "Audit Reports",
+              "Status Tracking"
+            ]
+          }
+        },
+        {
+          "featureId": "MOBILE_SOLUTION",
+          "name": "Mobile Treasury",
+          "description": "Mobile access to treasury services",
+          "isRequired": false,
+          "enrollmentModules": [
+            "mobile_setup"
+          ],
+          "capabilities": {
+            "features": [
+              "Payment Approval",
+              "Balance View",
+              "Transaction Search",
+              "Alert Management"
+            ],
+            "security": [
+              "Biometric Auth",
+              "Secure Enclave",
+              "Transaction Signing",
+              "Device Binding"
+            ]
+          }
+        }
+      ]
+    },
+    "eligibilityRules": {
+      "technical": {
+        "connectivity": {
+          "internet": "Dedicated/High Speed",
+          "security": [
+            "Firewall",
+            "VPN",
+            "DMZ"
+          ],
+          "certification": "Security Assessment"
+        },
+        "infrastructure": {
+          "systems": [
+            "ERP",
+            "TMS",
+            "Payment Systems"
+          ],
+          "standards": [
+            "ISO20022",
+            "API Standards"
+          ]
+        }
+      },
+      "operational": {
+        "volume": {
+          "minimumTransactions": 1000,
+          "dataVolume": "5GB/day"
+        },
+        "support": {
+          "technicalTeam": "Required",
+          "serviceDesk": "24x7"
+        }
+      }
+    },
+    "pricingRules": {
+      "basePrice": {
+        "implementation": {
+          "h2h": 50000,
+          "api": 25000,
+          "erp": 75000
+        },
+        "monthly": {
+          "h2h": 2000,
+          "api": 1500,
+          "erp": 3000
+        }
+      },
+      "usagePricing": {
+        "api": {
+          "calls": [
+            {
+              "tier": "0-10000",
+              "price": 0.05
+            },
+            {
+              "tier": "10001-100000",
+              "price": 0.03
+            }
+          ]
+        },
+        "storage": {
+          "included": "100GB",
+          "additional": "50/GB"
+        }
+      }
+    },
+    "enrollmentWorkflow": {
+      "stages": [
+        {
+          "stageId": "technical_assessment",
+          "name": "Technical Assessment",
+          "sequence": 1,
+          "components": [
+            {
+              "componentId": "infrastructure",
+              "type": "evaluation",
+              "checks": [
+                "Network Capability",
+                "System Compatibility",
+                "Security Standards"
+              ]
+            }
+          ]
+        },
+        {
+          "stageId": "security_setup",
+          "name": "Security Configuration",
+          "sequence": 2,
+          "components": [
+            {
+              "componentId": "security_config",
+              "type": "setup",
+              "items": [
+                "Certificate Generation",
+                "Key Exchange",
+                "Encryption Setup"
+              ]
+            }
+          ]
+        },
+        {
+          "stageId": "integration_setup",
+          "name": "Integration Configuration",
+          "sequence": 3,
+          "components": [
+            {
+              "componentId": "connectivity",
+              "type": "configuration",
+              "items": [
+                "Protocol Setup",
+                "Format Configuration",
+                "Message Mapping"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "serviceManagement": {
+      "sla": {
+        "availability": "99.99%",
+        "response": {
+          "api": "500ms",
+          "h2h": "5min"
+        },
+        "support": {
+          "severity1": "1hr",
+          "severity2": "4hr"
+        }
+      },
+      "monitoring": {
+        "metrics": [
+          "System Availability",
+          "Response Time",
+          "Error Rate",
+          "Volume"
+        ],
+        "alerts": [
+          "Service Disruption",
+          "Performance Degradation",
+          "Security Events"
+        ]
+      }
+    }
+  }
+}

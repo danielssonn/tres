@@ -1,0 +1,221 @@
+{
+  "modelAlternatives": {
+    "serviceBasedModel": {
+      "description": "Organize by service capability rather than product",
+      "structure": {
+        "serviceDomains": [
+          {
+            "name": "Payment Services",
+            "capabilities": [
+              "Payment Processing",
+              "Payment Routing",
+              "Payment Tracking",
+              "Settlement"
+            ],
+            "advantages": [
+              "Focus on client needs",
+              "Easier cross-selling",
+              "Clearer service mapping",
+              "Simplified integration"
+            ],
+            "disadvantages": [
+              "Complex pricing model",
+              "Product overlap",
+              "Revenue attribution challenges"
+            ]
+          },
+          {
+            "name": "Liquidity Services",
+            "capabilities": [
+              "Account Management",
+              "Cash Concentration",
+              "Investment Services",
+              "Forecasting"
+            ]
+          },
+          {
+            "name": "Information Services",
+            "capabilities": [
+              "Reporting",
+              "Analytics",
+              "Data Services",
+              "API Access"
+            ]
+          }
+        ],
+        "governanceApproach": {
+          "serviceOwnership": "Domain-based teams",
+          "developmentModel": "Service-oriented architecture",
+          "integrationPattern": "API-first design"
+        }
+      }
+    },
+    "clientSegmentModel": {
+      "description": "Organize by client segment needs",
+      "structure": {
+        "segments": [
+          {
+            "name": "Global Corporates",
+            "solutions": [
+              "Global Cash Management",
+              "Cross-border Solutions",
+              "Investment Services"
+            ],
+            "advantages": [
+              "Client-centric approach",
+              "Targeted solutions",
+              "Clearer value proposition",
+              "Simplified pricing"
+            ],
+            "disadvantages": [
+              "Product duplication",
+              "Complex operations",
+              "Integration challenges"
+            ]
+          },
+          {
+            "name": "Mid-Market",
+            "solutions": [
+              "Regional Banking",
+              "Domestic Services",
+              "Digital Solutions"
+            ]
+          }
+        ]
+      }
+    },
+    "platformModel": {
+      "description": "Platform-based modular architecture",
+      "structure": {
+        "core": {
+          "baseServices": [
+            "Account Services",
+            "Payment Processing",
+            "Security Services"
+          ],
+          "advantages": [
+            "Highly scalable",
+            "Easy to extend",
+            "Better reusability",
+            "Faster time to market"
+          ],
+          "disadvantages": [
+            "Initial complexity",
+            "Higher upfront cost",
+            "Technical expertise needed"
+          ]
+        },
+        "modules": {
+          "types": [
+            {
+              "name": "Payment Modules",
+              "components": [
+                "SWIFT Integration",
+                "ACH Processing",
+                "Real-time Payments"
+              ]
+            },
+            {
+              "name": "Information Modules",
+              "components": [
+                "Reporting Engine",
+                "Analytics Platform",
+                "Data Services"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "journeyBasedModel": {
+      "description": "Organize by client journey and experience",
+      "structure": {
+        "journeys": [
+          {
+            "name": "Treasury Management",
+            "touchpoints": [
+              "Account Opening",
+              "Service Configuration",
+              "Daily Operations",
+              "Reporting & Analysis"
+            ],
+            "advantages": [
+              "Better user experience",
+              "Clear process flow",
+              "Intuitive organization",
+              "Enhanced adoption"
+            ],
+            "disadvantages": [
+              "Complex backend",
+              "Integration challenges",
+              "Maintenance overhead"
+            ]
+          }
+        ]
+      }
+    },
+    "capabilityBasedModel": {
+      "description": "Organize by business capability",
+      "structure": {
+        "capabilities": [
+          {
+            "name": "Financial Capabilities",
+            "functions": [
+              "Transaction Processing",
+              "Risk Management",
+              "Treasury Operations"
+            ],
+            "advantages": [
+              "Clear organizational alignment",
+              "Efficient resource allocation",
+              "Better scalability",
+              "Simplified governance"
+            ],
+            "disadvantages": [
+              "Abstract for clients",
+              "Complex product mapping",
+              "Marketing challenges"
+            ]
+          }
+        ]
+      }
+    },
+    "comparisonMatrix": {
+      "criteria": [
+        {
+          "name": "Time to Market",
+          "ratings": {
+            "productModel": "Medium",
+            "serviceBasedModel": "Fast",
+            "platformModel": "Slow initially, Fast later",
+            "journeyBasedModel": "Medium",
+            "capabilityBasedModel": "Medium"
+          }
+        },
+        {
+          "name": "Implementation Complexity",
+          "ratings": {
+            "productModel": "Medium",
+            "serviceBasedModel": "High",
+            "platformModel": "Very High",
+            "journeyBasedModel": "Medium",
+            "capabilityBasedModel": "High"
+          }
+        },
+        {
+          "name": "Maintenance Effort",
+          "ratings": {
+            "productModel": "Medium",
+            "serviceBasedModel": "High",
+            "platformModel": "Low",
+            "journeyBasedModel": "Medium",
+            "capabilityBasedModel": "Medium"
+          }
+        },
+        {
+          "name": "Client Understanding",
+          "ratings": {
+            "productModel": "Good",
+            "serviceBasedModel": "Very Good",
+            "platformModel": "Complex",
+            "journe

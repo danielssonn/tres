@@ -1,0 +1,422 @@
+{
+  "enterpriseCatalog": {
+    "metadata": {
+      // Previous metadata remains same
+    },
+    "commonDefinitions": {
+      // Previous commonDefinitions remain same
+    },
+    "products": [
+      {
+        "productId": "TREAS_SWIFT_001",
+        "productName": "SWIFT Direct Access",
+        "productCategory": "Treasury",
+        "productType": "Connectivity",
+        "version": "2.0",
+        "status": "active",
+        "features": {
+          "baseFeatures": [
+            {
+              "featureId": "SWIFT_MSG",
+              "name": "SWIFT Messaging",
+              "description": "Standard SWIFT messaging capabilities",
+              "isRequired": true,
+              "enrollmentModules": ["connectivity", "message_setup"],
+              "messageTypes": {
+                "payments": ["MT101", "MT103", "MT202"],
+                "treasury": ["MT300", "MT320"],
+                "reporting": ["MT940", "MT941", "MT942"],
+                "advising": ["MT798", "MT799"]
+              }
+            },
+            {
+              "featureId": "SWIFT_GPI",
+              "name": "SWIFT GPI",
+              "description": "Global Payment Innovation service",
+              "isRequired": false,
+              "enrollmentModules": ["gpi_setup"],
+              "capabilities": {
+                "tracking": true,
+                "stopAndRecall": true,
+                "directoryService": true,
+                "preValidation": true
+              }
+            }
+          ],
+          "addOnFeatures": [
+            {
+              "featureId": "SANCTIONS_SCREEN",
+              "name": "Sanctions Screening",
+              "description": "Automated sanctions screening service",
+              "isRequired": false,
+              "enrollmentModules": ["compliance_setup"],
+              "screeningTypes": [
+                "entities",
+                "countries",
+                "transactions"
+              ]
+            },
+            {
+              "featureId": "SWIFT_API",
+              "name": "SWIFT API Integration",
+              "description": "API access to SWIFT services",
+              "isRequired": false,
+              "enrollmentModules": ["api_setup"]
+            }
+          ]
+        },
+        "connectivity": {
+          "methods": [
+            {
+              "type": "ALLIANCE_LITE2",
+              "description": "Cloud-based SWIFT connectivity",
+              "requirements": {
+                "hardware": "none",
+                "software": "web_browser"
+              }
+            },
+            {
+              "type": "ALLIANCE_ACCESS",
+              "description": "Direct SWIFT connection",
+              "requirements": {
+                "hardware": "HSM",
+                "software": "SWIFT_Alliance"
+              }
+            },
+            {
+              "type": "SERVICE_BUREAU",
+              "description": "Third-party SWIFT connectivity",
+              "requirements": {
+                "provider": "approved_bureau"
+              }
+            }
+          ]
+        },
+        "eligibilityRules": {
+          "companySize": {
+            "minAnnualRevenue": 100000000,
+            "minTransactionVolume": 10000
+          },
+          "geographicPresence": {
+            "allowedRegions": ["NA", "EMEA", "APAC"],
+            "restrictedCountries": ["sanctioned_countries"]
+          },
+          "creditRating": {
+            "minimumRating": "BBB",
+            "ratingAgencies": ["S&P", "Moodys"]
+          },
+          "documentation": {
+            "required": [
+              "swiftAgreement",
+              "complianceCertification",
+              "bureauContract"
+            ]
+          }
+        },
+        "pricingRules": {
+          "basePrice": {
+            "setupFee": 10000,
+            "monthlyFee": 5000,
+            "transactionFees": {
+              "messageType": {
+                "MT101": 0.50,
+                "MT103": 0.75,
+                "MT940": 0.25,
+                "MT942": 0.35
+              }
+            }
+          },
+          "volumeDiscounts": [
+            {
+              "threshold": 100000,
+              "discountPercent": 10
+            },
+            {
+              "threshold": 500000,
+              "discountPercent": 20
+            }
+          ],
+          "additionalServices": {
+            "gpi": {
+              "monthly": 1000,
+              "perTransaction": 0.10
+            },
+            "sanctionsScreening": {
+              "monthly": 500,
+              "perScreen": 0.05
+            }
+          }
+        }
+      },
+      {
+        "productId": "CORP_DD_001",
+        "productName": "Corporate Demand Deposit",
+        "productCategory": "Deposits",
+        "productType": "Account",
+        "version": "1.0",
+        "status": "active",
+        "features": {
+          "baseFeatures": [
+            {
+              "featureId": "DD_BASE",
+              "name": "Basic Demand Deposit",
+              "description": "Standard corporate checking account",
+              "isRequired": true,
+              "enrollmentModules": ["account_setup", "service_config"],
+              "capabilities": {
+                "payments": ["incoming", "outgoing"],
+                "statements": ["daily", "monthly"],
+                "alerts": ["balance", "transaction"]
+              }
+            },
+            {
+              "featureId": "DD_SWEEP",
+              "name": "Automated Sweeps",
+              "description": "End-of-day balance sweeping",
+              "isRequired": false,
+              "enrollmentModules": ["sweep_setup"],
+              "sweepTypes": [
+                "zero_balance",
+                "target_balance",
+                "investment_sweep"
+              ]
+            }
+          ],
+          "addOnFeatures": [
+            {
+              "featureId": "DD_INTEREST",
+              "name": "Interest Computation",
+              "description": "Tiered interest calculation",
+              "isRequired": false,
+              "enrollmentModules": ["interest_setup"]
+            },
+            {
+              "featureId": "DD_POOLING",
+              "name": "Cash Pooling",
+              "description": "Physical or notional pooling",
+              "isRequired": false,
+              "enrollmentModules": ["pooling_setup"]
+            }
+          ]
+        },
+        "accountRules": {
+          "currencies": ["USD", "EUR", "GBP"],
+          "interestRules": {
+            "interestType": "tiered",
+            "tiers": [
+              {
+                "minBalance": 1000000,
+                "maxBalance": 4999999,
+                "rate": 0.5
+              },
+              {
+                "minBalance": 5000000,
+                "rate": 0.75
+              }
+            ],
+            "computation": {
+              "basis": "daily",
+              "payment": "monthly"
+            }
+          },
+          "balanceRules": {
+            "minimumBalance": 100000,
+            "targetBalance": {
+              "required": false,
+              "defaultAmount": 250000
+            },
+            "overdraft": {
+              "allowed": true,
+              "requiresApproval": true,
+              "limits": {
+                "default": 1000000,
+                "maximum": 5000000
+              }
+            }
+          }
+        },
+        "eligibilityRules": {
+          "companySize": {
+            "minAnnualRevenue": 50000000,
+            "minAverageBalance": 1000000
+          },
+          "documentation": {
+            "required": [
+              "boardResolution",
+              "taxDocuments",
+              "financialStatements"
+            ]
+          }
+        },
+        "pricingRules": {
+          "maintenanceFee": {
+            "amount": 100,
+            "frequency": "monthly",
+            "waiverCriteria": {
+              "minimumBalance": 1000000
+            }
+          },
+          "transactionFees": {
+            "incoming": {
+              "domestic": 0.15,
+              "international": 15.00
+            },
+            "outgoing": {
+              "domestic": 0.25,
+              "international": 25.00
+            }
+          },
+          "serviceFees": {
+            "sweep": 50,
+            "pooling": 100,
+            "overdraft": {
+              "setup": 500,
+              "monthly": 50
+            }
+          }
+        }
+      },
+      {
+        "productId": "TREAS_ACH_001",
+        "productName": "ACH Services",
+        "productCategory": "Treasury",
+        "productType": "Payments",
+        "version": "1.0",
+        "status": "active",
+        "features": {
+          "baseFeatures": [
+            {
+              "featureId": "ACH_ORIGINATION",
+              "name": "ACH Origination",
+              "description": "Standard ACH origination services",
+              "isRequired": true,
+              "enrollmentModules": ["ach_setup", "file_format"],
+              "capabilities": {
+                "batchTypes": ["credit", "debit"],
+                "secCodes": ["CCD", "CTX", "PPD"],
+                "fileFormats": ["NACHA", "XML", "CSV"]
+              }
+            },
+            {
+              "featureId": "ACH_RECEIPT",
+              "name": "ACH Receipt",
+              "description": "Receive ACH transactions",
+              "isRequired": false,
+              "enrollmentModules": ["receipt_setup"]
+            }
+          ],
+          "addOnFeatures": [
+            {
+              "featureId": "ACH_SAME_DAY",
+              "name": "Same Day ACH",
+              "description": "Same day processing capability",
+              "isRequired": false,
+              "enrollmentModules": ["sameday_setup"]
+            },
+            {
+              "featureId": "ACH_POSITIVE_PAY",
+              "name": "ACH Positive Pay",
+              "description": "ACH debit blocking and filtering",
+              "isRequired": false,
+              "enrollmentModules": ["positive_pay_setup"],
+              "filterTypes": [
+                "company_id",
+                "amount",
+                "unauthorized_entries"
+              ]
+            },
+            {
+              "featureId": "ACH_API",
+              "name": "ACH API Access",
+              "description": "Direct API integration for ACH",
+              "isRequired": false,
+              "enrollmentModules": ["api_setup"]
+            }
+          ]
+        },
+        "achRules": {
+          "limits": {
+            "daily": {
+              "credit": 10000000,
+              "debit": 5000000
+            },
+            "perTransaction": {
+              "credit": 1000000,
+              "debit": 500000
+            }
+          },
+          "timing": {
+            "standardACH": {
+              "cutoffTime": "16:00",
+              "timezone": "EST",
+              "settlementDays": 2
+            },
+            "sameDay": {
+              "cutoffTimes": ["10:30", "14:45"],
+              "timezone": "EST",
+              "additionalFee": 0.50
+            }
+          },
+          "secCodes": {
+            "allowed": ["CCD", "CTX", "PPD", "WEB", "TEL"],
+            "default": "CCD"
+          },
+          "returnHandling": {
+            "notifications": ["email", "file", "api"],
+            "autoReinitiationRules": {
+              "maxAttempts": 2,
+              "waitPeriod": 24
+            }
+          }
+        },
+        "eligibilityRules": {
+          "companySize": {
+            "minAnnualRevenue": 25000000,
+            "minTransactionVolume": 5000
+          },
+          "operationalRequirements": {
+            "minimumAccountBalance": 100000,
+            "requiredDocuments": [
+              "achAgreement",
+              "corporateResolution",
+              "fraudPreventionCertification"
+            ]
+          }
+        },
+        "pricingRules": {
+          "basePrice": {
+            "setupFee": 500,
+            "monthlyFee": 100,
+            "transactionFees": {
+              "standard": {
+                "credit": 0.15,
+                "debit": 0.20
+              },
+              "sameDay": {
+                "credit": 0.50,
+                "debit": 0.55
+              },
+              "return": 5.00
+            }
+          },
+          "volumeDiscounts": [
+            {
+              "threshold": 10000,
+              "discountPercent": 10
+            },
+            {
+              "threshold": 50000,
+              "discountPercent": 20
+            }
+          ],
+          "additionalServices": {
+            "positivePay": {
+              "monthly": 50,
+              "perCheck": 0.05
+            }
+          }
+        }
+      }
+    ]
+  }
+}

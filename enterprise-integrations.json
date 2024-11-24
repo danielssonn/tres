@@ -1,0 +1,249 @@
+{
+  "integrations": {
+    "coreServices": {
+      "customerManagement": {
+        "endpoints": {
+          "create": "/api/v1/customer",
+          "update": "/api/v1/customer/{id}",
+          "query": "/api/v1/customer/search",
+          "delete": "/api/v1/customer/{id}",
+          "relationships": "/api/v1/customer/{id}/relationships"
+        },
+        "webhooks": {
+          "customerUpdated": "/webhooks/customer/updated",
+          "customerStatusChanged": "/webhooks/customer/status"
+        }
+      },
+      "accountManagement": {
+        "endpoints": {
+          "create": "/api/v1/account",
+          "update": "/api/v1/account/{id}",
+          "close": "/api/v1/account/{id}/close",
+          "balance": "/api/v1/account/{id}/balance",
+          "transactions": "/api/v1/account/{id}/transactions",
+          "statements": "/api/v1/account/{id}/statements"
+        },
+        "webhooks": {
+          "balanceUpdated": "/webhooks/account/balance",
+          "transactionPosted": "/webhooks/account/transaction"
+        }
+      },
+      "documentManagement": {
+        "endpoints": {
+          "upload": "/api/v1/documents/upload",
+          "download": "/api/v1/documents/{id}/download",
+          "delete": "/api/v1/documents/{id}",
+          "search": "/api/v1/documents/search",
+          "metadata": "/api/v1/documents/{id}/metadata"
+        },
+        "webhooks": {
+          "documentUploaded": "/webhooks/document/uploaded",
+          "documentExpiring": "/webhooks/document/expiring"
+        }
+      }
+    },
+    "productServices": {
+      "swift": {
+        "messaging": {
+          "endpoints": {
+            "send": "/api/v1/swift/message/send",
+            "receive": "/api/v1/swift/message/receive",
+            "status": "/api/v1/swift/message/{id}/status",
+            "validate": "/api/v1/swift/message/validate"
+          },
+          "webhooks": {
+            "messageReceived": "/webhooks/swift/received",
+            "messageStatus": "/webhooks/swift/status"
+          }
+        },
+        "gpi": {
+          "endpoints": {
+            "track": "/api/v1/swift/gpi/track/{uetr}",
+            "cancel": "/api/v1/swift/gpi/cancel/{uetr}",
+            "directory": "/api/v1/swift/gpi/directory"
+          },
+          "webhooks": {
+            "statusUpdate": "/webhooks/swift/gpi/status",
+            "cancellation": "/webhooks/swift/gpi/cancel"
+          }
+        },
+        "compliance": {
+          "endpoints": {
+            "screen": "/api/v1/swift/compliance/screen",
+            "report": "/api/v1/swift/compliance/report"
+          }
+        }
+      },
+      "deposits": {
+        "account": {
+          "endpoints": {
+            "open": "/api/v1/deposits/account/open",
+            "modify": "/api/v1/deposits/account/{id}/modify",
+            "close": "/api/v1/deposits/account/{id}/close",
+            "interest": "/api/v1/deposits/account/{id}/interest",
+            "sweep": "/api/v1/deposits/account/{id}/sweep"
+          },
+          "webhooks": {
+            "interestPosted": "/webhooks/deposits/interest",
+            "sweepExecuted": "/webhooks/deposits/sweep"
+          }
+        },
+        "pooling": {
+          "endpoints": {
+            "setup": "/api/v1/deposits/pooling/setup",
+            "execute": "/api/v1/deposits/pooling/execute",
+            "report": "/api/v1/deposits/pooling/report"
+          }
+        }
+      },
+      "ach": {
+        "origination": {
+          "endpoints": {
+            "submit": "/api/v1/ach/batch/submit",
+            "validate": "/api/v1/ach/batch/validate",
+            "status": "/api/v1/ach/batch/{id}/status",
+            "return": "/api/v1/ach/batch/{id}/return"
+          },
+          "webhooks": {
+            "batchStatus": "/webhooks/ach/batch/status",
+            "returnReceived": "/webhooks/ach/return"
+          }
+        },
+        "positivePay": {
+          "endpoints": {
+            "rules": "/api/v1/ach/positivepay/rules",
+            "exceptions": "/api/v1/ach/positivepay/exceptions",
+            "decision": "/api/v1/ach/positivepay/decision"
+          },
+          "webhooks": {
+            "exceptionCreated": "/webhooks/ach/positivepay/exception"
+          }
+        },
+        "fileTransfer": {
+          "endpoints": {
+            "upload": "/api/v1/ach/file/upload",
+            "download": "/api/v1/ach/file/download",
+            "validate": "/api/v1/ach/file/validate"
+          }
+        }
+      },
+      "statements": {
+        "generation": {
+          "endpoints": {
+            "generate": "/api/v1/statements/generate",
+            "schedule": "/api/v1/statements/schedule",
+            "retrieve": "/api/v1/statements/retrieve/{id}",
+            "cancel": "/api/v1/statements/cancel/{id}"
+          },
+          "webhooks": {
+            "statementReady": "/webhooks/statements/ready",
+            "generationFailed": "/webhooks/statements/failed"
+          }
+        },
+        "machineReadable": {
+          "endpoints": {
+            "transform": "/api/v1/statements/machine/transform",
+            "validate": "/api/v1/statements/machine/validate",
+            "stream": "/api/v1/statements/machine/stream"
+          },
+          "streaming": {
+            "kafka": {
+              "topics": {
+                "transactions": "statements.transactions",
+                "balances": "statements.balances",
+                "events": "statements.events"
+              }
+            },
+            "websocket": "/ws/statements/stream"
+          }
+        },
+        "archive": {
+          "endpoints": {
+            "store": "/api/v1/statements/archive/store",
+            "search": "/api/v1/statements/archive/search",
+            "retrieve": "/api/v1/statements/archive/retrieve"
+          }
+        }
+      },
+      "fx": {
+        "trading": {
+          "endpoints": {
+            "quote": "/api/v1/fx/quote",
+            "execute": "/api/v1/fx/execute",
+            "book": "/api/v1/fx/book",
+            "cancel": "/api/v1/fx/cancel"
+          },
+          "webhooks": {
+            "tradeExecuted": "/webhooks/fx/trade/executed",
+            "tradeFailed": "/webhooks/fx/trade/failed"
+          },
+          "streaming": {
+            "rates": "/ws/fx/rates",
+            "orders": "/ws/fx/orders"
+          }
+        },
+        "settlement": {
+          "endpoints": {
+            "instruct": "/api/v1/fx/settlement/instruct",
+            "status": "/api/v1/fx/settlement/status",
+            "netting": "/api/v1/fx/settlement/netting"
+          },
+          "webhooks": {
+            "settlementComplete": "/webhooks/fx/settlement/complete",
+            "settlementFailed": "/webhooks/fx/settlement/failed"
+          }
+        },
+        "risk": {
+          "endpoints": {
+            "limits": "/api/v1/fx/risk/limits",
+            "exposure": "/api/v1/fx/risk/exposure",
+            "validation": "/api/v1/fx/risk/validate"
+          },
+          "webhooks": {
+            "limitBreached": "/webhooks/fx/risk/limit",
+            "exposureUpdated": "/webhooks/fx/risk/exposure"
+          }
+        }
+      }
+    },
+    "commonPatterns": {
+      "authentication": {
+        "oauth2": {
+          "authorize": "/oauth2/authorize",
+          "token": "/oauth2/token",
+          "revoke": "/oauth2/revoke"
+        },
+        "apiKey": {
+          "create": "/api/v1/keys/create",
+          "revoke": "/api/v1/keys/revoke"
+        }
+      },
+      "fileTransfer": {
+        "sftp": {
+          "host": "sftp.bank.com",
+          "protocols": ["SFTP", "FTPS"],
+          "directories": {
+            "incoming": "/incoming",
+            "outgoing": "/outgoing",
+            "reports": "/reports"
+          }
+        }
+      },
+      "monitoring": {
+        "health": "/health",
+        "metrics": "/metrics",
+        "trace": "/trace"
+      },
+      "errorHandling": {
+        "retry": {
+          "maxAttempts": 3,
+          "backoffPeriod": "exponential"
+        },
+        "deadLetter": {
+          "queue": "dlq.messages",
+          "notification": "/webhooks/error/dlq"
+        }
+      }
+    }
+  }
+}

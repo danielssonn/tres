@@ -1,0 +1,65 @@
+{
+  "achPricingTiers": {
+    "transactionPricing": {
+      "standard": {
+        "credit": {
+          "perTransaction": [
+            {
+              "volume": "1-500",
+              "price": 0.25,
+              "description": "Entry level"
+            },
+            {
+              "volume": "501-1000",
+              "price": 0.20,
+              "description": "Small business"
+            },
+            {
+              "volume": "1001-5000",
+              "price": 0.17,
+              "description": "Growing business"
+            },
+            {
+              "volume": "5001-10000",
+              "price": 0.15,
+              "description": "Mid-size volume"
+            },
+            {
+              "volume": "10001-25000",
+              "price": 0.13,
+              "description": "High volume"
+            },
+            {
+              "volume": "25001-50000",
+              "price": 0.11,
+              "description": "Very high volume"
+            },
+            {
+              "volume": "50001-100000",
+              "price": 0.09,
+              "description": "Premium volume"
+            },
+            {
+              "volume": "100001-500000",
+              "price": 0.07,
+              "description": "Enterprise volume"
+            },
+            {
+              "volume": "500001+",
+              "price": 0.05,
+              "description": "Ultra enterprise"
+            }
+          ],
+          "fileCharges": {
+            "perFile": [
+              {
+                "files": "1-10",
+                "price": 5.00
+              },
+              {
+                "files": "11-50",
+                "price": 4.00
+              },
+              {
+                "files": "51-100",
+                "price": 3

@@ -1,0 +1,87 @@
+{
+  "nbfiBundles": {
+    "assetManagement": {
+      "name": "Investment Management Solutions",
+      "targetSegment": "Global Asset Managers",
+      "features": {
+        "fundOperations": {
+          "name": "Fund Operations Suite",
+          "capabilities": {
+            "subscriptionRedemption": {
+              "name": "Fund Subscription & Redemption",
+              "features": [
+                "Automated subscription processing",
+                "Redemption payment management",
+                "Capital call automation",
+                "Distribution payments",
+                "Transfer agency integration"
+              ]
+            },
+            "investmentOperations": {
+              "name": "Investment Settlement",
+              "features": [
+                "Trade settlement payments",
+                "FX settlement",
+                "Derivative payments",
+                "Margin management",
+                "Collateral transfers"
+              ]
+            },
+            "feeManagement": {
+              "name": "Fee Processing",
+              "features": [
+                "Management fee collection",
+                "Performance fee calculation",
+                "Service provider payments",
+                "Commission handling",
+                "Revenue sharing payments"
+              ]
+            }
+          }
+        },
+        "specializedServices": {
+          "regulatoryCompliance": {
+            "features": [
+              "SEC compliance reporting",
+              "ERISA payment handling",
+              "Form PF support",
+              "Custody rule compliance",
+              "Investor verification"
+            ]
+          }
+        }
+      }
+    },
+    "insuranceProviders": {
+      "name": "Insurance Payment Solutions",
+      "targetSegment": "Global Insurance Companies",
+      "features": {
+        "claimsManagement": {
+          "name": "Claims Payment Platform",
+          "capabilities": {
+            "claimsProcessing": {
+              "features": [
+                "Automated claims disbursement",
+                "Multi-party payment splitting",
+                "Provider network payments",
+                "Excess & reinsurance settlements",
+                "Cross-border claim payments"
+              ]
+            },
+            "premiumCollection": {
+              "features": [
+                "Premium direct debit management",
+                "Agency commission payments",
+                "Broker payment settlement",
+                "Premium financing",
+                "Installment plan management"
+              ]
+            }
+          }
+        },
+        "specializedServices": {
+          "compliance": {
+            "features": [
+              "Insurance regulatory reporting",
+              "State filing payments",
+     

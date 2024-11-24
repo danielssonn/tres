@@ -1,0 +1,51 @@
+{
+  "achBundlePackages": {
+    "standardBundles": {
+      "starter": {
+        "name": "Starter Bundle",
+        "targetSegment": "Small Business",
+        "monthlyFee": 250,
+        "included": {
+          "transactions": {
+            "standardACH": {
+              "credits": 500,
+              "debits": 500
+            },
+            "sameDayACH": {
+              "credits": 10,
+              "debits": 10
+            }
+          },
+          "files": {
+            "monthly": 20,
+            "formats": ["NACHA"]
+          },
+          "returns": {
+            "included": 10,
+            "notifications": "Email"
+          },
+          "features": [
+            "Basic reporting",
+            "Online access",
+            "Email support",
+            "Standard templates"
+          ]
+        },
+        "additionalFees": {
+          "transactions": {
+            "standardACH": {
+              "credit": 0.20,
+              "debit": 0.25
+            },
+            "sameDayACH": {
+              "credit": 0.75,
+              "debit": 1.00
+            }
+          },
+          "files": 5.00,
+          "returns": 5.00
+        }
+      },
+      "professional": {
+        "name": "Professional Bundle",
+        "targetSegment": "M

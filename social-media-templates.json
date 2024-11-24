@@ -1,0 +1,296 @@
+{
+  "socialMediaTemplates": {
+    "internalSocial": {
+      "microsoftTeams": {
+        "announcements": {
+          "general": {
+            "structure": {
+              "title": "🔔 Product Catalog Update",
+              "format": {
+                "header": "{emoji} {category}: {brief title}",
+                "body": "Clear, concise update (max 250 characters)",
+                "links": "Related resources and documentation",
+                "callToAction": "Clear next steps or actions required"
+              },
+              "categories": [
+                {
+                  "type": "Launch Update",
+                  "emoji": "🚀",
+                  "template": "Now Live: {feature} - {brief description}"
+                },
+                {
+                  "type": "Training Alert",
+                  "emoji": "📚",
+                  "template": "New Training: {topic} - {date/time}"
+                },
+                {
+                  "type": "Milestone Achievement",
+                  "emoji": "🎯",
+                  "template": "Milestone Reached: {achievement} - {impact}"
+                },
+                {
+                  "type": "Quick Tip",
+                  "emoji": "💡",
+                  "template": "Pro Tip: {feature} - {usage tip}"
+                }
+              ]
+            }
+          },
+          "urgentUpdates": {
+            "structure": {
+              "title": "⚠️ Important Update",
+              "format": {
+                "header": "IMPORTANT: {issue summary}",
+                "impact": "Who is affected and how",
+                "action": "Required immediate actions",
+                "timeline": "When action is needed",
+                "support": "Where to get help"
+              }
+            }
+          }
+        },
+        "channels": {
+          "productCatalog": {
+            "sections": [
+              {
+                "name": "General",
+                "contentTypes": [
+                  "Announcements",
+                  "Updates",
+                  "General discussion"
+                ]
+              },
+              {
+                "name": "Implementation",
+                "contentTypes": [
+                  "Technical updates",
+                  "Process changes",
+                  "Support queries"
+                ]
+              },
+              {
+                "name": "Training",
+                "contentTypes": [
+                  "Learning resources",
+                  "Workshop announcements",
+                  "Best practices"
+                ]
+              }
+            ],
+            "postTemplates": {
+              "update": {
+                "structure": {
+                  "title": "{emoji} {type}: {brief title}",
+                  "body": "Update details (max 500 characters)",
+                  "attachments": "Related files or links",
+                  "tags": "#relevant #hashtags"
+                }
+              },
+              "question": {
+                "structure": {
+                  "title": "❓ Question: {topic}",
+                  "context": "Background information",
+                  "question": "Specific query",
+                  "tags": "#help #specific-area"
+                }
+              }
+            }
+          }
+        }
+      },
+      "yammer": {
+        "groups": {
+          "productCatalogCommunity": {
+            "postTypes": {
+              "success": {
+                "structure": {
+                  "title": "🌟 Success Story: {title}",
+                  "content": [
+                    "Challenge overcome",
+                    "Solution implemented",
+                    "Benefits realized",
+                    "Key learnings"
+                  ],
+                  "media": "Screenshots or videos",
+                  "tags": "#success #learning"
+                }
+              },
+              "tip": {
+                "structure": {
+                  "title": "💡 Quick Tip: {feature}",
+                  "content": [
+                    "Problem solved",
+                    "Step-by-step solution",
+                    "Time/effort saved",
+                    "Additional resources"
+                  ],
+                  "tags": "#tip #howto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "externalSocial": {
+      "linkedin": {
+        "companyUpdates": {
+          "productAnnouncement": {
+            "structure": {
+              "title": "Announcing: {product/feature name}",
+              "format": {
+                "headline": "Compelling headline (max 150 characters)",
+                "body": "Value proposition and key benefits (max 1300 characters)",
+                "media": "Image or video requirements",
+                "callToAction": "Clear next step"
+              },
+              "variations": [
+                {
+                  "type": "Launch Post",
+                  "template": "🎉 Excited to announce our new {product/feature}! {value proposition} {benefit} #relevanthashtags"
+                },
+                {
+                  "type": "Feature Spotlight",
+                  "template": "💡 Discover how {feature} helps {target audience} achieve {benefit}. Learn more: {link} #relevanthashtags"
+                },
+                {
+                  "type": "Success Story",
+                  "template": "🌟 See how {client} achieved {result} with our {product/feature}. Read the full story: {link} #customersuccess"
+                }
+              ]
+            }
+          },
+          "thoughtLeadership": {
+            "structure": {
+              "title": "{topic} Insights",
+              "format": {
+                "hook": "Engaging opening (max 150 characters)",
+                "content": "Industry insight or trend analysis (max 1300 characters)",
+                "expertise": "Demonstrate thought leadership",
+                "callToAction": "Engagement prompt"
+              }
+            }
+          }
+        },
+        "articles": {
+          "structure": {
+            "title": "Compelling headline (max 100 characters)",
+            "format": {
+              "introduction": "Hook and context",
+              "body": [
+                "Key points (3-5)",
+                "Supporting evidence",
+                "Industry impact"
+              ],
+              "conclusion": "Key takeaways and next steps",
+              "callToAction": "Clear engagement prompt"
+            }
+          }
+        }
+      },
+      "twitter": {
+        "templates": {
+          "productUpdates": {
+            "structure": {
+              "format": "Text + Visual",
+              "length": "280 characters max",
+              "components": [
+                "Key benefit/feature",
+                "Relevant hashtags",
+                "Call to action",
+                "Link (if applicable)"
+              ]
+            },
+            "variations": [
+              {
+                "type": "Launch Tweet",
+                "template": "🎉 New: {feature} is here! {key benefit} Learn more: {link} #{hashtags}"
+              },
+              {
+                "type": "Tip Tweet",
+                "template": "💡 Pro Tip: {quick tip} for {benefit}. #{hashtags}"
+              },
+              {
+                "type": "Thread Template",
+                "structure": [
+                  "Hook tweet",
+                  "Key points (2-3 tweets)",
+                  "Supporting details",
+                  "Call to action"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "instagram": {
+        "templates": {
+          "visualContent": {
+            "structure": {
+              "imageSpecs": {
+                "size": "1080x1080px (square)",
+                "format": "High-res imagery or infographic"
+              },
+              "caption": {
+                "structure": [
+                  "Hook (first line)",
+                  "Key message (2-3 lines)",
+                  "Call to action",
+                  "Hashtags (comments)"
+                ],
+                "length": "Max 2200 characters"
+              }
+            },
+            "contentTypes": [
+              {
+                "type": "Feature Showcase",
+                "template": {
+                  "visual": "Product screenshot/demo",
+                  "caption": "✨ {feature highlight} that helps {target audience} achieve {benefit}. Learn more at {link in bio}. #relevanthashtags"
+                }
+              },
+              {
+                "type": "Behind the Scenes",
+                "template": {
+                  "visual": "Team/implementation photos",
+                  "caption": "👥 Meet the team behind {product/feature}! {story/insight} #companyculture #teamwork"
+                }
+              }
+            ]
+          },
+          "stories": {
+            "structure": {
+              "format": "15-second segments",
+              "elements": [
+                "Opening hook",
+                "Key information",
+                "Call to action",
+                "Swipe up link"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "hashtagStrategy": {
+      "internal": {
+        "categories": [
+          "#ProductCatalog",
+          "#Implementation",
+          "#Training",
+          "#Support",
+          "#TeamSuccess"
+        ]
+      },
+      "external": {
+        "categories": [
+          "#FinTech",
+          "#Banking",
+          "#Innovation",
+          "#DigitalTransformation",
+          "#ProductManagement"
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,309 @@
+{
+  "productCatalog": {
+    // Previous base configuration remains same
+    "features": {
+      "baseFeatures": [
+        // Previous base features remain same
+      ],
+      "addOnFeatures": [
+        {
+          "featureId": "WEB_PORTAL",
+          "name": "Corporate Web Portal",
+          "description": "Web-based treasury management platform",
+          "isRequired": false,
+          "enrollmentModules": ["portal_setup", "user_config"],
+          "capabilities": {
+            "modules": [
+              {
+                "name": "Dashboard",
+                "features": [
+                  "Global Cash Position",
+                  "Payment Status",
+                  "Custom Widgets",
+                  "Action Items"
+                ]
+              },
+              {
+                "name": "Payment Center",
+                "features": [
+                  "Payment Initiation",
+                  "Template Management",
+                  "Bulk Uploads",
+                  "Payment Tracking"
+                ]
+              },
+              {
+                "name": "Account Center",
+                "features": [
+                  "Balance Reporting",
+                  "Transaction Search",
+                  "Statement Download",
+                  "Account Analytics"
+                ]
+              },
+              {
+                "name": "Trade Center",
+                "features": [
+                  "FX Trading",
+                  "Trade Finance",
+                  "Investment Management",
+                  "Position Management"
+                ]
+              }
+            ],
+            "customization": {
+              "branding": ["Logo", "Color Scheme", "Layout"],
+              "reporting": ["Custom Reports", "Scheduled Reports"],
+              "widgets": ["Market Data", "Cash Forecasting", "KPIs"]
+            }
+          }
+        },
+        {
+          "featureId": "MOBILE_ADVANCED",
+          "name": "Advanced Mobile Solutions",
+          "description": "Enhanced mobile banking capabilities",
+          "capabilities": {
+            "apps": [
+              {
+                "name": "Treasury Mobile",
+                "platforms": ["iOS", "Android", "Huawei"],
+                "features": [
+                  "Biometric Login",
+                  "Push Notifications",
+                  "Offline Mode",
+                  "Widget Support"
+                ]
+              },
+              {
+                "name": "Approver App",
+                "platforms": ["iOS", "Android"],
+                "features": [
+                  "Quick Approval",
+                  "Batch Authorization",
+                  "Approval History",
+                  "Delegation Management"
+                ]
+              },
+              {
+                "name": "Trade App",
+                "platforms": ["iOS", "Android"],
+                "features": [
+                  "FX Trading",
+                  "Market Watch",
+                  "Order Management",
+                  "Position Monitoring"
+                ]
+              }
+            ],
+            "security": {
+              "authentication": [
+                "Face ID",
+                "Fingerprint",
+                "Pattern Lock",
+                "PIN"
+              ],
+              "authorization": [
+                "Soft Token",
+                "Push Authentication",
+                "Transaction Signing",
+                "Device Binding"
+              ]
+            }
+          }
+        },
+        {
+          "featureId": "CHAT_BANKING",
+          "name": "Conversational Banking",
+          "description": "Chat-based banking services",
+          "capabilities": {
+            "channels": [
+              {
+                "name": "Corporate Chat",
+                "platforms": [
+                  "Web Portal",
+                  "Mobile App",
+                  "Microsoft Teams",
+                  "WhatsApp Business"
+                ],
+                "features": [
+                  "Balance Inquiry",
+                  "Transaction Search",
+                  "Payment Status",
+                  "forex Rates"
+                ]
+              },
+              {
+                "name": "Virtual Assistant",
+                "capabilities": [
+                  "Natural Language Processing",
+                  "Transaction Initiation",
+                  "Service Requests",
+                  "Problem Resolution"
+                ]
+              }
+            ],
+            "integration": {
+              "erp": ["SAP", "Oracle", "Microsoft"],
+              "collaboration": ["Teams", "Slack", "WebEx"]
+            }
+          }
+        },
+        {
+          "featureId": "OPEN_BANKING",
+          "name": "Open Banking Services",
+          "description": "Open banking integration channels",
+          "capabilities": {
+            "services": [
+              {
+                "name": "Account Aggregation",
+                "features": [
+                  "Multi-bank Balance",
+                  "Consolidated Reporting",
+                  "Transaction Aggregation",
+                  "Account Analytics"
+                ]
+              },
+              {
+                "name": "Payment Initiation",
+                "features": [
+                  "Cross-bank Payments",
+                  "Bulk Payments",
+                  "Standing Orders",
+                  "Payment Status"
+                ]
+              }
+            ],
+            "standards": [
+              "PSD2",
+              "Berlin Group",
+              "UK Open Banking",
+              "FDX"
+            ]
+          }
+        },
+        {
+          "featureId": "WIDGET_BANKING",
+          "name": "Embedded Treasury",
+          "description": "Embeddable treasury widgets",
+          "capabilities": {
+            "widgets": [
+              {
+                "name": "Cash Position",
+                "features": [
+                  "Real-time Balances",
+                  "Currency Breakdown",
+                  "Trend Analysis"
+                ]
+              },
+              {
+                "name": "Payment Widget",
+                "features": [
+                  "Quick Payment",
+                  "Template Access",
+                  "Status Tracking"
+                ]
+              },
+              {
+                "name": "FX Widget",
+                "features": [
+                  "Rate Monitor",
+                  "Quick Trade",
+                  "Position View"
+                ]
+              }
+            ],
+            "integration": {
+              "platforms": [
+                "ERP Systems",
+                "TMS",
+                "Corporate Intranets",
+                "Mobile Apps"
+              ]
+            }
+          }
+        },
+        {
+          "featureId": "REAL_TIME_DATA",
+          "name": "Real-time Data Services",
+          "description": "Real-time data streaming and notifications",
+          "capabilities": {
+            "streams": [
+              {
+                "name": "Balance Streaming",
+                "features": [
+                  "Real-time Updates",
+                  "Threshold Alerts",
+                  "Liquidity Monitoring"
+                ]
+              },
+              {
+                "name": "Transaction Streaming",
+                "features": [
+                  "Instant Notification",
+                  "Fraud Monitoring",
+                  "Pattern Detection"
+                ]
+              },
+              {
+                "name": "Market Data",
+                "features": [
+                  "FX Rates",
+                  "Interest Rates",
+                  "Market Indices"
+                ]
+              }
+            ],
+            "alerts": {
+              "channels": [
+                "Push Notification",
+                "Email",
+                "SMS",
+                "Webhook"
+              ],
+              "configuration": [
+                "Alert Rules",
+                "Threshold Setting",
+                "Routing Rules"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "eligibilityRules": {
+      "channelSpecific": {
+        "web": {
+          "browser": ["Chrome", "Safari", "Firefox", "Edge"],
+          "version": "Latest 2 versions"
+        },
+        "mobile": {
+          "os": ["iOS 14+", "Android 10+"],
+          "device": "Smartphone/Tablet"
+        },
+        "chat": {
+          "platforms": ["Teams", "WhatsApp Business"],
+          "requirements": ["Business Verification"]
+        }
+      }
+    },
+    "pricingRules": {
+      "channelPricing": {
+        "web": {
+          "setup": 5000,
+          "monthly": 500,
+          "userBased": true
+        },
+        "mobile": {
+          "setup": 3000,
+          "monthly": 300,
+          "deviceBased": true
+        },
+        "chat": {
+          "setup": 2000,
+          "monthly": 200,
+          "messageBased": true
+        }
+      }
+    }
+  }
+}

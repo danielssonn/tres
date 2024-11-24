@@ -1,0 +1,244 @@
+{
+  "enterpriseCatalog": {
+    "metadata": {
+      "organization": "Corporate Banking",
+      "division": "Treasury Services",
+      "version": "2.0",
+      "lastUpdated": "2024-11-23",
+      "status": "active",
+      "classification": "Corporate",
+      "regulatoryFramework": ["Dodd-Frank", "BASEL", "PSD2"]
+    },
+    "commonDefinitions": {
+      "customerSegments": [
+        {
+          "segmentId": "CORP_LARGE",
+          "name": "Large Corporate",
+          "criteria": {
+            "annualRevenue": {
+              "min": 1000000000,
+              "currency": "USD"
+            }
+          }
+        },
+        {
+          "segmentId": "CORP_MID",
+          "name": "Middle Market",
+          "criteria": {
+            "annualRevenue": {
+              "min": 50000000,
+              "max": 999999999,
+              "currency": "USD"
+            }
+          }
+        }
+      ],
+      "currencies": {
+        "major": ["USD", "EUR", "GBP", "JPY", "CHF"],
+        "emerging": ["CNY", "INR", "BRL", "MXN"],
+        "exotic": ["THB", "ZAR", "SGD"]
+      },
+      "documentTypes": {
+        "legal": [
+          "boardResolution",
+          "powerOfAttorney",
+          "certificateOfIncorporation"
+        ],
+        "financial": [
+          "financialStatements",
+          "taxReturns",
+          "creditReports"
+        ],
+        "regulatory": [
+          "kycDocuments",
+          "fatcaDocumentation",
+          "sanctionsScreening"
+        ]
+      },
+      "serviceChannels": [
+        {
+          "channelId": "DIGITAL",
+          "name": "Digital Banking Platform",
+          "capabilities": ["transact", "report", "service"]
+        },
+        {
+          "channelId": "API",
+          "name": "API Services",
+          "capabilities": ["integrate", "automate"]
+        },
+        {
+          "channelId": "HOST",
+          "name": "Host-to-Host",
+          "capabilities": ["fileTransfer", "bulkProcessing"]
+        }
+      ]
+    },
+    "products": [
+      {
+        "productId": "TREAS_SWIFT_001",
+        // SWIFT product details
+      },
+      {
+        "productId": "CORP_DD_001",
+        // Deposit product details
+      },
+      {
+        "productId": "TREAS_ACH_001",
+        // ACH product details
+      },
+      {
+        "productId": "TREAS_STMT_001",
+        // Statement product details
+      },
+      {
+        "productId": "TREAS_FX_001",
+        // FX product details
+      }
+    ],
+    "productRelationships": {
+      "bundles": [
+        {
+          "bundleId": "TREAS_COMPLETE",
+          "name": "Complete Treasury Package",
+          "products": [
+            "TREAS_SWIFT_001",
+            "TREAS_ACH_001",
+            "TREAS_STMT_001",
+            "TREAS_FX_001",
+            "CORP_DD_001"
+          ],
+          "discountPercent": 25,
+          "minimumTerm": "12_months"
+        },
+        {
+          "bundleId": "TREAS_PAYMENTS",
+          "name": "Payments Package",
+          "products": [
+            "TREAS_SWIFT_001",
+            "TREAS_ACH_001",
+            "CORP_DD_001"
+          ],
+          "discountPercent": 15,
+          "minimumTerm": "12_months"
+        }
+      ],
+      "dependencies": [
+        {
+          "primary": "TREAS_ACH_001",
+          "requires": ["CORP_DD_001"]
+        },
+        {
+          "primary": "TREAS_STMT_001",
+          "conditionalRequirements": [
+            {
+              "feature": "STMT_SWIFT",
+              "requires": ["TREAS_SWIFT_001"]
+            }
+          ]
+        }
+      ],
+      "crossProductFeatures": [
+        {
+          "featureId": "CROSS_BORDER_PAYMENT",
+          "requiredProducts": ["TREAS_SWIFT_001", "TREAS_FX_001"],
+          "optionalProducts": ["TREAS_STMT_001"]
+        },
+        {
+          "featureId": "LIQUIDITY_MANAGEMENT",
+          "requiredProducts": ["CORP_DD_001"],
+          "optionalProducts": ["TREAS_STMT_001", "TREAS_FX_001"]
+        }
+      ]
+    },
+    "enrollmentWorkflows": {
+      "common": {
+        "stages": [
+          {
+            "stageId": "CUSTOMER_ONBOARD",
+            "name": "Customer Onboarding",
+            "sequence": 1,
+            "isRequired": true,
+            "components": [
+              {
+                "componentId": "legal_entity",
+                "type": "form",
+                "fields": [
+                  {
+                    "name": "legalName",
+                    "type": "string",
+                    "required": true,
+                    "validation": "company_registry_check"
+                  },
+                  {
+                    "name": "taxId",
+                    "type": "string",
+                    "required": true,
+                    "validation": "tax_id_format"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "productSpecific": {
+        "TREAS_SWIFT_001": {
+          // SWIFT-specific enrollment stages
+        },
+        "CORP_DD_001": {
+          // Deposit-specific enrollment stages
+        },
+        "TREAS_ACH_001": {
+          // ACH-specific enrollment stages
+        },
+        "TREAS_STMT_001": {
+          // Statement-specific enrollment stages
+        },
+        "TREAS_FX_001": {
+          // FX-specific enrollment stages
+        }
+      }
+    },
+    "integrations": {
+      "coreServices": {
+        "customerManagement": {
+          "endpoints": {
+            "create": "/api/v1/customer",
+            "update": "/api/v1/customer/{id}",
+            "query": "/api/v1/customer/search"
+          }
+        },
+        "accountManagement": {
+          "endpoints": {
+            "create": "/api/v1/account",
+            "update": "/api/v1/account/{id}",
+            "balance": "/api/v1/account/{id}/balance"
+          }
+        },
+        "documentManagement": {
+          "endpoints": {
+            "upload": "/api/v1/documents/upload",
+            "retrieve": "/api/v1/documents/{id}"
+          }
+        }
+      },
+      "productServices": {
+        "swift": {
+          // SWIFT-specific endpoints
+        },
+        "ach": {
+          // ACH-specific endpoints
+        },
+        "deposits": {
+          // Deposit-specific endpoints
+        },
+        "statements": {
+          // Statement-specific endpoints
+        },
+        "fx": {
+          // FX-specific endpoints
+        }
+      }
+    }
+  }
+}

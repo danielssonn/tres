@@ -1,0 +1,118 @@
+{
+  "promotionalBundles": {
+    "newCustomerOffers": {
+      "welcomePackages": [
+        {
+          "name": "New Business Starter",
+          "duration": "6 months",
+          "regularPrice": 250,
+          "promotionalPrice": 150,
+          "savings": "40%",
+          "includes": {
+            "transactions": {
+              "standardACH": {
+                "credits": 750,
+                "debits": 750,
+                "note": "50% more than standard starter package"
+              }
+            },
+            "additionalBenefits": [
+              "Implementation fee waived ($5000 value)",
+              "Free training sessions",
+              "Dedicated onboarding specialist",
+              "30-day money-back guarantee"
+            ]
+          },
+          "conditions": [
+            "New customers only",
+            "12-month commitment required",
+            "Must sign up by Q4 2024"
+          ]
+        },
+        {
+          "name": "Digital Transformation",
+          "duration": "3 months",
+          "targetSegment": "Paper to Digital Migration",
+          "regularPrice": 500,
+          "promotionalPrice": 250,
+          "savings": "50%",
+          "includes": {
+            "transactions": {
+              "standardACH": {
+                "credits": 2500,
+                "debits": 2500
+              }
+            },
+            "additionalBenefits": [
+              "Free paper-to-digital conversion consulting",
+              "Custom file mapping included",
+              "Process automation setup",
+              "ROI analysis tools"
+            ]
+          }
+        }
+      ],
+      "migrationSpecials": {
+        "competitiveSwitch": {
+          "name": "Competitive Switch Offer",
+          "benefits": [
+            {
+              "type": "Price Match",
+              "description": "Match or beat current provider pricing",
+              "duration": "12 months"
+            },
+            {
+              "type": "Migration Support",
+              "value": "$10000",
+              "includes": [
+                "Free implementation",
+                "Data migration assistance",
+                "Parallel processing period",
+                "Training program"
+              ]
+            }
+          ],
+          "requirements": [
+            "Current bank statement",
+            "Pricing documentation",
+            "24-month commitment"
+          ]
+        }
+      }
+    },
+    "seasonalPromotions": {
+      "yearEnd": {
+        "name": "Year-End Switch & Save",
+        "timing": "Q4 2024",
+        "offers": [
+          {
+            "name": "Early Bird Special",
+            "description": "Lock in 2024 pricing for 2025",
+            "deadline": "November 30, 2024",
+            "benefits": [
+              "Price protection guarantee",
+              "Free year-end processing",
+              "Bonus transaction allowance"
+            ]
+          },
+          {
+            "name": "Holiday Processing Bundle",
+            "timing": "November-December 2024",
+            "benefits": [
+              "Free same-day ACH processing",
+              "Extended processing windows",
+              "Priority support during peak days"
+            ]
+          }
+        ]
+      },
+      "taxSeason": {
+        "name": "Tax Season Relief",
+        "timing": "Q1 2024",
+        "features": [
+          "Double transaction allowance",
+          "Free tax payment handling",
+          "Extended support hours",
+          "Priority processing"
+        ],
+    

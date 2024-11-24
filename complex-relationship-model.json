@@ -1,0 +1,261 @@
+{
+  "relationshipModel": {
+    "primaryRelationship": {
+      "legalEntityLevel": {
+        "components": {
+          "contractualFramework": {
+            "mainAgreements": [
+              {
+                "type": "Master Service Agreement",
+                "scope": [
+                  "Primary banking relationship",
+                  "Product and service terms",
+                  "Fee structures",
+                  "Service levels"
+                ]
+              },
+              {
+                "type": "Account Agreement",
+                "scope": [
+                  "Account ownership",
+                  "Operating mandates",
+                  "Signatory rights",
+                  "Account structure"
+                ]
+              }
+            ],
+            "supplementaryAgreements": [
+              {
+                "type": "Product Specific Agreements",
+                "examples": [
+                  "Cash management services",
+                  "Payment services",
+                  "Trade finance",
+                  "FX services"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    "agentRelationships": {
+      "types": {
+        "fundManagers": {
+          "relationshipStructure": {
+            "documentationRequired": [
+              {
+                "type": "Agent Appointment Letter",
+                "content": [
+                  "Scope of authority",
+                  "Service parameters",
+                  "Access rights",
+                  "Reporting requirements"
+                ]
+              },
+              {
+                "type": "Power of Attorney",
+                "content": [
+                  "Specific authorities granted",
+                  "Transaction limits",
+                  "Duration of authority",
+                  "Revocation terms"
+                ]
+              },
+              {
+                "type": "Service Agreement Addendum",
+                "content": [
+                  "Agent specific terms",
+                  "Service scope",
+                  "Fee arrangements",
+                  "Liability provisions"
+                ]
+              }
+            ],
+            "accessRights": {
+              "levels": [
+                {
+                  "type": "Transactional",
+                  "permissions": [
+                    "Payment initiation",
+                    "Trade execution",
+                    "Account inquiry",
+                    "Report access"
+                  ]
+                },
+                {
+                  "type": "Administrative",
+                  "permissions": [
+                    "User management",
+                    "Access control",
+                    "Mandate management",
+                    "Report configuration"
+                  ]
+                },
+                {
+                  "type": "Reporting",
+                  "permissions": [
+                    "Balance reporting",
+                    "Transaction reporting",
+                    "Custom reports",
+                    "Analytics access"
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "serviceBureaus": {
+          "relationshipStructure": {
+            "documentationRequired": [
+              {
+                "type": "Service Provider Agreement",
+                "content": [
+                  "Service definition",
+                  "Processing rights",
+                  "Technical requirements",
+                  "Security protocols"
+                ]
+              }
+            ],
+            "accessRights": {
+              "technical": [
+                "Host-to-host connectivity",
+                "API access",
+                "File transfer rights",
+                "Processing capabilities"
+              ]
+            }
+          }
+        },
+        "treasuryServiceProviders": {
+          "relationshipStructure": {
+            "documentationRequired": [
+              {
+                "type": "Operating Agreement",
+                "content": [
+                  "Service scope",
+                  "Operating procedures",
+                  "Control requirements",
+                  "Reporting obligations"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    "accessManagement": {
+      "framework": {
+        "entitlements": {
+          "matrix": {
+            "dimensions": [
+              {
+                "name": "Entity Level",
+                "types": [
+                  "Legal Entity",
+                  "Agent Entity",
+                  "Service Provider"
+                ]
+              },
+              {
+                "name": "Product Level",
+                "types": [
+                  "Account Services",
+                  "Payment Services",
+                  "Reporting Services",
+                  "Trading Services"
+                ]
+              },
+              {
+                "name": "Function Level",
+                "types": [
+                  "View Only",
+                  "Initiate",
+                  "Approve",
+                  "Administer"
+                ]
+              }
+            ]
+          },
+          "controls": {
+            "segregation": [
+              {
+                "rule": "Entity Separation",
+                "description": "Separate access rights between legal entity and agents"
+              },
+              {
+                "rule": "Function Separation",
+                "description": "Separate initiation and approval rights"
+              }
+            ],
+            "limits": [
+              {
+                "type": "Transaction Limits",
+                "parameters": [
+                  "Amount limits",
+                  "Daily limits",
+                  "Product specific limits"
+                ]
+              },
+              {
+                "type": "Approval Limits",
+                "parameters": [
+                  "Authorization levels",
+                  "Approval thresholds",
+                  "Combined limits"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    "monitoring": {
+      "activityTracking": {
+        "areas": [
+          {
+            "type": "Transaction Monitoring",
+            "metrics": [
+              "Volume by entity/agent",
+              "Value by entity/agent",
+              "Pattern analysis",
+              "Anomaly detection"
+            ]
+          },
+          {
+            "type": "Access Monitoring",
+            "metrics": [
+              "Login patterns",
+              "Function usage",
+              "Access attempts",
+              "Security events"
+            ]
+          }
+        ]
+      },
+      "reporting": {
+        "types": [
+          {
+            "category": "Activity Reports",
+            "content": [
+              "Transaction summaries",
+              "Access logs",
+              "Exception reports",
+              "Audit trails"
+            ]
+          },
+          {
+            "category": "Relationship Reports",
+            "content": [
+              "Entity relationships",
+              "Agent activities",
+              "Service provider usage",
+              "Access rights summary"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

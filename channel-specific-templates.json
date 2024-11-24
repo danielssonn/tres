@@ -1,0 +1,309 @@
+{
+  "channelTemplates": {
+    "presentations": {
+      "executiveDeck": {
+        "purpose": "Strategic briefings and board updates",
+        "structure": {
+          "slides": [
+            {
+              "type": "Opening",
+              "content": {
+                "title": "Product Catalog & Governance Framework",
+                "subtitle": "Strategic Initiative Overview",
+                "keyMessage": "Transforming our product management capabilities"
+              },
+              "design": {
+                "layout": "Title slide with executive imagery",
+                "branding": "Corporate primary colors",
+                "duration": "30 seconds"
+              }
+            },
+            {
+              "type": "Executive Summary",
+              "content": {
+                "sections": [
+                  "Initiative Overview",
+                  "Strategic Alignment",
+                  "Expected Impact",
+                  "Key Milestones"
+                ],
+                "format": "2x2 grid with key metrics"
+              },
+              "design": {
+                "layout": "Quadrant layout",
+                "duration": "2 minutes"
+              }
+            },
+            {
+              "type": "Business Case",
+              "content": {
+                "sections": [
+                  "Market Analysis",
+                  "Financial Impact",
+                  "Risk Assessment",
+                  "Resource Requirements"
+                ],
+                "visualizations": [
+                  "ROI chart",
+                  "Timeline graphic",
+                  "Risk matrix"
+                ]
+              },
+              "design": {
+                "layout": "Data-driven with visuals",
+                "duration": "5 minutes"
+              }
+            },
+            {
+              "type": "Implementation Roadmap",
+              "content": {
+                "timeline": "Phased approach graphic",
+                "milestones": "Key achievement points",
+                "dependencies": "Critical path items"
+              },
+              "design": {
+                "layout": "Timeline visualization",
+                "duration": "3 minutes"
+              }
+            },
+            {
+              "type": "Closing",
+              "content": {
+                "summary": "Key takeaways",
+                "nextSteps": "Immediate actions",
+                "decisions": "Required approvals"
+              },
+              "design": {
+                "layout": "Call to action format",
+                "duration": "2 minutes"
+              }
+            }
+          ]
+        }
+      },
+      "townHall": {
+        "purpose": "Organization-wide updates",
+        "format": {
+          "duration": "45 minutes",
+          "sections": [
+            {
+              "type": "Welcome",
+              "content": {
+                "introduction": "Meeting purpose",
+                "agenda": "Session overview"
+              },
+              "duration": "3 minutes"
+            },
+            {
+              "type": "Progress Update",
+              "content": {
+                "achievements": "Key milestones reached",
+                "metrics": "Success indicators",
+                "stories": "Team highlights"
+              },
+              "duration": "15 minutes"
+            },
+            {
+              "type": "Interactive Session",
+              "content": {
+                "polling": "Real-time feedback",
+                "Q&A": "Open discussion",
+                "demonstrations": "Live system demos"
+              },
+              "duration": "20 minutes"
+            },
+            {
+              "type": "Next Steps",
+              "content": {
+                "upcoming": "Future milestones",
+                "actions": "Team responsibilities",
+                "support": "Available resources"
+              },
+              "duration": "7 minutes"
+            }
+          ]
+        }
+      }
+    },
+    "digitalChannels": {
+      "intranetPortal": {
+        "homepage": {
+          "sections": [
+            {
+              "type": "Banner",
+              "content": {
+                "headline": "Initiative Status",
+                "progress": "Visual progress bar",
+                "keyMetric": "Critical success metric"
+              }
+            },
+            {
+              "type": "Quick Links",
+              "content": [
+                "Training Resources",
+                "Support Portal",
+                "Documentation Library",
+                "Feedback Form"
+              ]
+            },
+            {
+              "type": "News Feed",
+              "content": {
+                "updates": "Latest news items",
+                "success": "Success stories",
+                "upcoming": "Calendar of events"
+              }
+            }
+          ]
+        },
+        "resourceCenter": {
+          "sections": [
+            "Training Materials",
+            "Process Guides",
+            "FAQ Database",
+            "Support Contact"
+          ]
+        }
+      },
+      "emailTemplates": {
+        "weeklyUpdate": {
+          "subject": "[Weekly Update] Product Catalog Implementation - Week {X}",
+          "structure": {
+            "header": {
+              "progress": "Progress indicator",
+              "phase": "Current phase"
+            },
+            "body": {
+              "achievements": "This week's highlights",
+              "upcoming": "Next week's focus",
+              "actions": "Required actions",
+              "support": "Help resources"
+            },
+            "footer": {
+              "contacts": "Key contacts",
+              "links": "Important resources"
+            }
+          }
+        },
+        "quickAlert": {
+          "subject": "[Alert] Important Product Catalog Update",
+          "structure": {
+            "what": "Change/update description",
+            "why": "Reason and impact",
+            "when": "Timing details",
+            "action": "Required steps",
+            "help": "Support information"
+          }
+        }
+      },
+      "videoContent": {
+        "trainingVideos": {
+          "format": {
+            "duration": "5-10 minutes",
+            "structure": [
+              {
+                "section": "Introduction",
+                "duration": "30 seconds",
+                "content": "Topic overview and learning objectives"
+              },
+              {
+                "section": "Demonstration",
+                "duration": "3-7 minutes",
+                "content": "Step-by-step walkthrough"
+              },
+              {
+                "section": "Practice",
+                "duration": "1-2 minutes",
+                "content": "Hands-on exercise instructions"
+              },
+              {
+                "section": "Summary",
+                "duration": "30 seconds",
+                "content": "Key takeaways and next steps"
+              }
+            ]
+          }
+        },
+        "executiveMessages": {
+          "format": {
+            "duration": "2-3 minutes",
+            "structure": [
+              {
+                "section": "Strategic Message",
+                "duration": "1 minute",
+                "content": "Vision and importance"
+              },
+              {
+                "section": "Progress Update",
+                "duration": "1 minute",
+                "content": "Key achievements and impact"
+              },
+              {
+                "section": "Call to Action",
+                "duration": "30 seconds",
+                "content": "Next steps and support needed"
+              }
+            ]
+          }
+        }
+      },
+      "interactiveTools": {
+        "feedbackPlatform": {
+          "formats": [
+            {
+              "type": "Quick Poll",
+              "structure": {
+                "question": "Specific feedback point",
+                "options": "Multiple choice responses",
+                "comments": "Optional elaboration"
+              }
+            },
+            {
+              "type": "Detailed Survey",
+              "structure": {
+                "sections": [
+                  "User Experience",
+                  "Process Effectiveness",
+                  "Support Quality",
+                  "Suggested Improvements"
+                ],
+                "questionTypes": [
+                  "Rating scales",
+                  "Multiple choice",
+                  "Open text"
+                ]
+              }
+            }
+          ]
+        },
+        "collaborationPlatform": {
+          "features": [
+            {
+              "type": "Discussion Forum",
+              "structure": {
+                "categories": [
+                  "Implementation Support",
+                  "Best Practices",
+                  "Technical Questions",
+                  "General Discussion"
+                ],
+                "moderation": "Community guidelines"
+              }
+            },
+            {
+              "type": "Knowledge Base",
+              "structure": {
+                "sections": [
+                  "FAQs",
+                  "Troubleshooting Guides",
+                  "Best Practices",
+                  "User Tips"
+                ]
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,264 @@
+{
+  "successMeasurementFramework": {
+    "businessMetrics": {
+      "revenue": {
+        "metrics": [
+          {
+            "name": "Product Revenue Growth",
+            "description": "Revenue increase from product adoption",
+            "measurement": {
+              "formula": "(New Revenue - Baseline Revenue) / Baseline Revenue * 100",
+              "frequency": "Monthly",
+              "target": "15% increase YoY",
+              "dataSource": "Financial systems"
+            }
+          },
+          {
+            "name": "Cross-Sell Revenue",
+            "description": "Revenue from additional product adoption",
+            "measurement": {
+              "formula": "Sum of revenue from secondary product sales",
+              "frequency": "Quarterly",
+              "target": "20% of total revenue",
+              "dataSource": "Sales data"
+            }
+          },
+          {
+            "name": "Revenue per Product",
+            "description": "Average revenue generated per product",
+            "measurement": {
+              "formula": "Total Revenue / Number of Active Products",
+              "frequency": "Monthly",
+              "target": "10% increase YoY",
+              "dataSource": "Product analytics"
+            }
+          }
+        ]
+      },
+      "efficiency": {
+        "metrics": [
+          {
+            "name": "Time to Market",
+            "description": "Time from product concept to launch",
+            "measurement": {
+              "formula": "Average days from initiation to launch",
+              "frequency": "Per product",
+              "target": "30% reduction",
+              "dataSource": "Project management system"
+            }
+          },
+          {
+            "name": "Operational Cost Reduction",
+            "description": "Decrease in operational expenses",
+            "measurement": {
+              "formula": "(New Costs - Baseline Costs) / Baseline Costs * 100",
+              "frequency": "Quarterly",
+              "target": "20% reduction",
+              "dataSource": "Financial systems"
+            }
+          },
+          {
+            "name": "Process Automation Rate",
+            "description": "Percentage of automated processes",
+            "measurement": {
+              "formula": "Automated Processes / Total Processes * 100",
+              "frequency": "Monthly",
+              "target": "80% automation",
+              "dataSource": "System logs"
+            }
+          }
+        ]
+      }
+    },
+    "operationalMetrics": {
+      "productManagement": {
+        "metrics": [
+          {
+            "name": "Product Catalog Accuracy",
+            "description": "Accuracy of product information",
+            "measurement": {
+              "formula": "Correct Entries / Total Entries * 100",
+              "frequency": "Weekly",
+              "target": "99.9% accuracy",
+              "dataSource": "Product catalog audit"
+            }
+          },
+          {
+            "name": "Product Setup Time",
+            "description": "Time to configure new product",
+            "measurement": {
+              "formula": "Average setup time per product",
+              "frequency": "Per product",
+              "target": "50% reduction",
+              "dataSource": "Workflow system"
+            }
+          },
+          {
+            "name": "Feature Utilization",
+            "description": "Usage of available features",
+            "measurement": {
+              "formula": "Used Features / Available Features * 100",
+              "frequency": "Monthly",
+              "target": "75% utilization",
+              "dataSource": "Usage analytics"
+            }
+          }
+        ]
+      },
+      "systemPerformance": {
+        "metrics": [
+          {
+            "name": "System Uptime",
+            "description": "System availability",
+            "measurement": {
+              "formula": "Uptime Minutes / Total Minutes * 100",
+              "frequency": "Daily",
+              "target": "99.99% uptime",
+              "dataSource": "System monitoring"
+            }
+          },
+          {
+            "name": "Response Time",
+            "description": "System response time",
+            "measurement": {
+              "formula": "Average response time in milliseconds",
+              "frequency": "Real-time",
+              "target": "<500ms",
+              "dataSource": "Performance monitoring"
+            }
+          },
+          {
+            "name": "Error Rate",
+            "description": "System errors and failures",
+            "measurement": {
+              "formula": "Errors / Total Transactions * 100",
+              "frequency": "Daily",
+              "target": "<0.1%",
+              "dataSource": "Error logs"
+            }
+          }
+        ]
+      }
+    },
+    "userMetrics": {
+      "adoption": {
+        "metrics": [
+          {
+            "name": "User Adoption Rate",
+            "description": "Active users of the system",
+            "measurement": {
+              "formula": "Active Users / Total Users * 100",
+              "frequency": "Monthly",
+              "target": "90% adoption",
+              "dataSource": "User analytics"
+            }
+          },
+          {
+            "name": "Feature Adoption",
+            "description": "Usage of new features",
+            "measurement": {
+              "formula": "Users Using Feature / Total Users * 100",
+              "frequency": "Per feature",
+              "target": "70% adoption",
+              "dataSource": "Feature tracking"
+            }
+          },
+          {
+            "name": "Training Completion",
+            "description": "Completion of required training",
+            "measurement": {
+              "formula": "Completed Training / Required Training * 100",
+              "frequency": "Monthly",
+              "target": "100% completion",
+              "dataSource": "Training system"
+            }
+          }
+        ]
+      },
+      "satisfaction": {
+        "metrics": [
+          {
+            "name": "User Satisfaction Score",
+            "description": "Overall user satisfaction",
+            "measurement": {
+              "formula": "Average satisfaction rating",
+              "frequency": "Quarterly",
+              "target": ">4.5/5",
+              "dataSource": "User surveys"
+            }
+          },
+          {
+            "name": "Support Ticket Volume",
+            "description": "Number of support requests",
+            "measurement": {
+              "formula": "Number of tickets per user",
+              "frequency": "Monthly",
+              "target": "50% reduction",
+              "dataSource": "Support system"
+            }
+          },
+          {
+            "name": "Time to Resolution",
+            "description": "Support ticket resolution time",
+            "measurement": {
+              "formula": "Average resolution time",
+              "frequency": "Weekly",
+              "target": "<4 hours",
+              "dataSource": "Support metrics"
+            }
+          }
+        ]
+      }
+    },
+    "governanceMetrics": {
+      "compliance": {
+        "metrics": [
+          {
+            "name": "Compliance Rate",
+            "description": "Adherence to policies",
+            "measurement": {
+              "formula": "Compliant Items / Total Items * 100",
+              "frequency": "Monthly",
+              "target": "100% compliance",
+              "dataSource": "Audit reports"
+            }
+          },
+          {
+            "name": "Documentation Coverage",
+            "description": "Required documentation completeness",
+            "measurement": {
+              "formula": "Completed Docs / Required Docs * 100",
+              "frequency": "Monthly",
+              "target": "100% coverage",
+              "dataSource": "Documentation system"
+            }
+          }
+        ]
+      },
+      "riskManagement": {
+        "metrics": [
+          {
+            "name": "Risk Incident Rate",
+            "description": "Number of risk incidents",
+            "measurement": {
+              "formula": "Risk Incidents / Time Period",
+              "frequency": "Monthly",
+              "target": "Zero incidents",
+              "dataSource": "Risk management system"
+            }
+          },
+          {
+            "name": "Control Effectiveness",
+            "description": "Effectiveness of control measures",
+            "measurement": {
+              "formula": "Effective Controls / Total Controls * 100",
+              "frequency": "Quarterly",
+              "target": "95% effectiveness",
+              "dataSource": "Control assessments"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

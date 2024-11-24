@@ -1,0 +1,218 @@
+{
+  "productCatalog": {
+    "productId": "TREAS_CARD_001",
+    "productName": "Corporate Card Solutions",
+    "productCategory": "Treasury",
+    "productType": "Cards",
+    "version": "1.0",
+    "status": "active",
+    "features": {
+      "baseFeatures": [
+        {
+          "featureId": "CORP_CREDIT",
+          "name": "Corporate Credit Cards",
+          "description": "Standard corporate credit cards",
+          "isRequired": false,
+          "enrollmentModules": ["credit_setup", "card_issuance"],
+          "cardTypes": {
+            "corporate": {
+              "name": "Corporate Liability Card",
+              "features": [
+                "Corporate Liability",
+                "Individual Billing",
+                "Expense Integration",
+                "Travel Insurance"
+              ],
+              "limits": {
+                "types": [
+                  {
+                    "name": "Credit Limit",
+                    "scope": "Card Level",
+                    "configurable": true
+                  },
+                  {
+                    "name": "Transaction Limit",
+                    "scope": "Per Transaction",
+                    "configurable": true
+                  },
+                  {
+                    "name": "Merchant Category",
+                    "scope": "Purchase Type",
+                    "configurable": true
+                  }
+                ]
+              },
+              "controls": {
+                "usage": [
+                  "Geographic Restrictions",
+                  "Merchant Categories",
+                  "Time-based Controls",
+                  "Channel Restrictions"
+                ],
+                "authorization": [
+                  "Real-time Authorization",
+                  "Pre-authorization",
+                  "Velocity Checks"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "featureId": "PURCH_CARD",
+          "name": "Purchasing Cards",
+          "description": "Dedicated procurement cards",
+          "isRequired": false,
+          "enrollmentModules": ["purchase_setup"],
+          "capabilities": {
+            "purchasing": {
+              "features": [
+                "Enhanced Data Capture",
+                "Level 3 Data",
+                "Supplier Integration",
+                "VAT Recovery"
+              ],
+              "controls": {
+                "spending": [
+                  "Pre-approved Suppliers",
+                  "Category Restrictions",
+                  "Budget Integration",
+                  "Project Coding"
+                ],
+                "workflow": [
+                  "Pre-approval Process",
+                  "Multi-level Approval",
+                  "Budget Check",
+                  "Policy Compliance"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "featureId": "VIRTUAL_CARD",
+          "name": "Virtual Card Accounts",
+          "description": "Digital card solutions",
+          "isRequired": false,
+          "enrollmentModules": ["virtual_setup"],
+          "capabilities": {
+            "virtualCards": {
+              "types": [
+                {
+                  "name": "Single-use VCA",
+                  "features": [
+                    "One-time Use",
+                    "Exact Amount",
+                    "Supplier Specific",
+                    "Auto Reconciliation"
+                  ]
+                },
+                {
+                  "name": "Lodge Cards",
+                  "features": [
+                    "Travel Booking",
+                    "Supplier Integration",
+                    "Automated Billing",
+                    "Central Settlement"
+                  ]
+                },
+                {
+                  "name": "B2B Payments",
+                  "features": [
+                    "Supplier Payments",
+                    "Invoice Matching",
+                    "Dynamic Limits",
+                    "Payment Scheduling"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "addOnFeatures": [
+        {
+          "featureId": "EXPENSE_MGMT",
+          "name": "Expense Management",
+          "description": "Integrated expense management",
+          "capabilities": {
+            "expense": {
+              "features": [
+                "Receipt Capture",
+                "Policy Enforcement",
+                "Approval Workflow",
+                "Expense Reports"
+              ],
+              "integration": [
+                "ERP Integration",
+                "Accounting Export",
+                "Tax Calculation",
+                "Audit Trail"
+              ]
+            }
+          }
+        },
+        {
+          "featureId": "CARD_CONTROL",
+          "name": "Card Management Platform",
+          "description": "Central card administration",
+          "capabilities": {
+            "administration": {
+              "features": [
+                {
+                  "name": "Card Lifecycle",
+                  "functions": [
+                    "Application",
+                    "Issuance",
+                    "Suspension",
+                    "Cancellation"
+                  ]
+                },
+                {
+                  "name": "Limit Management",
+                  "functions": [
+                    "Credit Adjustment",
+                    "Temporary Limits",
+                    "Emergency Limits",
+                    "Group Limits"
+                  ]
+                },
+                {
+                  "name": "User Management",
+                  "functions": [
+                    "Cardholder Setup",
+                    "Role Definition",
+                    "Access Control",
+                    "Delegation"
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "featureId": "REPORTING_ANALYTICS",
+          "name": "Card Analytics",
+          "description": "Comprehensive reporting suite",
+          "capabilities": {
+            "reporting": {
+              "reports": [
+                {
+                  "name": "Spend Analytics",
+                  "features": [
+                    "Spend Categories",
+                    "Trend Analysis",
+                    "Supplier Analysis",
+                    "Cost Allocation"
+                  ]
+                },
+                {
+                  "name": "Compliance",
+                  "features": [
+                    "Policy Violations",
+                    "Exception Reports",
+                    "Audit Reports",
+                    "Risk Indicators"
+                  ]
+                },
+   

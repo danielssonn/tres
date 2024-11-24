@@ -1,0 +1,134 @@
+{
+  "cardPricingModel": {
+    "programPricing": {
+      "implementationFees": {
+        "baseProgram": {
+          "amount": 10000,
+          "description": "Basic program setup",
+          "includes": [
+            "Program Configuration",
+            "Basic Integration",
+            "Standard Training",
+            "Documentation"
+          ],
+          "optional": [
+            {
+              "service": "Custom Integration",
+              "fee": 25000,
+              "scope": [
+                "ERP Integration",
+                "Expense System Integration",
+                "Custom File Formats",
+                "API Setup"
+              ]
+            },
+            {
+              "service": "Advanced Training",
+              "fee": 5000,
+              "scope": [
+                "On-site Training",
+                "Administrator Training",
+                "Custom Materials",
+                "Refresher Sessions"
+              ]
+            }
+          ]
+        }
+      },
+      "recurringFees": {
+        "programFees": {
+          "annual": {
+            "tiers": [
+              {
+                "cards": "10-50",
+                "fee": 5000
+              },
+              {
+                "cards": "51-200",
+                "fee": 10000
+              },
+              {
+                "cards": "201-500",
+                "fee": 20000
+              },
+              {
+                "cards": "501+",
+                "fee": "Custom"
+              }
+            ]
+          },
+          "monthly": {
+            "platformFee": {
+              "base": 500,
+              "perActiveCard": 2
+            }
+          }
+        }
+      }
+    },
+    "cardPricing": {
+      "corporateCards": {
+        "annualFees": {
+          "standard": {
+            "amount": 100,
+            "waiverCriteria": {
+              "spendThreshold": 25000,
+              "paymentTerms": "Central Settlement"
+            }
+          },
+          "premium": {
+            "amount": 250,
+            "includes": [
+              "Travel Insurance",
+              "Lounge Access",
+              "Concierge Service"
+            ],
+            "waiverCriteria": {
+              "spendThreshold": 50000
+            }
+          }
+        },
+        "transactionFees": {
+          "domestic": {
+            "standard": {
+              "rate": "2.5%",
+              "minimum": 5
+            },
+            "volume": [
+              {
+                "threshold": 1000000,
+                "rate": "2.2%"
+              },
+              {
+                "threshold": 5000000,
+                "rate": "1.9%"
+              }
+            ]
+          },
+          "international": {
+            "standard": {
+              "rate": "3.5%",
+              "minimum": 10,
+              "fxMarkup": "2%"
+            },
+            "volume": [
+              {
+                "threshold": 1000000,
+                "rate": "3.2%",
+                "fxMarkup": "1.8%"
+              },
+              {
+                "threshold": 5000000,
+                "rate": "2.9%",
+                "fxMarkup": "1.5%"
+              }
+            ]
+          }
+        }
+      },
+      "purchasingCards": {
+        "annualFees": {
+          "standard": {
+            "amount": 150,
+            "waiverCriteria": {
+              

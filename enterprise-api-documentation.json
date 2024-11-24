@@ -1,0 +1,392 @@
+{
+  "apiDocumentation": {
+    "metadata": {
+      "version": "3.0.0",
+      "title": "Treasury Services API",
+      "description": "Enterprise Treasury Services REST API Documentation",
+      "contact": {
+        "name": "API Support",
+        "email": "api.support@bank.com",
+        "url": "https://developer.bank.com"
+      },
+      "servers": [
+        {
+          "url": "https://api.bank.com/v1",
+          "description": "Production"
+        },
+        {
+          "url": "https://api-uat.bank.com/v1",
+          "description": "UAT"
+        }
+      ]
+    },
+    "security": {
+      "schemes": {
+        "oauth2": {
+          "type": "oauth2",
+          "flows": {
+            "clientCredentials": {
+              "tokenUrl": "/oauth2/token",
+              "scopes": {
+                "swift:read": "Read SWIFT messages",
+                "swift:write": "Send SWIFT messages",
+                "ach:read": "Read ACH transactions",
+                "ach:write": "Create ACH transactions",
+                "fx:trade": "Execute FX trades",
+                "statements:read": "Read statements"
+              }
+            }
+          }
+        },
+        "apiKey": {
+          "type": "apiKey",
+          "in": "header",
+          "name": "X-API-Key"
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "Error": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            },
+            "details": {
+              "type": "object"
+            }
+          }
+        },
+        "SwiftMessage": {
+          "type": "object",
+          "properties": {
+            "messageId": {
+              "type": "string"
+            },
+            "messageType": {
+              "type": "string",
+              "enum": ["MT101", "MT103", "MT940"]
+            },
+            "sender": {
+              "type": "string"
+            },
+            "receiver": {
+              "type": "string"
+            },
+            "payload": {
+              "type": "object"
+            }
+          }
+        },
+        "AchBatch": {
+          "type": "object",
+          "properties": {
+            "batchId": {
+              "type": "string"
+            },
+            "companyId": {
+              "type": "string"
+            },
+            "effectiveDate": {
+              "type": "string",
+              "format": "date"
+            },
+            "entries": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/AchEntry"
+              }
+            }
+          }
+        },
+        "FxTrade": {
+          "type": "object",
+          "properties": {
+            "tradeId": {
+              "type": "string"
+            },
+            "buyCurrency": {
+              "type": "string"
+            },
+            "sellCurrency": {
+              "type": "string"
+            },
+            "buyAmount": {
+              "type": "number"
+            },
+            "sellAmount": {
+              "type": "number"
+            },
+            "rate": {
+              "type": "number"
+            },
+            "valueDate": {
+              "type": "string",
+              "format": "date"
+            }
+          }
+        },
+        "Statement": {
+          "type": "object",
+          "properties": {
+            "statementId": {
+              "type": "string"
+            },
+            "accountId": {
+              "type": "string"
+            },
+            "fromDate": {
+              "type": "string",
+              "format": "date"
+            },
+            "toDate": {
+              "type": "string",
+              "format": "date"
+            },
+            "format": {
+              "type": "string",
+              "enum": ["PDF", "MT940", "camt.053"]
+            }
+          }
+        }
+      }
+    },
+    "paths": {
+      "/swift/message": {
+        "post": {
+          "summary": "Send SWIFT message",
+          "security": [
+            {
+              "oauth2": ["swift:write"]
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SwiftMessage"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Message sent successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "messageId": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid message format",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/ach/batch": {
+        "post": {
+          "summary": "Submit ACH batch",
+          "security": [
+            {
+              "oauth2": ["ach:write"]
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AchBatch"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Batch submitted successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "batchId": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/fx/trade": {
+        "post": {
+          "summary": "Execute FX trade",
+          "security": [
+            {
+              "oauth2": ["fx:trade"]
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FxTrade"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Trade executed successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "tradeId": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "string"
+                      },
+                      "executedRate": {
+                        "type": "number"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/statements/{accountId}": {
+        "get": {
+          "summary": "Retrieve statements",
+          "security": [
+            {
+              "oauth2": ["statements:read"]
+            }
+          ],
+          "parameters": [
+            {
+              "name": "accountId",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "fromDate",
+              "in": "query",
+              "schema": {
+                "type": "string",
+                "format": "date"
+              }
+            },
+            {
+              "name": "format",
+              "in": "query",
+              "schema": {
+                "type": "string",
+                "enum": ["PDF", "MT940", "camt.053"]
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Statements retrieved successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Statement"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "webhooks": {
+      "documentation": {
+        "version": "1.0.0",
+        "endpoints": {
+          "/webhooks/swift/received": {
+            "post": {
+              "summary": "SWIFT message received webhook",
+              "requestBody": {
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/SwiftMessage"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "/webhooks/ach/batch/status": {
+            "post": {
+              "summary": "ACH batch status webhook",
+              "requestBody": {
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "batchId": {
+                          "type": "string"
+                        },
+                        "status": {
+                          "type": "string"
+                        },
+                        "timestamp": {
+                          "type": "string",
+                          "format": "date-time"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

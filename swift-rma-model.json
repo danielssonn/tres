@@ -1,0 +1,274 @@
+{
+  "productCatalog": {
+    "productId": "TREAS_SWIFT_001",
+    // Previous base product details remain same
+    "rmaManagement": {
+      "rmaTypes": {
+        "standard": {
+          "name": "Standard RMA",
+          "description": "Basic bilateral authorization",
+          "messageCategories": [
+            {
+              "category": "1",
+              "description": "Customer Payments and Cheques",
+              "defaultStatus": "Required"
+            },
+            {
+              "category": "2",
+              "description": "Financial Institution Transfers",
+              "defaultStatus": "Required"
+            },
+            {
+              "category": "3",
+              "description": "Treasury Markets - FX",
+              "defaultStatus": "Optional"
+            },
+            {
+              "category": "4",
+              "description": "Collection Payments",
+              "defaultStatus": "Optional"
+            },
+            {
+              "category": "5",
+              "description": "Securities Markets",
+              "defaultStatus": "Optional"
+            },
+            {
+              "category": "7",
+              "description": "Documentary Credits & Guarantees",
+              "defaultStatus": "Optional"
+            },
+            {
+              "category": "9",
+              "description": "Cash Management & Status",
+              "defaultStatus": "Required"
+            }
+          ]
+        },
+        "plus": {
+          "name": "RMA Plus",
+          "description": "Enhanced granular authorization",
+          "controls": {
+            "messageTypes": [
+              {
+                "type": "MT101",
+                "name": "Request for Transfer",
+                "defaultStatus": "Review Required"
+              },
+              {
+                "type": "MT103",
+                "name": "Single Customer Credit Transfer",
+                "defaultStatus": "Review Required"
+              },
+              {
+                "type": "MT202",
+                "name": "General Financial Institution Transfer",
+                "defaultStatus": "Review Required"
+              },
+              {
+                "type": "MT940",
+                "name": "Customer Statement Message",
+                "defaultStatus": "Review Required"
+              },
+              {
+                "type": "MT942",
+                "name": "Interim Transaction Report",
+                "defaultStatus": "Review Required"
+              }
+            ]
+          }
+        }
+      },
+      "rmaWorkflow": {
+        "stages": [
+          {
+            "stage": "Initiation",
+            "actions": [
+              {
+                "action": "RMA Request",
+                "requiredData": [
+                  "Counterparty BIC",
+                  "RMA Type",
+                  "Message Categories",
+                  "Business Justification"
+                ],
+                "validation": [
+                  "BIC validation",
+                  "Existing relationship check",
+                  "Sanctions screening"
+                ]
+              }
+            ]
+          },
+          {
+            "stage": "Review",
+            "actions": [
+              {
+                "action": "Risk Assessment",
+                "checkpoints": [
+                  "Counterparty due diligence",
+                  "Business case review",
+                  "Risk rating check",
+                  "Compliance review"
+                ]
+              },
+              {
+                "action": "Authorization Review",
+                "checkpoints": [
+                  "Message category appropriateness",
+                  "Volume projections",
+                  "Operational capability"
+                ]
+              }
+            ]
+          },
+          {
+            "stage": "Approval",
+            "actions": [
+              {
+                "action": "Internal Approval",
+                "approvers": [
+                  "Product Manager",
+                  "Risk Officer",
+                  "Compliance Officer"
+                ]
+              },
+              {
+                "action": "RMA Grant",
+                "steps": [
+                  "SWIFT RMA request submission",
+                  "Counterparty notification",
+                  "Status tracking"
+                ]
+              }
+            ]
+          }
+        ],
+        "maintenance": {
+          "periodic": {
+            "reviews": [
+              {
+                "type": "Regular Review",
+                "frequency": "Annual",
+                "scope": [
+                  "Usage analysis",
+                  "Risk reassessment",
+                  "Relationship review"
+                ]
+              },
+              {
+                "type": "Exception Review",
+                "triggers": [
+                  "Unusual volume",
+                  "Risk event",
+                  "Compliance alert"
+                ]
+              }
+            ]
+          },
+          "modifications": {
+            "types": [
+              {
+                "action": "Expand Authorization",
+                "requirements": [
+                  "Business case",
+                  "Risk assessment",
+                  "Approval workflow"
+                ]
+              },
+              {
+                "action": "Restrict Authorization",
+                "requirements": [
+                  "Risk justification",
+                  "Impact assessment",
+                  "Notification process"
+                ]
+              },
+              {
+                "action": "Suspend/Terminate",
+                "requirements": [
+                  "Risk event documentation",
+                  "Management approval",
+                  "Exit process"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "rmaControls": {
+        "monitoring": {
+          "areas": [
+            {
+              "type": "Usage Monitoring",
+              "metrics": [
+                "Message volumes",
+                "Category utilization",
+                "Pattern analysis",
+                "Anomaly detection"
+              ]
+            },
+            {
+              "type": "Compliance Monitoring",
+              "checks": [
+                "Authorization validity",
+                "Category compliance",
+                "Limit adherence",
+                "Risk indicators"
+              ]
+            }
+          ]
+        },
+        "reporting": {
+          "types": [
+            {
+              "category": "Operational Reports",
+              "content": [
+                "Active RMAs",
+                "Pending requests",
+                "Usage statistics",
+                "Exception reports"
+              ]
+            },
+            {
+              "category": "Risk Reports",
+              "content": [
+                "Risk assessments",
+                "Compliance status",
+                "Review schedules",
+                "Issue tracking"
+              ]
+            }
+          ]
+        }
+      },
+      "participantModel": {
+        "rmaConsiderations": {
+          "primaryEntity": {
+            "requirements": [
+              "Own BIC verification",
+              "RMA authority",
+              "Category selection authority"
+            ]
+          },
+          "agents": {
+            "serviceBureau": {
+              "rmaHandling": [
+                "Technical processing",
+                "Status monitoring",
+                "Report generation"
+              ]
+            },
+            "fundManager": {
+              "rmaRestrictions": [
+                "Category limitations",
+                "Volume controls",
+                "Authority limits"
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}

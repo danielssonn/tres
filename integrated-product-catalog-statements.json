@@ -1,0 +1,379 @@
+{
+  "productCatalog": {
+    "products": [
+      {
+        "productId": "TREAS_STMT_001",
+        "productName": "Statement Services",
+        "productCategory": "Treasury",
+        "productType": "Information",
+        "version": "1.1",
+        "status": "active",
+        "features": {
+          "baseFeatures": [
+            {
+              "featureId": "STMT_BASIC",
+              "name": "Basic Statements",
+              "description": "Standard account statements",
+              "isRequired": true,
+              "enrollmentModules": ["statement_setup", "delivery_config"]
+            },
+            {
+              "featureId": "STMT_INTRADAY",
+              "name": "Intraday Statements",
+              "description": "Multiple statements during business day",
+              "isRequired": false,
+              "enrollmentModules": ["intraday_setup"]
+            }
+          ],
+          "addOnFeatures": [
+            {
+              "featureId": "STMT_SWIFT",
+              "name": "SWIFT MT940/MT942",
+              "description": "SWIFT format statements",
+              "isRequired": false,
+              "enrollmentModules": ["swift_format_setup"],
+              "dependencies": {
+                "products": ["TREAS_SWIFT_001"]
+              }
+            },
+            {
+              "featureId": "STMT_CUSTOM",
+              "name": "Custom Format",
+              "description": "Custom statement format",
+              "isRequired": false,
+              "enrollmentModules": ["custom_format_setup"]
+            },
+            {
+              "featureId": "STMT_ARCHIVE",
+              "name": "Statement Archive",
+              "description": "7 years statement archive",
+              "isRequired": false,
+              "enrollmentModules": ["archive_setup"]
+            },
+            {
+              "featureId": "STMT_API",
+              "name": "Statement API",
+              "description": "Real-time statement API access",
+              "isRequired": false,
+              "enrollmentModules": ["api_setup"]
+            },
+            {
+              "featureId": "STMT_MACHINE",
+              "name": "Machine Readable Statements",
+              "description": "Structured data formats for automated processing",
+              "isRequired": false,
+              "enrollmentModules": ["machine_readable_setup"],
+              "subFeatures": [
+                {
+                  "featureId": "STMT_MACHINE_ISO20022",
+                  "name": "ISO 20022 camt Formats",
+                  "formats": ["camt.052", "camt.053", "camt.054"],
+                  "description": "ISO 20022 compliant statement formats"
+                },
+                {
+                  "featureId": "STMT_MACHINE_JSON",
+                  "name": "JSON Statement Format",
+                  "formats": ["JSON_BASIC", "JSON_EXTENDED"],
+                  "description": "JSON structured statements with schema validation"
+                },
+                {
+                  "featureId": "STMT_MACHINE_BAI",
+                  "name": "BAI Format",
+                  "formats": ["BAI2", "BAI3"],
+                  "description": "BAI standard formats"
+                }
+              ]
+            }
+          ]
+        },
+        "statementRules": {
+          "formats": {
+            "standard": ["PDF", "CSV", "XML"],
+            "swift": ["MT940", "MT942"],
+            "custom": ["BAI2", "JSON", "Custom XML"],
+            "machineReadable": {
+              "iso20022": {
+                "types": ["camt.052", "camt.053", "camt.054"],
+                "versions": ["2019", "2020"],
+                "validation": "schema_based",
+                "enrichment": {
+                  "transactionDetails": true,
+                  "remittanceInfo": true,
+                  "counterpartyData": true
+                }
+              },
+              "json": {
+                "schemas": {
+                  "basic": {
+                    "balances": true,
+                    "transactions": true,
+                    "summary": true
+                  },
+                  "extended": {
+                    "balances": true,
+                    "transactions": true,
+                    "summary": true,
+                    "remittanceInfo": true,
+                    "categories": true,
+                    "metadata": true
+                  }
+                },
+                "validation": "json_schema"
+              },
+              "bai": {
+                "versions": ["BAI2", "BAI3"],
+                "types": ["detail", "summary"],
+                "validation": "bai_standard"
+              }
+            }
+          },
+          "frequency": {
+            "endOfDay": {
+              "options": ["daily", "weekly", "monthly"],
+              "cutoffTime": "19:00",
+              "timezone": "EST"
+            },
+            "intraday": {
+              "intervals": ["hourly", "every_2_hours", "every_4_hours"],
+              "startTime": "06:00",
+              "endTime": "18:00",
+              "timezone": "EST"
+            }
+          },
+          "delivery": {
+            "channels": {
+              "secure_email": {
+                "maxSize": "10MB",
+                "encryption": "TLS_1.2"
+              },
+              "swift": {
+                "messageTypes": ["MT940", "MT942"],
+                "compression": true
+              },
+              "sftp": {
+                "protocols": ["SFTP", "FTPS"],
+                "retention": "30_days"
+              },
+              "api": {
+                "formats": ["JSON", "XML"],
+                "realtime": true
+              },
+              "portal": {
+                "retention": "90_days",
+                "downloadFormats": ["PDF", "CSV", "XML"]
+              },
+              "api_streaming": {
+                "protocols": ["webhook", "kafka", "api_push"],
+                "formats": ["JSON", "XML", "ISO20022"],
+                "realtime": true,
+                "compression": true,
+                "encryption": "TLS_1.2"
+              }
+            }
+          },
+          "retention": {
+            "online": "90_days",
+            "archive": "7_years",
+            "retrievalSLA": "24_hours"
+          },
+          "machineReadableRules": {
+            "dataEnrichment": {
+              "transactionClassification": true,
+              "counterpartyEnrichment": true,
+              "referenceDataLookup": true
+            },
+            "validation": {
+              "schemaValidation": true,
+              "businessRules": true,
+              "reconciliationChecks": true
+            },
+            "processing": {
+              "transformation": {
+                "enabled": true,
+                "mappings": ["custom", "standard"],
+                "rules": "configurable"
+              },
+              "aggregation": {
+                "enabled": true,
+                "levels": ["account", "entity", "group"]
+              }
+            }
+          }
+        },
+        "pricingRules": {
+          "basePrice": {
+            "monthlyFee": 50,
+            "perStatementFee": {
+              "pdf": 0,
+              "csv": 0,
+              "swift": 5,
+              "custom": 10
+            },
+            "deliveryFees": {
+              "secure_email": 0,
+              "swift": 5,
+              "sftp": 10,
+              "api": 20
+            },
+            "machineReadable": {
+              "monthly": {
+                "iso20022": 100,
+                "json": 75,
+                "bai": 50
+              },
+              "perStatement": {
+                "iso20022": 1.00,
+                "json": 0.75,
+                "bai": 0.50
+              },
+              "streaming": {
+                "setup": 500,
+                "monthly": 200
+              }
+            }
+          },
+          "volumeDiscounts": [
+            {
+              "threshold": 1000,
+              "discountPercent": 10
+            },
+            {
+              "threshold": 5000,
+              "discountPercent": 20
+            }
+          ],
+          "archiveFees": {
+            "monthly": 25,
+            "retrievalFee": 10
+          }
+        }
+      }
+    ]
+  },
+  "enrollmentWorkflow": {
+    "stages": {
+      "statements": [
+        // Previous stages remain the same
+        {
+          "stageId": "machine_readable_setup",
+          "name": "Machine Readable Configuration",
+          "sequence": 4,
+          "isRequired": false,
+          "dependsOn": {
+            "featureId": "STMT_MACHINE",
+            "isSelected": true
+          },
+          "components": [
+            {
+              "componentId": "format_selection",
+              "type": "form",
+              "fields": [
+                {
+                  "name": "formatType",
+                  "type": "multi_select",
+                  "options": ["ISO20022", "JSON", "BAI"],
+                  "required": true
+                },
+                {
+                  "name": "iso20022Types",
+                  "type": "multi_select",
+                  "options": ["camt.052", "camt.053", "camt.054"],
+                  "required": false,
+                  "conditionallyRequired": {
+                    "field": "formatType",
+                    "value": "ISO20022"
+                  }
+                },
+                {
+                  "name": "jsonSchema",
+                  "type": "enum",
+                  "options": ["basic", "extended"],
+                  "required": false,
+                  "conditionallyRequired": {
+                    "field": "formatType",
+                    "value": "JSON"
+                  }
+                }
+              ]
+            },
+            {
+              "componentId": "delivery_config",
+              "type": "configuration",
+              "fields": [
+                {
+                  "name": "deliveryMethod",
+                  "type": "enum",
+                  "options": ["api", "sftp", "streaming"],
+                  "required": true
+                },
+                {
+                  "name": "streamingConfig",
+                  "type": "object",
+                  "required": false,
+                  "conditionallyRequired": {
+                    "field": "deliveryMethod",
+                    "value": "streaming"
+                  },
+                  "fields": [
+                    {
+                      "name": "protocol",
+                      "type": "enum",
+                      "options": ["webhook", "kafka", "api_push"],
+                      "required": true
+                    },
+                    {
+                      "name": "endpoint",
+                      "type": "string",
+                      "required": true
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "validations": {
+      "dependencies": [
+        {
+          "if": {
+            "featureId": "STMT_SWIFT",
+            "isSelected": true
+          },
+          "then": {
+            "requiredProducts": ["TREAS_SWIFT_001"],
+            "requiredStages": ["swift_format_setup"]
+          }
+        }
+      ]
+    }
+  },
+  "integrations": {
+    "statementGeneration": {
+      "endpoints": {
+        "generate": "/api/v1/statements/generate",
+        "retrieve": "/api/v1/statements/retrieve",
+        "archive": "/api/v1/statements/archive",
+        "machineReadable": {
+          "generate": "/api/v1/statements/machine/generate",
+          "transform": "/api/v1/statements/machine/transform",
+          "validate": "/api/v1/statements/machine/validate",
+          "stream": "/api/v1/statements/machine/stream"
+        }
+      },
+      "mappings": {
+        "accountId": "${account.id}",
+        "format": "${selected.format}",
+        "delivery": "${selected.deliveryChannel}"
+      }
+    },
+    "fileDelivery": {
+      "endpoints": {
+        "email": "/api/v1/delivery/email",
+        "sftp": "/api/v1/delivery/sftp",
+        "swift": "/api/v1/delivery/swift"
+      }
+    }
+  }
+}

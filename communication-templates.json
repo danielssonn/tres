@@ -1,0 +1,259 @@
+{
+  "messageTemplates": {
+    "executiveCommunications": {
+      "initialAnnouncement": {
+        "type": "Executive Briefing",
+        "purpose": "Launch announcement to executive team",
+        "template": {
+          "subject": "Strategic Initiative: New Product Catalog and Governance Framework Launch",
+          "structure": {
+            "opening": {
+              "content": "As part of our strategic transformation initiative, we are launching a new enterprise product catalog and governance framework.",
+              "keyPoints": [
+                "Market-driven initiative",
+                "Strategic importance",
+                "Enterprise-wide impact"
+              ]
+            },
+            "body": {
+              "sections": [
+                {
+                  "title": "Strategic Benefits",
+                  "points": [
+                    "Streamlined product management",
+                    "Enhanced market responsiveness",
+                    "Improved risk control",
+                    "Operational efficiency gains"
+                  ]
+                },
+                {
+                  "title": "Investment and Returns",
+                  "points": [
+                    "Resource allocation details",
+                    "Expected ROI metrics",
+                    "Timeline for benefits realization",
+                    "Success metrics"
+                  ]
+                },
+                {
+                  "title": "Next Steps",
+                  "points": [
+                    "Implementation timeline",
+                    "Resource requirements",
+                    "Key milestones",
+                    "Support needed"
+                  ]
+                }
+              ]
+            },
+            "closing": {
+              "callToAction": "Executive sponsorship and visible support",
+              "nextSteps": "Detailed briefing scheduled for [DATE]"
+            }
+          }
+        }
+      },
+      "progressUpdate": {
+        "type": "Executive Dashboard",
+        "frequency": "Monthly",
+        "template": {
+          "subject": "Product Catalog Implementation: Monthly Executive Update",
+          "sections": [
+            {
+              "title": "Implementation Progress",
+              "metrics": [
+                "Milestone completion status",
+                "Resource utilization",
+                "Budget tracking",
+                "Risk status"
+              ]
+            },
+            {
+              "title": "Business Impact",
+              "metrics": [
+                "Efficiency gains",
+                "Process improvements",
+                "Cost savings",
+                "Quality metrics"
+              ]
+            },
+            {
+              "title": "Key Decisions Required",
+              "format": "Decision matrix with recommendations"
+            }
+          ]
+        }
+      }
+    },
+    "productTeamCommunications": {
+      "implementationGuide": {
+        "type": "Detailed Instructions",
+        "purpose": "Guide product teams through implementation",
+        "template": {
+          "subject": "Product Catalog Implementation Guide: Step-by-Step Instructions",
+          "sections": [
+            {
+              "title": "Process Changes",
+              "content": {
+                "current": "Current process overview",
+                "future": "New process details",
+                "transition": "Step-by-step migration plan",
+                "timeline": "Implementation schedule"
+              }
+            },
+            {
+              "title": "Tool Updates",
+              "content": {
+                "systems": "Affected systems",
+                "changes": "Required updates",
+                "access": "Access instructions",
+                "support": "Support contacts"
+              }
+            },
+            {
+              "title": "Training Resources",
+              "content": {
+                "materials": "Available resources",
+                "sessions": "Training schedule",
+                "practice": "Hands-on exercises",
+                "assessment": "Competency checks"
+              }
+            }
+          ]
+        }
+      },
+      "statusUpdate": {
+        "type": "Team Update",
+        "frequency": "Weekly",
+        "template": {
+          "subject": "Weekly Product Catalog Implementation Update",
+          "sections": [
+            {
+              "title": "This Week's Achievements",
+              "format": "Bullet points with metrics"
+            },
+            {
+              "title": "Next Week's Goals",
+              "format": "Action items with owners"
+            },
+            {
+              "title": "Issues and Support Needed",
+              "format": "Issue log with status"
+            }
+          ]
+        }
+      }
+    },
+    "technicalTeamCommunications": {
+      "technicalSpecification": {
+        "type": "Technical Documentation",
+        "purpose": "Provide technical implementation details",
+        "template": {
+          "subject": "Technical Implementation Guide: Product Catalog Framework",
+          "sections": [
+            {
+              "title": "Architecture Overview",
+              "content": {
+                "current": "Existing architecture",
+                "target": "Future state",
+                "changes": "Required modifications",
+                "dependencies": "System dependencies"
+              }
+            },
+            {
+              "title": "Integration Requirements",
+              "content": {
+                "apis": "API specifications",
+                "data": "Data mapping",
+                "security": "Security requirements",
+                "performance": "Performance criteria"
+              }
+            },
+            {
+              "title": "Implementation Steps",
+              "content": {
+                "preparation": "Pre-implementation tasks",
+                "execution": "Implementation steps",
+                "validation": "Testing requirements",
+                "rollback": "Contingency plans"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "salesTeamCommunications": {
+      "productUpdate": {
+        "type": "Sales Enablement",
+        "purpose": "Enable sales teams with new capabilities",
+        "template": {
+          "subject": "New Product Catalog Features and Client Benefits",
+          "sections": [
+            {
+              "title": "Key Features",
+              "content": {
+                "description": "Feature overview",
+                "benefits": "Client benefits",
+                "comparison": "Competitive advantages",
+                "pricing": "Pricing details"
+              }
+            },
+            {
+              "title": "Client Talking Points",
+              "content": {
+                "valueProposition": "Key selling points",
+                "useScenarios": "Example use cases",
+                "responses": "Common objection handling",
+                "nextSteps": "Engagement process"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "generalStakeholderCommunications": {
+      "newsletter": {
+        "type": "Monthly Newsletter",
+        "purpose": "Keep all stakeholders informed",
+        "template": {
+          "subject": "Product Catalog Initiative: Monthly Update",
+          "sections": [
+            {
+              "title": "Progress Highlights",
+              "content": {
+                "achievements": "Key milestones",
+                "impact": "Business benefits",
+                "stories": "Success stories",
+                "recognition": "Team achievements"
+              }
+            },
+            {
+              "title": "Upcoming Changes",
+              "content": {
+                "changes": "New features/processes",
+                "timeline": "Implementation schedule",
+                "support": "Available resources",
+                "contact": "Support information"
+              }
+            }
+          ]
+        }
+      },
+      "quickUpdates": {
+        "type": "Email Alerts",
+        "purpose": "Time-sensitive notifications",
+        "template": {
+          "subject": "[URGENT] Product Catalog Update: {Topic}",
+          "structure": {
+            "what": "Clear description of update/change",
+            "why": "Reason for change",
+            "when": "Timing and duration",
+            "impact": "Who is affected and how",
+            "action": "Required actions",
+            "support": "Where to get help"
+          }
+        }
+      }
+    }
+  }
+}

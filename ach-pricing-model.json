@@ -1,0 +1,58 @@
+{
+  "achPricingModel": {
+    "implementationFees": {
+      "base": {
+        "standard": {
+          "amount": 5000,
+          "description": "Basic ACH setup",
+          "includes": [
+            "Standard file format setup",
+            "Basic testing",
+            "User training",
+            "Documentation"
+          ]
+        },
+        "advanced": {
+          "amount": 15000,
+          "description": "Advanced ACH setup",
+          "includes": [
+            "Custom file formats",
+            "Multiple entity setup",
+            "Advanced testing",
+            "Integration support"
+          ]
+        },
+        "premium": {
+          "amount": 25000,
+          "description": "Premium ACH setup",
+          "includes": [
+            "API integration",
+            "Real-time processing",
+            "Custom workflows",
+            "Dedicated support"
+          ]
+        }
+      },
+      "additionalServices": {
+        "fileFormats": [
+          {
+            "type": "NACHA",
+            "fee": 0
+          },
+          {
+            "type": "Custom XML",
+            "fee": 2500
+          },
+          {
+            "type": "ISO20022",
+            "fee": 3500
+          }
+        ],
+        "integration": [
+          {
+            "type": "Host-to-Host",
+            "fee": 10000
+          },
+          {
+            "type": "API Setup",
+            "fee": 15

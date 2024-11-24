@@ -1,0 +1,271 @@
+{
+  "fortune50Bundles": {
+    "technology": {
+      "name": "Global Tech Enterprise Solutions",
+      "targetSegment": "Major Technology Corporations",
+      "basePrice": {
+        "monthlyFee": "Custom",
+        "volumeCommitment": "100M+ transactions annually"
+      },
+      "features": {
+        "paymentCapabilities": {
+          "globalPayments": {
+            "name": "Global Payment Hub",
+            "capabilities": [
+              {
+                "name": "Subscription Management",
+                "features": [
+                  "Global recurring billing",
+                  "Multi-currency processing",
+                  "Marketplace payouts",
+                  "Developer payments",
+                  "App store settlements"
+                ]
+              },
+              {
+                "name": "Vendor Management",
+                "features": [
+                  "Global supplier network",
+                  "Cloud service provider payments",
+                  "Hardware supplier settlements",
+                  "R&D partner payments"
+                ]
+              }
+            ]
+          },
+          "specializedServices": {
+            "name": "Tech-Specific Services",
+            "features": [
+              "API-first architecture",
+              "Real-time payment processing",
+              "Blockchain payment integration",
+              "Smart contract compatibility",
+              "Developer ecosystem support"
+            ]
+          }
+        },
+        "integrationCapabilities": {
+          "systems": [
+            "Major ERP systems",
+            "Cloud platforms",
+            "Development platforms",
+            "Marketplace systems"
+          ],
+          "apis": {
+            "standards": ["REST", "GraphQL", "SOAP"],
+            "protocols": ["JSON", "XML", "Protobuf"]
+          }
+        }
+      }
+    },
+    "retail": {
+      "name": "Global Retail Enterprise Solutions",
+      "targetSegment": "Major Retail Corporations",
+      "features": {
+        "paymentCapabilities": {
+          "supplierPayments": {
+            "name": "Supply Chain Finance",
+            "capabilities": [
+              {
+                "name": "Vendor Management",
+                "features": [
+                  "Global supplier payments",
+                  "Early payment discounts",
+                  "Supply chain financing",
+                  "Dynamic discounting",
+                  "Inventory financing"
+                ]
+              }
+            ]
+          },
+          "storeOperations": {
+            "name": "Store Network Management",
+            "features": [
+              "Store-level reconciliation",
+              "Cash management integration",
+              "Franchise payment processing",
+              "Inter-store settlements",
+              "POS system integration"
+            ]
+          }
+        },
+        "specializedServices": {
+          "ecommerce": {
+            "features": [
+              "Marketplace settlements",
+              "Drop-ship vendor payments",
+              "Return processing",
+              "Loyalty program integration",
+              "Cross-border payment optimization"
+            ]
+          }
+        }
+      }
+    },
+    "energy": {
+      "name": "Global Energy Enterprise Solutions",
+      "targetSegment": "Major Energy Corporations",
+      "features": {
+        "paymentCapabilities": {
+          "commodityPayments": {
+            "name": "Commodity Trading Settlement",
+            "features": [
+              "Real-time settlement",
+              "Futures market integration",
+              "Exchange connectivity",
+              "Broker payments",
+              "Trading partner settlements"
+            ]
+          },
+          "operationalPayments": {
+            "name": "Operational Finance",
+            "features": [
+              "Equipment supplier payments",
+              "Contractor settlements",
+              "Field service payments",
+              "Project financing",
+              "Joint venture settlements"
+            ]
+          }
+        },
+        "specializedServices": {
+          "regulatoryCompliance": {
+            "features": [
+              "Carbon credit trading",
+              "Environmental compliance",
+              "Government settlements",
+              "Regulatory reporting"
+            ]
+          }
+        }
+      }
+    },
+    "healthcare": {
+      "name": "Global Healthcare Enterprise Solutions",
+      "targetSegment": "Major Healthcare Corporations",
+      "features": {
+        "paymentCapabilities": {
+          "providerPayments": {
+            "name": "Healthcare Network Management",
+            "features": [
+              "Hospital system settlements",
+              "Provider network payments",
+              "Claims processing",
+              "Clinical trial payments",
+              "Research grant disbursements"
+            ]
+          },
+          "pharmaceuticalPayments": {
+            "name": "Pharma Supply Chain",
+            "features": [
+              "Distribution network payments",
+              "Research partner settlements",
+              "Clinical trial site payments",
+              "Global supplier payments",
+              "Regulatory fee processing"
+            ]
+          }
+        },
+        "specializedServices": {
+          "compliance": {
+            "features": [
+              "HIPAA compliance",
+              "Global regulatory compliance",
+              "FDA payment processing",
+              "Research grant management"
+            ]
+          }
+        }
+      }
+    },
+    "financial": {
+      "name": "Global Financial Institution Solutions",
+      "targetSegment": "Major Financial Corporations",
+      "features": {
+        "paymentCapabilities": {
+          "marketOperations": {
+            "name": "Market Operations Settlement",
+            "features": [
+              "Securities settlement",
+              "Trading partner payments",
+              "Broker-dealer settlements",
+              "Asset manager payments",
+              "Fund distributions"
+            ]
+          },
+          "treasuryOperations": {
+            "name": "Treasury Management",
+            "features": [
+              "Inter-company settlements",
+              "Global liquidity management",
+              "Investment operations",
+              "Collateral management",
+              "Credit facility management"
+            ]
+          }
+        },
+        "specializedServices": {
+          "riskCompliance": {
+            "features": [
+              "Basel compliance",
+              "Dodd-Frank reporting",
+              "OFAC screening",
+              "Global regulatory reporting"
+            ]
+          }
+        }
+      }
+    },
+    "commonFeatures": {
+      "globalCapabilities": {
+        "processing": {
+          "volumes": "Unlimited",
+          "availability": "24/7/365",
+          "sla": "99.999%",
+          "support": "Dedicated global team"
+        },
+        "security": {
+          "features": [
+            "Advanced fraud detection",
+            "Real-time monitoring",
+            "Cyber threat protection",
+            "Multi-factor authentication",
+            "Biometric validation"
+          ]
+        },
+        "reporting": {
+          "capabilities": [
+            "Real-time dashboards",
+            "Custom analytics",
+            "Regulatory reporting",
+            "AI-powered insights",
+            "Predictive analytics"
+          ]
+        },
+        "integration": {
+          "methods": [
+            "API-first architecture",
+            "Direct host integration",
+            "Real-time messaging",
+            "Blockchain compatibility",
+            "Cloud-native design"
+          ]
+        }
+      },
+      "serviceLevel": {
+        "support": {
+          "coverage": "Global 24/7",
+          "team": "Dedicated support team",
+          "response": "15-minute critical response",
+          "managers": "Dedicated relationship managers"
+        },
+        "implementation": {
+          "approach": "White-glove service",
+          "team": "Dedicated implementation team",
+          "timeline": "Custom project planning",
+          "migration": "Zero-disruption transition"
+        }
+      }
+    }
+  }
+}

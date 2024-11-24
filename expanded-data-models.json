@@ -1,0 +1,472 @@
+{
+  "components": {
+    "schemas": {
+      "SwiftMessage": {
+        "type": "object",
+        "required": ["messageType", "sender", "receiver", "payload"],
+        "properties": {
+          "messageId": {
+            "type": "string",
+            "description": "Unique message identifier",
+            "pattern": "^[A-Z0-9]{16}$"
+          },
+          "messageType": {
+            "type": "string",
+            "enum": ["MT101", "MT103", "MT202", "MT940", "MT942"],
+            "description": "SWIFT message type"
+          },
+          "sender": {
+            "type": "string",
+            "description": "Sender BIC code",
+            "pattern": "^[A-Z]{6}[A-Z2-9][A-NP-Z0-9]([A-Z0-9]{3})?$"
+          },
+          "receiver": {
+            "type": "string",
+            "description": "Receiver BIC code",
+            "pattern": "^[A-Z]{6}[A-Z2-9][A-NP-Z0-9]([A-Z0-9]{3})?$"
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["Normal", "Urgent"],
+            "default": "Normal"
+          },
+          "payload": {
+            "type": "object",
+            "description": "Message-specific content",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/MT101Payload"
+              },
+              {
+                "$ref": "#/components/schemas/MT103Payload"
+              }
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": ["ACCEPTED", "REJECTED", "PROCESSED", "DELIVERED"],
+            "description": "Current message status"
+          },
+          "metadata": {
+            "type": "object",
+            "properties": {
+              "timestamp": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "networkReference": {
+                "type": "string"
+              },
+              "charges": {
+                "type": "string",
+                "enum": ["OUR", "BEN", "SHA"]
+              }
+            }
+          }
+        }
+      },
+      "MT101Payload": {
+        "type": "object",
+        "required": ["requestingParty", "instructingParty", "transactions"],
+        "properties": {
+          "requestingParty": {
+            "type": "string",
+            "description": "Party requesting the transfer"
+          },
+          "instructingParty": {
+            "type": "string",
+            "description": "Party instructing the transfer"
+          },
+          "transactions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PaymentTransaction"
+            }
+          }
+        }
+      },
+      "PaymentTransaction": {
+        "type": "object",
+        "required": ["amount", "currency", "beneficiary"],
+        "properties": {
+          "transactionReference": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "number",
+            "format": "decimal",
+            "minimum": 0
+          },
+          "currency": {
+            "type": "string",
+            "pattern": "^[A-Z]{3}$"
+          },
+          "valueDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "beneficiary": {
+            "$ref": "#/components/schemas/Beneficiary"
+          },
+          "remittanceInfo": {
+            "type": "string",
+            "maxLength": 140
+          }
+        }
+      },
+      "AchBatch": {
+        "type": "object",
+        "required": ["companyId", "effectiveDate", "entries"],
+        "properties": {
+          "batchId": {
+            "type": "string",
+            "description": "Unique batch identifier"
+          },
+          "companyId": {
+            "type": "string",
+            "description": "ACH company identifier",
+            "pattern": "^[0-9]{10}$"
+          },
+          "companyName": {
+            "type": "string",
+            "maxLength": 16
+          },
+          "effectiveDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "batchHeader": {
+            "type": "object",
+            "properties": {
+              "serviceClassCode": {
+                "type": "string",
+                "enum": ["200", "220", "225"]
+              },
+              "companyDiscretionaryData": {
+                "type": "string",
+                "maxLength": 20
+              },
+              "standardEntryClass": {
+                "type": "string",
+                "enum": ["CCD", "CTX", "PPD", "WEB"]
+              }
+            }
+          },
+          "entries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AchEntry"
+            }
+          },
+          "addenda": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AchAddenda"
+            }
+          },
+          "controlTotals": {
+            "type": "object",
+            "properties": {
+              "entryCount": {
+                "type": "integer"
+              },
+              "totalDebit": {
+                "type": "number"
+              },
+              "totalCredit": {
+                "type": "number"
+              }
+            }
+          }
+        }
+      },
+      "AchEntry": {
+        "type": "object",
+        "required": ["routingNumber", "accountNumber", "amount", "transactionType"],
+        "properties": {
+          "routingNumber": {
+            "type": "string",
+            "pattern": "^[0-9]{9}$"
+          },
+          "accountNumber": {
+            "type": "string",
+            "maxLength": 17
+          },
+          "amount": {
+            "type": "number",
+            "minimum": 0
+          },
+          "transactionType": {
+            "type": "string",
+            "enum": ["credit", "debit"]
+          },
+          "traceNumber": {
+            "type": "string"
+          },
+          "receiverName": {
+            "type": "string",
+            "maxLength": 22
+          },
+          "discretionaryData": {
+            "type": "string",
+            "maxLength": 2
+          }
+        }
+      },
+      "FxTrade": {
+        "type": "object",
+        "required": ["buyCurrency", "sellCurrency", "valueDate"],
+        "properties": {
+          "tradeId": {
+            "type": "string"
+          },
+          "tradeType": {
+            "type": "string",
+            "enum": ["SPOT", "FORWARD", "WINDOW"]
+          },
+          "buyCurrency": {
+            "type": "string",
+            "pattern": "^[A-Z]{3}$"
+          },
+          "sellCurrency": {
+            "type": "string",
+            "pattern": "^[A-Z]{3}$"
+          },
+          "buyAmount": {
+            "type": "number",
+            "minimum": 0
+          },
+          "sellAmount": {
+            "type": "number",
+            "minimum": 0
+          },
+          "rate": {
+            "type": "number",
+            "minimum": 0
+          },
+          "valueDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "settlement": {
+            "$ref": "#/components/schemas/FxSettlement"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["NEW", "EXECUTED", "SETTLED", "CANCELLED"]
+          }
+        }
+      },
+      "FxSettlement": {
+        "type": "object",
+        "properties": {
+          "buyAccount": {
+            "type": "string"
+          },
+          "sellAccount": {
+            "type": "string"
+          },
+          "method": {
+            "type": "string",
+            "enum": ["PVP", "NON_PVP"]
+          },
+          "instructions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SettlementInstruction"
+            }
+          }
+        }
+      },
+      "Statement": {
+        "type": "object",
+        "required": ["accountId", "fromDate", "toDate"],
+        "properties": {
+          "statementId": {
+            "type": "string"
+          },
+          "accountId": {
+            "type": "string"
+          },
+          "fromDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "toDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "format": {
+            "type": "string",
+            "enum": ["PDF", "CSV", "MT940", "camt.053", "BAI2"]
+          },
+          "balances": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Balance"
+            }
+          },
+          "transactions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Transaction"
+            }
+          },
+          "delivery": {
+            "$ref": "#/components/schemas/DeliveryPreferences"
+          }
+        }
+      },
+      "Balance": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["OPENING", "CLOSING", "INTRADAY"]
+          },
+          "amount": {
+            "type": "number"
+          },
+          "currency": {
+            "type": "string",
+            "pattern": "^[A-Z]{3}$"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Transaction": {
+        "type": "object",
+        "properties": {
+          "transactionId": {
+            "type": "string"
+          },
+          "valueDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "bookingDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "amount": {
+            "type": "number"
+          },
+          "currency": {
+            "type": "string",
+            "pattern": "^[A-Z]{3}$"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["CREDIT", "DEBIT"]
+          },
+          "description": {
+            "type": "string"
+          },
+          "reference": {
+            "type": "string"
+          },
+          "counterparty": {
+            "$ref": "#/components/schemas/Counterparty"
+          }
+        }
+      },
+      "DeliveryPreferences": {
+        "type": "object",
+        "properties": {
+          "method": {
+            "type": "string",
+            "enum": ["EMAIL", "SWIFT", "API", "SFTP"]
+          },
+          "destination": {
+            "type": "string"
+          },
+          "format": {
+            "type": "string"
+          },
+          "frequency": {
+            "type": "string",
+            "enum": ["REALTIME", "DAILY", "WEEKLY", "MONTHLY"]
+          }
+        }
+      },
+      "Beneficiary": {
+        "type": "object",
+        "required": ["name", "accountNumber"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 140
+          },
+          "accountNumber": {
+            "type": "string"
+          },
+          "bankCode": {
+            "type": "string"
+          },
+          "address": {
+            "$ref": "#/components/schemas/Address"
+          }
+        }
+      },
+      "Address": {
+        "type": "object",
+        "properties": {
+          "line1": {
+            "type": "string"
+          },
+          "line2": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string",
+            "pattern": "^[A-Z]{2}$"
+          },
+          "postalCode": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "examples": {
+      "swiftMessageExample": {
+        "value": {
+          "messageId": "ABC123DEF456GHI7",
+          "messageType": "MT103",
+          "sender": "BOFAUS3NXXX",
+          "receiver": "CHASUS33XXX",
+          "priority": "Normal",
+          "payload": {
+            "transactionReference": "TXREF123456",
+            "amount": 100000.00,
+            "currency": "USD",
+            "beneficiary": {
+              "name": "John Doe Corp",
+              "accountNumber": "1234567890"
+            }
+          }
+        }
+      },
+      "achBatchExample": {
+        "value": {
+          "batchId": "BATCH123456",
+          "companyId": "1234567890",
+          "effectiveDate": "2024-12-01",
+          "entries": [
+            {
+              "routingNumber": "123456789",
+              "accountNumber": "987654321",
+              "amount": 1000.00,
+              "transactionType": "credit"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

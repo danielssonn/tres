@@ -1,0 +1,291 @@
+{
+  "productCatalog": {
+    "productId": "TREAS_LIQ_001",
+    "productName": "Liquidity Management Solutions",
+    "productCategory": "Treasury",
+    "productType": "Liquidity",
+    "version": "1.0",
+    "status": "active",
+    "features": {
+      "baseFeatures": [
+        {
+          "featureId": "PHYS_POOL",
+          "name": "Physical Cash Pooling",
+          "description": "Physical concentration of cash positions",
+          "isRequired": false,
+          "enrollmentModules": ["pool_setup", "account_structure"],
+          "structures": {
+            "types": [
+              {
+                "name": "Zero Balance Account",
+                "description": "End-of-day zero balance sweeping",
+                "parameters": {
+                  "sweepTiming": ["EOD", "Intraday"],
+                  "targetBalance": "Zero",
+                  "sweepDirection": ["Two-way", "One-way"]
+                }
+              },
+              {
+                "name": "Target Balance Account",
+                "description": "Maintain target balance level",
+                "parameters": {
+                  "targetAmount": "Configurable",
+                  "sweepTiming": ["EOD", "Intraday"],
+                  "excessHandling": "Sweep to header"
+                }
+              },
+              {
+                "name": "Multi-Level Pool",
+                "description": "Hierarchical pooling structure",
+                "parameters": {
+                  "levels": "Multiple",
+                  "intermediateAccounts": true,
+                  "crossBorder": true
+                }
+              }
+            ]
+          }
+        },
+        {
+          "featureId": "NOT_POOL",
+          "name": "Notional Pooling",
+          "description": "Interest optimization without physical movement",
+          "isRequired": false,
+          "enrollmentModules": ["notional_setup", "interest_config"],
+          "structures": {
+            "types": [
+              {
+                "name": "Single Currency Notional",
+                "parameters": {
+                  "currencies": ["Single"],
+                  "interestCalculation": "Aggregate",
+                  "reporting": "Consolidated"
+                }
+              },
+              {
+                "name": "Multi Currency Notional",
+                "parameters": {
+                  "currencies": ["Multiple"],
+                  "fxCalculation": "Daily mark-to-market",
+                  "crossCurrency": true
+                }
+              }
+            ]
+          }
+        },
+        {
+          "featureId": "VIRTUAL_ACCOUNT",
+          "name": "Virtual Account Management",
+          "description": "Virtual account structures for segregation",
+          "isRequired": false,
+          "enrollmentModules": ["virtual_setup", "naming_convention"],
+          "capabilities": {
+            "structure": {
+              "levels": "Multiple",
+              "accounts": "Unlimited",
+              "hierarchies": "Configurable"
+            },
+            "features": [
+              "Interest calculation",
+              "Balance reporting",
+              "Transaction attribution",
+              "Client money segregation"
+            ]
+          }
+        }
+      ],
+      "addOnFeatures": [
+        {
+          "featureId": "LIQ_FORECAST",
+          "name": "Liquidity Forecasting",
+          "description": "Cash flow forecasting and analysis",
+          "isRequired": false,
+          "enrollmentModules": ["forecast_setup"],
+          "capabilities": {
+            "horizons": ["Daily", "Weekly", "Monthly"],
+            "dataSources": ["Historical", "Expected", "Pattern"],
+            "analysis": ["Variance", "Trend", "What-if"]
+          }
+        },
+        {
+          "featureId": "INVEST_SWEEP",
+          "name": "Investment Sweeping",
+          "description": "Automated investment of excess funds",
+          "isRequired": false,
+          "enrollmentModules": ["investment_setup"],
+          "investments": {
+            "types": ["Money Market", "Time Deposit", "Note"],
+            "automation": "Rule-based",
+            "monitoring": "Real-time"
+          }
+        },
+        {
+          "featureId": "INTRADAY_LIQ",
+          "name": "Intraday Liquidity Management",
+          "description": "Real-time liquidity monitoring and management",
+          "isRequired": false,
+          "enrollmentModules": ["intraday_setup"],
+          "capabilities": {
+            "monitoring": "Real-time",
+            "alerts": "Configurable",
+            "reporting": "Regulatory compliant"
+          }
+        }
+      ]
+    },
+    "eligibilityRules": {
+      "companySize": {
+        "minAnnualRevenue": 50000000,
+        "minAvgBalance": 1000000
+      },
+      "accountRequirements": {
+        "minimumAccounts": 2,
+        "supportedCurrencies": ["USD", "EUR", "GBP", "JPY"],
+        "jurisdictions": ["Domestic", "Cross-border"]
+      },
+      "regulatoryRequirements": {
+        "crossBorder": [
+          "Tax clearance",
+          "Regulatory approval",
+          "Transfer pricing documentation"
+        ],
+        "reporting": [
+          "Regulatory reporting capability",
+          "Audit trail maintenance",
+          "Compliance monitoring"
+        ]
+      }
+    },
+    "pricingRules": {
+      "basePrice": {
+        "setupFee": {
+          "physical": 5000,
+          "notional": 7500,
+          "virtual": 3000
+        },
+        "monthlyFee": {
+          "base": 1000,
+          "perAccount": 50,
+          "perStructure": 200
+        }
+      },
+      "transactionFees": {
+        "sweep": {
+          "domestic": 5,
+          "international": 15
+        },
+        "report": {
+          "standard": 0,
+          "custom": 25
+        }
+      },
+      "valuationRules": {
+        "interestCalculation": {
+          "method": "Daily",
+          "basis": "360/365",
+          "application": "Tiered"
+        },
+        "balanceTiers": [
+          {
+            "tier": "0-1M",
+            "rate": "Reference-0.5%"
+          },
+          {
+            "tier": "1M-10M",
+            "rate": "Reference-0.25%"
+          },
+          {
+            "tier": "10M+",
+            "rate": "Reference"
+          }
+        ]
+      }
+    },
+    "enrollmentWorkflow": {
+      "stages": [
+        {
+          "stageId": "structure_design",
+          "name": "Structure Design",
+          "sequence": 1,
+          "isRequired": true,
+          "components": [
+            {
+              "componentId": "account_hierarchy",
+              "type": "configuration",
+              "fields": [
+                {
+                  "name": "structureType",
+                  "type": "enum",
+                  "options": ["Physical", "Notional", "Virtual"]
+                },
+                {
+                  "name": "accountRelationships",
+                  "type": "hierarchy",
+                  "validation": "structure_rules"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "stageId": "legal_setup",
+          "name": "Legal Documentation",
+          "sequence": 2,
+          "isRequired": true,
+          "components": [
+            {
+              "componentId": "agreements",
+              "type": "document",
+              "required": [
+                "Pooling Agreement",
+                "Interest Optimization Agreement",
+                "Cross-border Authorization"
+              ]
+            }
+          ]
+        },
+        {
+          "stageId": "parameter_config",
+          "name": "Parameter Configuration",
+          "sequence": 3,
+          "isRequired": true,
+          "components": [
+            {
+              "componentId": "sweep_rules",
+              "type": "configuration",
+              "fields": [
+                {
+                  "name": "sweepTiming",
+                  "type": "enum",
+                  "options": ["EOD", "Intraday", "Scheduled"]
+                },
+                {
+                  "name": "thresholds",
+                  "type": "number",
+                  "validation": "threshold_rules"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "integrations": {
+      "coreBanking": {
+        "endpoints": {
+          "accountStructure": "/api/v1/liquidity/structure",
+          "sweepExecution": "/api/v1/liquidity/sweep",
+          "interestCalculation": "/api/v1/liquidity/interest"
+        }
+      },
+      "reporting": {
+        "types": [
+          "Structure Reports",
+          "Interest Statements",
+          "Pool Balance Reports",
+          "Forecast Reports"
+        ]
+      }
+    }
+  }
+}
