@@ -1,0 +1,95 @@
+{
+    "platformConfig": {
+        "version": "1.0",
+        "banks": [
+            {
+                "bankId": "BANK001",
+                "name": "Bank A",
+                "configuration": {
+                    "currencies": [
+                        "USD",
+                        "EUR",
+                        "GBP"
+                    ],
+                    "jurisdictions": [
+                        "US",
+                        "UK",
+                        "SG"
+                    ],
+                    "productRestrictions": {
+                        "cards": [
+                            "corporate",
+                            "purchasing"
+                        ],
+                        "fx": [
+                            "spot",
+                            "forward"
+                        ]
+                    }
+                }
+            }
+        ]
+    },
+    "productCatalog": {
+        "version": "1.0",
+        "products": [
+            {
+                "id": "CARD-001",
+                "name": "Corporate Card",
+                "category": "Treasury",
+                "bankConfigurations": {
+                    "BANK001": {
+                        "isEnabled": true,
+                        "features": {
+                            "F001": {
+                                "isEnabled": true,
+                                "configuration": {
+                                    "cardTypes": [
+                                        "corporate",
+                                        "purchasing"
+                                    ],
+                                    "limits": {
+                                        "maxCreditLimit": "1M USD",
+                                        "maxTransactionLimit": "100K USD"
+                                    }
+                                }
+                            }
+                        },
+                        "rules": {
+                            "R001": {
+                                "configuration": {
+                                    "minRevenue": "5M USD",
+                                    "allowedCountries": [
+                                        "US",
+                                        "UK"
+                                    ]
+                                }
+                            }
+                        },
+                        "workflows": {
+                            "W001": {
+                                "configuration": {
+                                    "approvalLevels": [
+                                        "Local",
+                                        "Regional"
+                                    ],
+                                    "documentRequirements": [
+                                        "standard"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "features": [
+                    {
+                        "id": "F001",
+                        "name": "Corporate Credit Card",
+                        "type": "base",
+                        "isRequired": true
+                    }
+                ]
+            }
+        ]
+    }
+}
