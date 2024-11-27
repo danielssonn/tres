@@ -1,0 +1,91 @@
+classDiagram
+    %% Existing classes
+    PlatformConfig *-- Bank
+    ProductCatalog *-- Product
+    Product *-- BankConfiguration
+    BankConfiguration *-- FeatureConfig
+    BankConfiguration *-- RuleConfig
+    BankConfiguration *-- WorkflowConfig
+
+    %% New lifecycle management classes
+    ChangeRequest "1" *-- "*" ConfigurationChange
+    ConfigurationChange "1" -- "1" ApprovalWorkflow
+    ApprovalWorkflow "1" *-- "*" ApprovalStep
+    
+    class ChangeRequest {
+        +id: string
+        +status: RequestStatus
+        +createdBy: string
+        +createdAt: datetime
+        +description: string
+        +changes: ConfigurationChange[]
+    }
+
+    class ConfigurationChange {
+        +id: string
+        +entityType: string
+        +entityId: string
+        +bankId: string
+        +changeType: ChangeType
+        +currentValue: JSON
+        +proposedValue: JSON
+        +status: ChangeStatus
+    }
+
+    class ApprovalWorkflow {
+        +id: string
+        +workflowType: string
+        +currentStep: number
+        +status: WorkflowStatus
+        +requiredApprovals: number
+    }
+
+    class ApprovalStep {
+        +id: string
+        +stepNumber: number
+        +approverRole: string
+        +status: StepStatus
+        +approvedBy: string
+        +approvedAt: datetime
+        +comments: string
+    }
+
+    %% Enums
+    class RequestStatus {
+        <<enumeration>>
+        DRAFT
+        PENDING_APPROVAL
+        APPROVED
+        REJECTED
+        IMPLEMENTED
+        CANCELLED
+    }
+
+    class ChangeStatus {
+        <<enumeration>>
+        PENDING
+        APPROVED
+        REJECTED
+    }
+
+    class ChangeType {
+        <<enumeration>>
+        CREATE
+        UPDATE
+        DELETE
+    }
+
+    class WorkflowStatus {
+        <<enumeration>>
+        IN_PROGRESS
+        COMPLETED
+        REJECTED
+    }
+
+    class StepStatus {
+        <<enumeration>>
+        PENDING
+        APPROVED
+        REJECTED
+        SKIPPED
+    }

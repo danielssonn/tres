@@ -1,0 +1,276 @@
+{
+    "productCatalog": {
+        "products": {
+            "FX-001": {
+                "basicInfo": {
+                    "productName": "FX Services",
+                    "productCategory": "Treasury",
+                    "status": "active",
+                    "version": "1.0"
+                },
+                "bankConfigurations": {
+                    "BANK001": {
+                        "isEnabled": true,
+                        "featureConfigs": {
+                            "FX-TRADING": {
+                                "isEnabled": true,
+                                "configuration": {
+                                    "products": {
+                                        "spot": {
+                                            "isEnabled": true,
+                                            "currencies": {
+                                                "major": [
+                                                    "USD",
+                                                    "EUR",
+                                                    "GBP",
+                                                    "JPY"
+                                                ],
+                                                "emerging": [
+                                                    "CNH",
+                                                    "INR",
+                                                    "BRL"
+                                                ]
+                                            },
+                                            "cutoffTimes": {
+                                                "major": "17:00 EST",
+                                                "emerging": "10:00 EST"
+                                            },
+                                            "valueDate": {
+                                                "standard": "T+2",
+                                                "special": [
+                                                    "T+1",
+                                                    "T+0"
+                                                ]
+                                            }
+                                        },
+                                        "forward": {
+                                            "isEnabled": true,
+                                            "types": [
+                                                {
+                                                    "name": "Outright Forward",
+                                                    "maxTenor": "2Years",
+                                                    "marginRequirement": "MTM basis"
+                                                },
+                                                {
+                                                    "name": "NDF",
+                                                    "currencies": [
+                                                        "CNH",
+                                                        "INR",
+                                                        "BRL"
+                                                    ],
+                                                    "fixingSource": [
+                                                        "REUTERS",
+                                                        "BLOOMBERG"
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        "swaps": {
+                                            "isEnabled": true,
+                                            "maxTenor": "2Years",
+                                            "rollover": true
+                                        },
+                                        "options": {
+                                            "isEnabled": false
+                                        }
+                                    },
+                                    "channels": {
+                                        "electronic": {
+                                            "platforms": [
+                                                "eFX Platform",
+                                                "API Trading"
+                                            ],
+                                            "features": [
+                                                "RFQ",
+                                                "Streaming Rates",
+                                                "Orders"
+                                            ]
+                                        },
+                                        "voice": {
+                                            "isEnabled": true,
+                                            "dealers": [
+                                                "Global",
+                                                "Regional"
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "ruleConfigs": {
+                            "FX-ELIG-001": {
+                                "configuration": {
+                                    "entityTypes": [
+                                        "Corporation",
+                                        "NBFI"
+                                    ],
+                                    "tradingPurpose": [
+                                        "Hedging",
+                                        "Operational"
+                                    ],
+                                    "documentation": {
+                                        "required": [
+                                            "ISDA",
+                                            "FX Trading Agreement",
+                                            "Dealing Mandate"
+                                        ],
+                                        "conditional": [
+                                            {
+                                                "document": "CSA",
+                                                "when": [
+                                                    "forward",
+                                                    "swap",
+                                                    "option"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    "limits": {
+                                        "validation": {
+                                            "settlement": {
+                                                "type": "Currency",
+                                                "monitoring": "RealTime"
+                                            },
+                                            "credit": {
+                                                "type": "MTM",
+                                                "monitoring": "RealTime"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "workflowConfigs": {
+                            "FX-TRADE-WF": {
+                                "configuration": {
+                                    "tradeFlow": {
+                                        "steps": [
+                                            {
+                                                "name": "PreTrade",
+                                                "checks": [
+                                                    "CreditLimit",
+                                                    "SettlementLimit",
+                                                    "ProductEligibility"
+                                                ]
+                                            },
+                                            {
+                                                "name": "Execution",
+                                                "requirements": [
+                                                    "PriceValidation",
+                                                    "LimitChecks",
+                                                    "Confirmation"
+                                                ]
+                                            },
+                                            {
+                                                "name": "PostTrade",
+                                                "processes": [
+                                                    "TradeCapture",
+                                                    "Confirmation",
+                                                    "Settlement"
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "baseFeatures": [
+                    {
+                        "featureId": "FX-CORE",
+                        "name": "FX Trading Core",
+                        "type": "base",
+                        "capabilities": {
+                            "trading": {
+                                "execution": [
+                                    "Single Trade",
+                                    "Batch Upload",
+                                    "Standing Order"
+                                ],
+                                "pricing": [
+                                    "Real-time Rates",
+                                    "Historical Rates",
+                                    "Forward Points"
+                                ]
+                            },
+                            "postTrade": {
+                                "confirmation": [
+                                    "SWIFT",
+                                    "Email",
+                                    "Platform"
+                                ],
+                                "settlement": [
+                                    "CLS",
+                                    "Bilateral",
+                                    "PvP"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "addOnFeatures": [
+                    {
+                        "featureId": "FX-REPORTING",
+                        "name": "FX Reporting",
+                        "capabilities": {
+                            "reports": [
+                                {
+                                    "type": "Trade",
+                                    "reports": [
+                                        "TradeBlotter",
+                                        "PositionReport",
+                                        "SettlementReport"
+                                    ]
+                                },
+                                {
+                                    "type": "Risk",
+                                    "reports": [
+                                        "ExposureReport",
+                                        "LimitUtilization",
+                                        "MTMValuation"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "integration": {
+                    "systems": {
+                        "treasury": {
+                            "platforms": [
+                                "FIS",
+                                "Kyriba",
+                                "GTreasury"
+                            ],
+                            "features": [
+                                "TradeCapture",
+                                "PositionUpdate",
+                                "Confirmation"
+                            ]
+                        },
+                        "risk": {
+                            "features": [
+                                "LimitMonitoring",
+                                "ExposureCalculation",
+                                "Reporting"
+                            ]
+                        }
+                    },
+                    "apis": {
+                        "trading": [
+                            "rateRequest",
+                            "tradeExecution",
+                            "orderManagement"
+                        ],
+                        "postTrade": [
+                            "tradeStatus",
+                            "confirmation",
+                            "settlement"
+                        ]
+                    }
+                }
+            }
+        }
+    }
+}
