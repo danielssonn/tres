@@ -1,0 +1,71 @@
+classDiagram
+    %% Live Catalog (only approved versions)
+    ProductCatalog *-- Product
+    Product *-- BankConfiguration
+    BankConfiguration *-- FeatureConfig
+    BankConfiguration *-- RuleConfig
+    BankConfiguration *-- WorkflowConfig
+
+    %% Change Management (separate)
+    ProductDraft "1" -- "1" Product
+    ProductDraft "1" -- "1" ApprovalFlow
+    ApprovalFlow *-- ApprovalStep
+
+    class ProductCatalog {
+        +products: Product[]
+    }
+
+    class Product {
+        +id: string
+        +name: string
+        +version: int
+        +lastApprovedAt: datetime
+        +bankConfigurations: Map<BankId, BankConfiguration>
+    }
+
+    class ProductDraft {
+        +id: string
+        +productId: string
+        +version: int
+        +status: DraftStatus
+        +createdBy: string
+        +createdAt: datetime
+        +proposedChanges: JSON
+    }
+
+    class DraftStatus {
+        <<enumeration>>
+        DRAFT
+        IN_REVIEW
+        APPROVED
+        REJECTED
+    }
+
+    class ApprovalFlow {
+        +currentStep: int
+        +status: WorkflowStatus
+        +requiredApprovals: int
+    }
+
+    class ApprovalStep {
+        +stepNumber: int
+        +approverRole: string
+        +approvedBy: string
+        +approvedAt: datetime
+        +status: StepStatus
+    }
+
+    class WorkflowStatus {
+        <<enumeration>>
+        IN_PROGRESS
+        COMPLETED
+        REJECTED
+    }
+
+    class StepStatus {
+        <<enumeration>>
+        PENDING
+        APPROVED
+        REJECTED
+        SKIPPED
+    }
