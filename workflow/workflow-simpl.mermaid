@@ -1,0 +1,90 @@
+classDiagram
+    %% Live Catalog (only approved versions)
+    ProductCatalog *-- Product
+    Product *-- BankConfiguration
+    BankConfiguration *-- FeatureConfig
+    BankConfiguration *-- RuleConfig
+    BankConfiguration *-- WorkflowConfig
+
+    %% Change Management (separate)
+    ProductDraft "1" -- "1" Product
+    ProductDraft "1" -- "1" ApprovalFlow
+    ApprovalFlow *-- ApprovalStep
+
+    class ProductCatalog {
+        +products: Product[]
+    }
+
+    class Product {
+        +id: string
+        +name: string
+        +category: string
+        +version: int
+        +lastApprovedAt: datetime
+        +bankConfigurations: Map<BankId, BankConfiguration>
+    }
+
+    class BankConfiguration {
+        +isEnabled: boolean
+        +featureConfigs: Map<FeatureId, FeatureConfig>
+        +ruleConfigs: Map<RuleId, RuleConfig>
+        +workflowConfigs: Map<WorkflowId, WorkflowConfig>
+    }
+
+    class FeatureConfig {
+        +isEnabled: boolean
+        +configuration: JSON
+    }
+
+    class RuleConfig {
+        +configuration: JSON
+    }
+
+    class WorkflowConfig {
+        +configuration: JSON
+    }
+
+    class ProductDraft {
+        +id: string
+        +productId: string
+        +version: int
+        +status: DraftStatus
+        +createdBy: string
+        +createdAt: datetime
+        +proposedChanges: JSON
+    }
+
+    class ApprovalFlow {
+        +currentStep: int
+        +requiredApprovals: int
+        +createdAt: datetime
+        +completedAt: datetime
+    }
+
+    class ApprovalStep {
+        +stepNumber: int
+        +approverRole: string
+        +approvedBy: string
+        +approvedAt: datetime
+        +comments: string
+        +status: StepStatus
+    }
+
+    class DraftStatus {
+        <<enumeration>>
+        DRAFT
+        IN_REVIEW
+        APPROVED
+        REJECTED
+        CANCELLED
+    }
+
+    class StepStatus {
+        <<enumeration>>
+        PENDING
+        APPROVED_STEP
+        REJECTED_STEP
+        SKIPPED
+    }
+
+Sent from my iPhone
