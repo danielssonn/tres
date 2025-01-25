@@ -1,0 +1,92 @@
+{
+  "product": {
+    "id": "SAVINGS_PLUS",
+    "name": "Premium Savings Account",
+    "version": "1.0",
+    "presentation": {
+      "web": {
+        "layout": "card",
+        "sections": [
+          {
+            "id": "basic-info",
+            "title": "Account Overview",
+            "fields": [
+              {"id": "name", "type": "text"},
+              {
+                "id": "interest-tiers",
+                "type": "dropdown",
+                "dataSource": "features.interestRate.tiers"
+              }
+            ]
+          },
+          {
+            "id": "eligibility",
+            "component": "EligibilityChecker",
+            "ruleRef": "rules/ACC_ELIG_001"
+          }
+        ]
+      },
+      "conversational": {
+        "intents": {
+          "discover": {
+            "triggers": ["tell me about savings"],
+            "response": {
+              "type": "card",
+              "content": {
+                "title": "Premium Savings Account",
+                "quickActions": ["check_eligibility", "view_rates"]
+              }
+            }
+          },
+          "check_eligibility": {
+            "triggers": ["am I eligible"],
+            "response": {
+              "type": "form",
+              "ruleRef": "rules/ACC_ELIG_001"
+            }
+          }
+        }
+      },
+      "api": {
+        "version": "v1",
+        "paths": {
+          "/accounts": {
+            "post": {
+              "summary": "Create account",
+              "input": {
+                "customerData": {"$ref": "rules/ACC_ELIG_001/inputs/customer"},
+                "productConfig": {"$ref": "features"}
+              }
+            }
+          },
+          "/accounts/{id}/eligibility": {
+            "post": {
+              "summary": "Check eligibility",
+              "ruleRef": "rules/ACC_ELIG_001"
+            }
+          }
+        },
+        "webhooks": {
+          "account.created": {
+            "payload": {"$ref": "#/paths/accounts/post/responses/201"}
+          }
+        }
+      }
+    },
+    "features": {
+      "interestRate": {
+        "type": "variable",
+        "baseRate": 0.025,
+        "tiers": [
+          {"balance": 10000, "rate": 0.03},
+          {"balance": 50000, "rate": 0.035}
+        ]
+      }
+    },
+    "rules": {
+      "eligibility": {
+        "$ref": "rules/ACC_ELIG_001"
+      }
+    }
+  }
+}

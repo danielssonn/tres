@@ -1,0 +1,250 @@
+{
+    "productCatalog": {
+        "products": {
+            "ACH-001": {
+                "basicInfo": {
+                    "productName": "ACH Services",
+                    "productCategory": "Payments",
+                    "status": "active",
+                    "version": "1.0"
+                },
+                "bankConfigurations": {
+                    "BANK001": {
+                        "isEnabled": true,
+                        "featureConfigs": {
+                            "ACH-CONNECT": {
+                                "isEnabled": true,
+                                "configuration": {
+                                    "connectivityTypes": {
+                                        "h2h": {
+                                            "isEnabled": true,
+                                            "protocols": [
+                                                "SFTP",
+                                                "FTPS",
+                                                "AS2"
+                                            ],
+                                            "formats": {
+                                                "nacha": {
+                                                    "versions": [
+                                                        "Standard-94",
+                                                        "Plus-98"
+                                                    ],
+                                                    "addendaTypes": [
+                                                        "PPD",
+                                                        "CCD",
+                                                        "CTX"
+                                                    ],
+                                                    "validation": true
+                                                },
+                                                "iso20022": {
+                                                    "versions": [
+                                                        "pain.001",
+                                                        "pain.002"
+                                                    ],
+                                                    "validation": true
+                                                },
+                                                "proprietary": {
+                                                    "formats": [
+                                                        "CSV",
+                                                        "XML",
+                                                        "Fixed-Width"
+                                                    ],
+                                                    "mapping": "Required"
+                                                }
+                                            },
+                                            "security": {
+                                                "encryption": [
+                                                    "PGP",
+                                                    "SFTP Keys"
+                                                ],
+                                                "authentication": [
+                                                    "Certificate-based",
+                                                    "Key-based"
+                                                ],
+                                                "dataPrivacy": [
+                                                    "Encryption at Rest",
+                                                    "Encryption in Transit"
+                                                ]
+                                            }
+                                        },
+                                        "api": {
+                                            "isEnabled": true,
+                                            "versions": [
+                                                "REST",
+                                                "SOAP"
+                                            ],
+                                            "authentication": [
+                                                "OAuth2.0",
+                                                "API Keys"
+                                            ],
+                                            "endpoints": {
+                                                "transaction": [
+                                                    "/submit",
+                                                    "/status",
+                                                    "/return"
+                                                ],
+                                                "maintenance": [
+                                                    "/config",
+                                                    "/keys",
+                                                    "/certificates"
+                                                ]
+                                            }
+                                        },
+                                        "onlineBanking": {
+                                            "isEnabled": true,
+                                            "features": [
+                                                "Manual Entry",
+                                                "File Upload",
+                                                "Template Management"
+                                            ]
+                                        }
+                                    },
+                                    "operationalRequirements": {
+                                        "availability": "24x7",
+                                        "supportHours": "24x5",
+                                        "sla": {
+                                            "transmission": "99.9%",
+                                            "processing": "99.9%"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "workflowConfigs": {
+                            "ACH-CONNECT-WF": {
+                                "configuration": {
+                                    "connectivity": {
+                                        "setup": {
+                                            "h2h": {
+                                                "steps": [
+                                                    {
+                                                        "name": "Technical Assessment",
+                                                        "tasks": [
+                                                            "Format Selection",
+                                                            "Protocol Selection",
+                                                            "Security Requirements"
+                                                        ]
+                                                    },
+                                                    {
+                                                        "name": "Environment Setup",
+                                                        "tasks": [
+                                                            "Credential Generation",
+                                                            "Certificate Exchange",
+                                                            "Network Configuration"
+                                                        ]
+                                                    },
+                                                    {
+                                                        "name": "Testing",
+                                                        "tasks": [
+                                                            "Connectivity Test",
+                                                            "Format Validation",
+                                                            "End-to-End Test"
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            "api": {
+                                                "steps": [
+                                                    "API Credential Setup",
+                                                    "Endpoint Configuration",
+                                                    "Integration Testing"
+                                                ]
+                                            }
+                                        },
+                                        "maintenance": {
+                                            "periodic": [
+                                                "Certificate Renewal",
+                                                "Key Rotation",
+                                                "Security Review"
+                                            ],
+                                            "monitoring": [
+                                                "Connection Status",
+                                                "File Transfer Status",
+                                                "Error Tracking"
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "baseFeatures": [
+                    {
+                        "featureId": "ACH-CONNECT",
+                        "name": "ACH Connectivity",
+                        "type": "base",
+                        "capabilities": {
+                            "fileProcessing": {
+                                "validation": {
+                                    "syntax": true,
+                                    "business": true,
+                                    "duplicate": true
+                                },
+                                "transformation": {
+                                    "mapping": true,
+                                    "enrichment": true
+                                },
+                                "monitoring": {
+                                    "status": [
+                                        "Received",
+                                        "Validated",
+                                        "Processed"
+                                    ],
+                                    "notifications": [
+                                        "Success",
+                                        "Error",
+                                        "Warning"
+                                    ]
+                                }
+                            },
+                            "errorHandling": {
+                                "autoRetry": true,
+                                "manualRepair": true,
+                                "notification": true
+                            },
+                            "reporting": {
+                                "transmission": [
+                                    "Status",
+                                    "History",
+                                    "Errors"
+                                ],
+                                "audit": [
+                                    "Access Logs",
+                                    "Change Logs",
+                                    "Security Logs"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "integration": {
+                    "erp": {
+                        "supported": [
+                            "SAP",
+                            "Oracle",
+                            "PeopleSoft"
+                        ],
+                        "features": [
+                            "AutomatedReconciliation",
+                            "StatusUpdate",
+                            "ErrorHandling"
+                        ]
+                    },
+                    "treasury": {
+                        "supported": [
+                            "FIS",
+                            "Kyriba",
+                            "GTreasury"
+                        ],
+                        "features": [
+                            "PaymentInitiation",
+                            "StatusTracking",
+                            "Reporting"
+                        ]
+                    }
+                }
+            }
+        }
+    }
+}
