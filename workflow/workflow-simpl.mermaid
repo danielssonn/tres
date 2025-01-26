@@ -7,8 +7,8 @@ classDiagram
     BankConfiguration *-- WorkflowConfig
 
     %% Change Management (separate)
-    ProductDraft "1" -- "1" Product
-    ProductDraft "1" -- "1" ApprovalFlow
+    ProductHistory "1" -- "1" Product
+    ProductHistory "1" -- "1" ApprovalFlow
     ApprovalFlow *-- ApprovalStep
 
     class ProductCatalog {
@@ -45,7 +45,7 @@ classDiagram
         +configuration: JSON
     }
 
-    class ProductDraft {
+    class ProductHistory {
         +id: string
         +productId: string
         +version: int
