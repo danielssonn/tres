@@ -34,6 +34,7 @@ classDiagram
     class FeatureConfig {
         +isEnabled: boolean
         +configuration: JSON
+        +productRule: RuleExpression
     }
 
     class RuleConfig {
@@ -56,7 +57,7 @@ classDiagram
 
     class ApprovalFlow {
         +currentStep: int
-        +requiredApprovals: int
+        +requiredApprovals: RuleExpression
         +createdAt: datetime
         +completedAt: datetime
     }
