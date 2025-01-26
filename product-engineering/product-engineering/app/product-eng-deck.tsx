@@ -12,12 +12,12 @@ const Presentation = () => {
           <li>Deep subject matter expertise in product teams</li>
           <li>Fragmented delivery approaches</li>
           <li>Limited reusability across products</li>
-          <li>High cost of maintenance</li>
+          <li>Long time to market introducing new products and features</li>
         </ul>
       </div>
 
       <div className="mb-12">
-        <h2 className="text-3xl font-bold mb-4">Product Engineering Vision</h2>
+        <h2 className="text-3xl font-bold mb-4">Product Engineering Vision</h2>apply well established engineering practices to product development and operations
         <div className="grid grid-cols-2 gap-6">
           <div className="p-4 border rounded">
             <h3 className="text-xl font-bold mb-2">Engineering Excellence</h3>
@@ -52,7 +52,7 @@ const Presentation = () => {
             <p>Web, API, Conversational Interfaces</p>
           </div>
           <div className="p-4 border rounded">
-            <h3 className="text-xl font-bold">Phase 3: Operations (3 months)</h3>
+            <h3 className="text-xl font-bold">Phase 3: Operations (6 months)</h3>
             <p>Monitoring, Analytics, Lifecycle Management</p>
           </div>
         </div>
