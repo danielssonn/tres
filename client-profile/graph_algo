@@ -1,0 +1,756 @@
+/**
+ * Business Graph Relationship Computation Algorithm
+ * 
+ * This algorithm handles entity relationship computation in a graph database
+ * for a business model with Clients, Companies, Documents, Agreements,
+ * Products, Accounts, and Related Parties.
+ */
+
+// Define entity types
+const EntityType = {
+  CLIENT: 'Client',
+  COMPANY: 'Company',
+  DOCUMENT: 'Document',
+  AGREEMENT: 'Agreement',
+  PRODUCT: 'Product',
+  ACCOUNT: 'Account',
+  RELATED_PARTY: 'RelatedParty'
+};
+
+// Define relationship types
+const RelationshipType = {
+  HAS_ACCOUNT: 'HAS_ACCOUNT',
+  PURCHASES: 'PURCHASES',
+  SIGNS: 'SIGNS',
+  SUBMITS: 'SUBMITS',
+  ASSOCIATED_WITH: 'ASSOCIATED_WITH',
+  OFFERS: 'OFFERS',
+  MANAGES: 'MANAGES',
+  ISSUES: 'ISSUES',
+  PROVIDES: 'PROVIDES',
+  EMPLOYS: 'EMPLOYS',
+  REFERENCES: 'REFERENCES',
+  BELONGS_TO: 'BELONGS_TO',
+  VERIFIES: 'VERIFIES',
+  DESCRIBES: 'DESCRIBES',
+  GOVERNS: 'GOVERNS',
+  COVERS: 'COVERS',
+  INCLUDES: 'INCLUDES',
+  REPRESENTS: 'REPRESENTS',
+  AUTHORIZED_FOR: 'AUTHORIZED_FOR',
+  APPROVES: 'APPROVES',
+  NEGOTIATES: 'NEGOTIATES',
+  LINKED_TO: 'LINKED_TO',
+  DETAILED_IN: 'DETAILED_IN',
+  DOCUMENTED_BY: 'DOCUMENTED_BY'
+};
+
+/**
+ * Class representing a Node in the graph
+ */
+class Node {
+  constructor(id, type, properties = {}) {
+    this.id = id;
+    this.type = type;
+    this.properties = properties;
+    this.relationships = []; // Outgoing relationships
+  }
+
+  addRelationship(relationship) {
+    this.relationships.push(relationship);
+  }
+
+  getRelationships(type = null) {
+    if (type) {
+      return this.relationships.filter(rel => rel.type === type);
+    }
+    return this.relationships;
+  }
+}
+
+/**
+ * Class representing a Relationship in the graph
+ */
+class Relationship {
+  constructor(id, type, source, target, properties = {}) {
+    this.id = id;
+    this.type = type;
+    this.source = source;
+    this.target = target;
+    this.properties = properties;
+  }
+}
+
+/**
+ * Main Graph Database class
+ */
+class BusinessGraphDB {
+  constructor() {
+    this.nodes = new Map();
+    this.relationships = new Map();
+    this.nodeIdCounter = 0;
+    this.relationshipIdCounter = 0;
+  }
+
+  /**
+   * Create a new node
+   */
+  createNode(type, properties = {}) {
+    const id = `node_${++this.nodeIdCounter}`;
+    const node = new Node(id, type, properties);
+    this.nodes.set(id, node);
+    return node;
+  }
+
+  /**
+   * Create a relationship between two nodes
+   */
+  createRelationship(type, sourceNode, targetNode, properties = {}) {
+    const id = `rel_${++this.relationshipIdCounter}`;
+    const relationship = new Relationship(id, type, sourceNode.id, targetNode.id, properties);
+    this.relationships.set(id, relationship);
+    sourceNode.addRelationship(relationship);
+    return relationship;
+  }
+
+  /**
+   * Find nodes by type and optional property filters
+   */
+  findNodes(type, filters = {}) {
+    const results = [];
+    for (const node of this.nodes.values()) {
+      if (node.type === type) {
+        let match = true;
+        for (const [key, value] of Object.entries(filters)) {
+          if (node.properties[key] !== value) {
+            match = false;
+            break;
+          }
+        }
+        if (match) {
+          results.push(node);
+        }
+      }
+    }
+    return results;
+  }
+
+  /**
+   * Find a node by ID
+   */
+  getNodeById(id) {
+    return this.nodes.get(id);
+  }
+
+  /**
+   * Find a relationship by ID
+   */
+  getRelationshipById(id) {
+    return this.relationships.get(id);
+  }
+
+  /**
+   * Get all neighbors of a node by relationship type
+   */
+  getNeighbors(nodeId, relationshipType = null, direction = 'OUTGOING') {
+    const neighbors = [];
+    const node = this.getNodeById(nodeId);
+    
+    if (!node) return neighbors;
+    
+    // Outgoing relationships
+    if (direction === 'OUTGOING' || direction === 'BOTH') {
+      for (const rel of node.getRelationships(relationshipType)) {
+        const targetNode = this.getNodeById(rel.target);
+        if (targetNode) {
+          neighbors.push({ node: targetNode, relationship: rel });
+        }
+      }
+    }
+    
+    // Incoming relationships
+    if (direction === 'INCOMING' || direction === 'BOTH') {
+      for (const rel of this.relationships.values()) {
+        if (rel.target === nodeId && (!relationshipType || rel.type === relationshipType)) {
+          const sourceNode = this.getNodeById(rel.source);
+          if (sourceNode) {
+            neighbors.push({ node: sourceNode, relationship: rel });
+          }
+        }
+      }
+    }
+    
+    return neighbors;
+  }
+
+  /**
+   * Traverse the graph starting from a node, following specific relationship types
+   */
+  traverseGraph(startNodeId, relationshipTypes = [], maxDepth = 3) {
+    const visited = new Set();
+    const result = [];
+    
+    const traverse = (nodeId, depth = 0) => {
+      if (depth > maxDepth || visited.has(nodeId)) return;
+      
+      visited.add(nodeId);
+      const node = this.getNodeById(nodeId);
+      result.push(node);
+      
+      const neighbors = this.getNeighbors(nodeId, null, 'BOTH');
+      for (const { node: neighbor, relationship } of neighbors) {
+        if (relationshipTypes.length === 0 || relationshipTypes.includes(relationship.type)) {
+          traverse(neighbor.id, depth + 1);
+        }
+      }
+    };
+    
+    traverse(startNodeId);
+    return result;
+  }
+
+  /**
+   * Compute the shortest path between two nodes
+   */
+  findShortestPath(startNodeId, endNodeId, relationshipTypes = []) {
+    const queue = [{ nodeId: startNodeId, path: [] }];
+    const visited = new Set([startNodeId]);
+    
+    while (queue.length > 0) {
+      const { nodeId, path } = queue.shift();
+      
+      if (nodeId === endNodeId) {
+        return [...path, nodeId];
+      }
+      
+      const neighbors = this.getNeighbors(nodeId, null, 'BOTH');
+      for (const { node: neighbor, relationship } of neighbors) {
+        if (!visited.has(neighbor.id) && 
+            (relationshipTypes.length === 0 || relationshipTypes.includes(relationship.type))) {
+          visited.add(neighbor.id);
+          queue.push({
+            nodeId: neighbor.id,
+            path: [...path, nodeId]
+          });
+        }
+      }
+    }
+    
+    return null; // No path found
+  }
+
+  /**
+   * Detect cycles in the graph
+   */
+  detectCycles(startNodeId) {
+    const visited = new Set();
+    const recursionStack = new Set();
+    const cycles = [];
+    
+    const dfs = (nodeId, path = []) => {
+      visited.add(nodeId);
+      recursionStack.add(nodeId);
+      path.push(nodeId);
+      
+      const neighbors = this.getNeighbors(nodeId, null, 'OUTGOING');
+      for (const { node: neighbor } of neighbors) {
+        if (!visited.has(neighbor.id)) {
+          const subCycles = dfs(neighbor.id, [...path]);
+          if (subCycles.length > 0) {
+            cycles.push(...subCycles);
+          }
+        } else if (recursionStack.has(neighbor.id)) {
+          // Found a cycle
+          const cycleStart = path.indexOf(neighbor.id);
+          if (cycleStart !== -1) {
+            cycles.push(path.slice(cycleStart));
+          }
+        }
+      }
+      
+      recursionStack.delete(nodeId);
+      return cycles;
+    };
+    
+    return dfs(startNodeId);
+  }
+
+  /**
+   * Find all paths between two nodes
+   */
+  findAllPaths(startNodeId, endNodeId, maxDepth = 10) {
+    const paths = [];
+    const visited = new Set();
+    
+    const dfs = (currentNodeId, path = [], depth = 0) => {
+      if (depth > maxDepth) return;
+      if (currentNodeId === endNodeId) {
+        paths.push([...path, currentNodeId]);
+        return;
+      }
+      
+      visited.add(currentNodeId);
+      path.push(currentNodeId);
+      
+      const neighbors = this.getNeighbors(currentNodeId, null, 'OUTGOING');
+      for (const { node: neighbor } of neighbors) {
+        if (!visited.has(neighbor.id)) {
+          dfs(neighbor.id, [...path], depth + 1);
+        }
+      }
+      
+      visited.delete(currentNodeId);
+    };
+    
+    dfs(startNodeId);
+    return paths;
+  }
+
+  /**
+   * Compute centrality measures for nodes
+   */
+  computeCentrality() {
+    const centrality = {};
+    
+    // Initialize centrality scores
+    for (const nodeId of this.nodes.keys()) {
+      centrality[nodeId] = {
+        degree: 0,
+        inDegree: 0,
+        outDegree: 0
+      };
+    }
+    
+    // Compute degree centrality
+    for (const rel of this.relationships.values()) {
+      centrality[rel.source].outDegree += 1;
+      centrality[rel.source].degree += 1;
+      centrality[rel.target].inDegree += 1;
+      centrality[rel.target].degree += 1;
+    }
+    
+    return centrality;
+  }
+
+  /**
+   * Find communities in the graph
+   */
+  findCommunities() {
+    // Simple community detection based on relationship density
+    const nodeCommunities = new Map();
+    let communityId = 0;
+    
+    // Start with unassigned nodes
+    const unassigned = new Set(this.nodes.keys());
+    
+    while (unassigned.size > 0) {
+      // Take first unassigned node as seed
+      const seed = [...unassigned][0];
+      const community = new Set([seed]);
+      const frontier = [seed];
+      
+      // Expand community
+      while (frontier.length > 0) {
+        const current = frontier.shift();
+        const neighbors = this.getNeighbors(current, null, 'BOTH')
+          .map(n => n.node.id)
+          .filter(id => unassigned.has(id));
+        
+        for (const neighbor of neighbors) {
+          community.add(neighbor);
+          frontier.push(neighbor);
+          unassigned.delete(neighbor);
+        }
+      }
+      
+      // Assign community ID to nodes
+      for (const nodeId of community) {
+        nodeCommunities.set(nodeId, communityId);
+      }
+      
+      communityId++;
+    }
+    
+    return nodeCommunities;
+  }
+
+  /**
+   * Build business-specific relationship computation
+   */
+  computeBusinessRelationships() {
+    // Automatic relationship inference based on business rules
+    
+    // 1. Connect clients to their documents
+    const clients = this.findNodes(EntityType.CLIENT);
+    const documents = this.findNodes(EntityType.DOCUMENT);
+    
+    // For each document, find the most likely client
+    for (const document of documents) {
+      // This would use actual business logic based on document properties
+      // For example, looking at document owner information
+      const potentialClients = clients.filter(client => 
+        document.properties.clientId === client.properties.id ||
+        document.properties.ownerName === client.properties.name
+      );
+      
+      if (potentialClients.length > 0) {
+        // Create relationship
+        this.createRelationship(
+          RelationshipType.BELONGS_TO,
+          document,
+          potentialClients[0]
+        );
+      }
+    }
+    
+    // 2. Connect agreements to related documents
+    const agreements = this.findNodes(EntityType.AGREEMENT);
+    
+    for (const agreement of agreements) {
+      // Find documents that reference this agreement
+      const relatedDocs = documents.filter(doc => 
+        doc.properties.agreementId === agreement.properties.id ||
+        (doc.properties.references && 
+         doc.properties.references.includes(agreement.properties.id))
+      );
+      
+      for (const doc of relatedDocs) {
+        this.createRelationship(
+          RelationshipType.REFERENCES,
+          doc,
+          agreement
+        );
+      }
+    }
+    
+    // 3. Connect products to accounts
+    const products = this.findNodes(EntityType.PRODUCT);
+    const accounts = this.findNodes(EntityType.ACCOUNT);
+    
+    for (const account of accounts) {
+      const accountProducts = products.filter(product => 
+        account.properties.productIds && 
+        account.properties.productIds.includes(product.properties.id)
+      );
+      
+      for (const product of accountProducts) {
+        this.createRelationship(
+          RelationshipType.LINKED_TO,
+          product,
+          account
+        );
+      }
+    }
+    
+    // 4. Connect related parties to companies
+    const relatedParties = this.findNodes(EntityType.RELATED_PARTY);
+    const companies = this.findNodes(EntityType.COMPANY);
+    
+    for (const party of relatedParties) {
+      const employerCompanies = companies.filter(company => 
+        party.properties.employerId === company.properties.id
+      );
+      
+      for (const company of employerCompanies) {
+        this.createRelationship(
+          RelationshipType.REPRESENTS,
+          party,
+          company
+        );
+      }
+    }
+    
+    // 5. Find all client-company relationships through products
+    for (const client of clients) {
+      // Get all products purchased by this client
+      const clientProducts = [];
+      const productRels = client.getRelationships(RelationshipType.PURCHASES);
+      
+      for (const rel of productRels) {
+        const product = this.getNodeById(rel.target);
+        if (product) {
+          clientProducts.push(product);
+        }
+      }
+      
+      // For each product, find the company that offers it
+      for (const product of clientProducts) {
+        for (const company of companies) {
+          const offeringRels = company.getRelationships(RelationshipType.OFFERS);
+          const offersProduct = offeringRels.some(rel => rel.target === product.id);
+          
+          if (offersProduct) {
+            // Client has indirect relationship with company through product
+            // You could create a direct relationship here if needed
+            console.log(`Client ${client.properties.name} has relationship with Company ${company.properties.name} through Product ${product.properties.name}`);
+          }
+        }
+      }
+    }
+    
+    return {
+      clientDocumentConnections: documents.filter(d => d.getRelationships(RelationshipType.BELONGS_TO).length > 0).length,
+      agreementDocumentConnections: documents.filter(d => d.getRelationships(RelationshipType.REFERENCES).length > 0).length,
+      productAccountConnections: products.filter(p => p.getRelationships(RelationshipType.LINKED_TO).length > 0).length,
+      relatedPartyCompanyConnections: relatedParties.filter(r => r.getRelationships(RelationshipType.REPRESENTS).length > 0).length
+    };
+  }
+
+  /**
+   * Generate a report of all relationships for a given entity
+   */
+  generateEntityReport(entityId) {
+    const node = this.getNodeById(entityId);
+    if (!node) return null;
+    
+    const report = {
+      entity: {
+        id: node.id,
+        type: node.type,
+        properties: node.properties
+      },
+      outgoingRelationships: [],
+      incomingRelationships: [],
+      connectedEntities: {
+        // Group connected entities by type
+        [EntityType.CLIENT]: [],
+        [EntityType.COMPANY]: [],
+        [EntityType.DOCUMENT]: [],
+        [EntityType.AGREEMENT]: [],
+        [EntityType.PRODUCT]: [],
+        [EntityType.ACCOUNT]: [],
+        [EntityType.RELATED_PARTY]: []
+      }
+    };
+    
+    // Get outgoing relationships
+    for (const rel of node.getRelationships()) {
+      const targetNode = this.getNodeById(rel.target);
+      if (targetNode) {
+        report.outgoingRelationships.push({
+          type: rel.type,
+          targetEntity: {
+            id: targetNode.id,
+            type: targetNode.type,
+            properties: targetNode.properties
+          }
+        });
+        
+        report.connectedEntities[targetNode.type].push({
+          id: targetNode.id,
+          relationshipType: rel.type,
+          direction: 'outgoing',
+          properties: targetNode.properties
+        });
+      }
+    }
+    
+    // Get incoming relationships
+    for (const rel of this.relationships.values()) {
+      if (rel.target === node.id) {
+        const sourceNode = this.getNodeById(rel.source);
+        if (sourceNode) {
+          report.incomingRelationships.push({
+            type: rel.type,
+            sourceEntity: {
+              id: sourceNode.id,
+              type: sourceNode.type,
+              properties: sourceNode.properties
+            }
+          });
+          
+          report.connectedEntities[sourceNode.type].push({
+            id: sourceNode.id,
+            relationshipType: rel.type,
+            direction: 'incoming',
+            properties: sourceNode.properties
+          });
+        }
+      }
+    }
+    
+    return report;
+  }
+
+  /**
+   * Recommend potential new relationships based on existing patterns
+   */
+  recommendRelationships() {
+    const recommendations = [];
+    
+    // Find clients without accounts
+    const clients = this.findNodes(EntityType.CLIENT);
+    for (const client of clients) {
+      const accountRels = client.getRelationships(RelationshipType.HAS_ACCOUNT);
+      if (accountRels.length === 0) {
+        recommendations.push({
+          type: 'MISSING_RELATIONSHIP',
+          entity: {
+            id: client.id,
+            type: client.type,
+            properties: client.properties
+          },
+          recommendedRelationship: RelationshipType.HAS_ACCOUNT,
+          reason: 'Client has no associated accounts'
+        });
+      }
+    }
+    
+    // Find products without documents
+    const products = this.findNodes(EntityType.PRODUCT);
+    for (const product of products) {
+      // Check if any documents describe this product
+      let hasDocumentation = false;
+      for (const document of this.findNodes(EntityType.DOCUMENT)) {
+        const docRelations = document.getRelationships(RelationshipType.DESCRIBES);
+        if (docRelations.some(rel => rel.target === product.id)) {
+          hasDocumentation = true;
+          break;
+        }
+      }
+      
+      if (!hasDocumentation) {
+        recommendations.push({
+          type: 'MISSING_RELATIONSHIP',
+          entity: {
+            id: product.id,
+            type: product.type,
+            properties: product.properties
+          },
+          recommendedRelationship: RelationshipType.DETAILED_IN,
+          reason: 'Product has no documentation'
+        });
+      }
+    }
+    
+    // Find agreements without related parties
+    const agreements = this.findNodes(EntityType.AGREEMENT);
+    for (const agreement of agreements) {
+      let hasRelatedParty = false;
+      for (const rel of agreement.getRelationships(RelationshipType.INCLUDES)) {
+        const target = this.getNodeById(rel.target);
+        if (target && target.type === EntityType.RELATED_PARTY) {
+          hasRelatedParty = true;
+          break;
+        }
+      }
+      
+      if (!hasRelatedParty) {
+        recommendations.push({
+          type: 'MISSING_RELATIONSHIP',
+          entity: {
+            id: agreement.id,
+            type: agreement.type,
+            properties: agreement.properties
+          },
+          recommendedRelationship: RelationshipType.INCLUDES,
+          reason: 'Agreement has no associated related parties'
+        });
+      }
+    }
+    
+    return recommendations;
+  }
+}
+
+// Example usage
+function runExample() {
+  const db = new BusinessGraphDB();
+  
+  // Create example nodes
+  const client1 = db.createNode(EntityType.CLIENT, { name: 'John Doe', id: '1001' });
+  const client2 = db.createNode(EntityType.CLIENT, { name: 'Jane Smith', id: '1002' });
+  
+  const company1 = db.createNode(EntityType.COMPANY, { name: 'Acme Corp', id: '2001' });
+  const company2 = db.createNode(EntityType.COMPANY, { name: 'Global Services', id: '2002' });
+  
+  const document1 = db.createNode(EntityType.DOCUMENT, { 
+    name: 'Client ID Verification', 
+    id: '3001',
+    clientId: '1001'
+  });
+  
+  const document2 = db.createNode(EntityType.DOCUMENT, { 
+    name: 'Investment Portfolio', 
+    id: '3002',
+    clientId: '1002',
+    references: ['4001'] 
+  });
+  
+  const agreement1 = db.createNode(EntityType.AGREEMENT, { 
+    name: 'Service Agreement', 
+    id: '4001' 
+  });
+  
+  const product1 = db.createNode(EntityType.PRODUCT, { 
+    name: 'Investment Account', 
+    id: '5001' 
+  });
+  
+  const account1 = db.createNode(EntityType.ACCOUNT, { 
+    number: 'ACC001', 
+    id: '6001',
+    productIds: ['5001']
+  });
+  
+  const relatedParty1 = db.createNode(EntityType.RELATED_PARTY, { 
+    name: 'Bob Johnson', 
+    id: '7001',
+    role: 'Officer',
+    employerId: '2001'
+  });
+  
+  // Create relationships
+  db.createRelationship(RelationshipType.HAS_ACCOUNT, client1, account1);
+  db.createRelationship(RelationshipType.SUBMITS, client1, document1);
+  db.createRelationship(RelationshipType.SIGNS, client2, agreement1);
+  db.createRelationship(RelationshipType.PURCHASES, client2, product1);
+  
+  db.createRelationship(RelationshipType.OFFERS, company1, product1);
+  db.createRelationship(RelationshipType.ISSUES, company1, document1);
+  db.createRelationship(RelationshipType.PROVIDES, company2, agreement1);
+  
+  db.createRelationship(RelationshipType.REFERENCES, document2, agreement1);
+  db.createRelationship(RelationshipType.DESCRIBES, document2, product1);
+  
+  db.createRelationship(RelationshipType.GOVERNS, agreement1, account1);
+  db.createRelationship(RelationshipType.INCLUDES, agreement1, relatedParty1);
+  
+  db.createRelationship(RelationshipType.REPRESENTS, relatedParty1, company1);
+  db.createRelationship(RelationshipType.APPROVES, relatedParty1, document1);
+  
+  // Compute relationships
+  const businessRelations = db.computeBusinessRelationships();
+  console.log('Business Relationship Computation:', businessRelations);
+  
+  // Get entity report
+  const clientReport = db.generateEntityReport(client1.id);
+  console.log('Client Entity Report:', JSON.stringify(clientReport, null, 2));
+  
+  // Get recommendations
+  const recommendations = db.recommendRelationships();
+  console.log('Relationship Recommendations:', recommendations);
+  
+  // Find path between client and company
+  const path = db.findShortestPath(client2.id, company1.id);
+  console.log('Path from Client to Company:', path);
+  
+  // Compute centrality
+  const centrality = db.computeCentrality();
+  console.log('Centrality Measures:', centrality);
+  
+  return db;
+}
+
+// Run example if this is the main script
+if (typeof require !== 'undefined' && require.main === module) {
+  runExample();
+}
+
+// Export the classes and functions
+module.exports = {
+  BusinessGraphDB,
+  EntityType,
+  RelationshipType,
+  runExample
+};
