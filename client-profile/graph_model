@@ -1,0 +1,49 @@
+graph TD
+    %% Entity Nodes
+    Client([Client])
+    Company([Company])
+    Document([Document])
+    Agreement([Agreement])
+    Product([Product])
+    Account([Account])
+    RelatedParty([Related Party])
+
+    %% Client Relationships
+    Client -- "HAS_ACCOUNT" --> Account
+    Client -- "PURCHASES" --> Product
+    Client -- "SIGNS" --> Agreement
+    Client -- "SUBMITS" --> Document
+    Client -- "ASSOCIATED_WITH" --> RelatedParty
+
+    %% Company Relationships
+    Company -- "OFFERS" --> Product
+    Company -- "MANAGES" --> Account
+    Company -- "ISSUES" --> Document
+    Company -- "PROVIDES" --> Agreement
+    Company -- "EMPLOYS" --> RelatedParty
+
+    %% Document Relationships
+    Document -- "REFERENCES" --> Agreement
+    Document -- "BELONGS_TO" --> Client
+    Document -- "VERIFIES" --> Account
+    Document -- "DESCRIBES" --> Product
+
+    %% Agreement Relationships
+    Agreement -- "GOVERNS" --> Account
+    Agreement -- "COVERS" --> Product
+    Agreement -- "REFERENCES" --> Document
+    Agreement -- "INCLUDES" --> RelatedParty
+
+    %% Related Party Relationships
+    RelatedParty -- "REPRESENTS" --> Company
+    RelatedParty -- "AUTHORIZED_FOR" --> Account
+    RelatedParty -- "APPROVES" --> Document
+    RelatedParty -- "NEGOTIATES" --> Agreement
+
+    %% Product Relationships
+    Product -- "LINKED_TO" --> Account
+    Product -- "DETAILED_IN" --> Document
+
+    %% Account Relationships
+    Account -- "ASSOCIATED_WITH" --> Product
+    Account -- "DOCUMENTED_BY" --> Document
