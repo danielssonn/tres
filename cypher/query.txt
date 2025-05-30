@@ -1,0 +1,421 @@
+// =============================================================================
+// GRAPH DATA MODEL: Entity, User, Product, Relationship, Collateral
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// 1. CREATE SAMPLE DATA
+// -----------------------------------------------------------------------------
+
+// Create Entities
+CREATE (acme:Entity {
+    name: "Acme Corp", 
+    legal_id: "ACME001",
+    address: "123 Business St",
+    created_date: date("2020-01-01")
+})
+CREATE (beta:Entity {
+    name: "Beta LLC", 
+    legal_id: "BETA002",
+    address: "456 Commerce Ave",
+    created_date: "2021-03-15"
+})
+CREATE (gamma:Entity {
+    name: "Gamma Inc", 
+    legal_id: "GAMMA003",
+    address: "789 Industry Blvd",
+    created_date: date("2019-06-01")
+});
+
+// Create Users
+CREATE (alice:User {
+    name: "Alice Smith", 
+    email: "alice@acme.com", 
+    user_id: "USR001",
+    created_date: date("2024-01-01")
+})
+CREATE (bob:User {
+    name: "Bob Jones", 
+    email: "bob@beta.com", 
+    user_id: "USR002",
+    created_date: date("2024-01-15")
+})
+CREATE (charlie:User {
+    name: "Charlie Brown", 
+    email: "charlie@gamma.com", 
+    user_id: "USR003",
+    created_date: date("2024-02-01")
+});
+
+// Create Products
+CREATE (crm:Product {
+    name: "CRM System", 
+    product_id: "PROD001",
+    description: "Customer Relationship Management",
+    version: "2.1"
+})
+CREATE (erp:Product {
+    name: "ERP Suite", 
+    product_id: "PROD002",
+    description: "Enterprise Resource Planning",
+    version: "3.0"
+})
+CREATE (analytics:Product {
+    name: "Analytics Platform", 
+    product_id: "PROD003",
+    description: "Business Intelligence Dashboard",
+    version: "1.5"
+})
+CREATE (hr:Product {
+    name: "HR Management", 
+    product_id: "PROD004",
+    description: "Human Resources System",
+    version: "2.0"
+});
+
+// Entity Ownership of Products
+CREATE (acme)-[:OWNS {acquired_date: date("2024-01-15"), ownership_type: "license"}]->(crm)
+CREATE (acme)-[:OWNS {acquired_date: date("2024-01-20"), ownership_type: "purchase"}]->(hr)
+CREATE (beta)-[:OWNS {acquired_date: date("2024-02-01"), ownership_type: "subscription"}]->(erp)
+CREATE (gamma)-[:OWNS {acquired_date: date("2024-03-01"), ownership_type: "license"}]->(analytics);
+
+// Create Relationships (Access Containers)
+CREATE (aliceEmployeeRel:Relationship {
+    name: "Alice Employee Access", 
+    type: "employment",
+    start_date: date("2024-01-01"),
+    status: "active",
+    created_by: "HR Department"
+})
+CREATE (aliceConsultantRel:Relationship {
+    name: "Alice Consultant Agreement",
+    type: "consulting", 
+    start_date: date("2024-03-01"),
+    end_date: date("2024-12-31"),
+    status: "active",
+    created_by: "Legal Department"
+})
+CREATE (bobPartnerRel:Relationship {
+    name: "Bob Partner Integration",
+    type: "partnership",
+    start_date: date("2024-02-15"), 
+    status: "active",
+    created_by: "Business Development"
+})
+CREATE (charlieEmployeeRel:Relationship {
+    name: "Charlie Employee Access",
+    type: "employment",
+    start_date: date("2024-02-01"),
+    status: "active",
+    created_by: "HR Department"
+});
+
+// Create Collateral (Proof Documents)
+CREATE (aliceEmploymentContract:Collateral {
+    document_type: "Employment Contract",
+    reference_number: "EMP-2024-001",
+    issue_date: date("2024-01-01"),
+    expiry_date: date("2025-01-01"),
+    issuer: "Acme Corp HR",
+    status: "valid",
+    file_path: "/documents/contracts/emp-alice-2024.pdf",
+    digital_signature: "SHA256:abc123def456",
+    verification_status: "verified"
+})
+CREATE (aliceConsultingAgreement:Collateral {
+    document_type: "Consulting Agreement", 
+    reference_number: "CONS-2024-015",
+    issue_date: date("2024-02-28"),
+    expiry_date: date("2024-12-31"),
+    issuer: "Beta LLC Legal",
+    status: "valid",
+    file_path: "/documents/agreements/cons-alice-beta-2024.pdf",
+    witness: "Legal Department",
+    verification_status: "verified"
+})
+CREATE (aliceNDA:Collateral {
+    document_type: "Non-Disclosure Agreement",
+    reference_number: "NDA-2024-007", 
+    issue_date: date("2024-02-15"),
+    expiry_date: date("2027-02-15"),
+    issuer: "Beta LLC",
+    status: "valid",
+    file_path: "/documents/ndas/nda-alice-beta.pdf",
+    verification_status: "verified"
+})
+CREATE (bobPartnershipAgreement:Collateral {
+    document_type: "Partnership Agreement",
+    reference_number: "PART-2024-003",
+    issue_date: date("2024-02-15"),
+    expiry_date: date("2025-02-15"),
+    issuer: "Acme Corp Legal",
+    status: "valid",
+    file_path: "/documents/partnerships/part-bob-acme-2024.pdf",
+    verification_status: "verified"
+})
+CREATE (charlieEmploymentContract:Collateral {
+    document_type: "Employment Contract",
+    reference_number: "EMP-2024-002",
+    issue_date: date("2024-02-01"),
+    expiry_date: date("2025-02-01"),
+    issuer: "Gamma Inc HR",
+    status: "valid",
+    file_path: "/documents/contracts/emp-charlie-2024.pdf",
+    verification_status: "verified"
+});
+
+// Link Users to Relationships
+CREATE (alice)-[:HAS_ACCESS_VIA {granted_date: date("2024-01-01"), granted_by: "HR"}]->(aliceEmployeeRel)
+CREATE (alice)-[:HAS_ACCESS_VIA {granted_date: date("2024-03-01"), granted_by: "Legal"}]->(aliceConsultantRel)
+CREATE (bob)-[:HAS_ACCESS_VIA {granted_date: date("2024-02-15"), granted_by: "Business Dev"}]->(bobPartnerRel)
+CREATE (charlie)-[:HAS_ACCESS_VIA {granted_date: date("2024-02-01"), granted_by: "HR"}]->(charlieEmployeeRel);
+
+// Link Relationships to Entities (with inheritance to all entity's products)
+CREATE (aliceEmployeeRel)-[:INCLUDES_ENTITY {permissions: ["read", "write", "admin"]}]->(acme)
+CREATE (aliceConsultantRel)-[:INCLUDES_ENTITY {permissions: ["read"]}]->(beta)
+CREATE (bobPartnerRel)-[:INCLUDES_ENTITY {permissions: ["read", "write"]}]->(acme)
+CREATE (charlieEmployeeRel)-[:INCLUDES_ENTITY {permissions: ["read", "write", "admin"]}]->(gamma);
+
+// Link Relationships to Specific Products (for granular access)
+CREATE (aliceConsultantRel)-[:INCLUDES_PRODUCT {permissions: ["read"]}]->(analytics)
+CREATE (bobPartnerRel)-[:INCLUDES_PRODUCT {permissions: ["read", "write"]}]->(crm);
+
+// Link Relationships to Collateral (Proof Documents)
+CREATE (aliceEmployeeRel)-[:PROVEN_BY {primary: true}]->(aliceEmploymentContract)
+CREATE (aliceConsultantRel)-[:PROVEN_BY {primary: true}]->(aliceConsultingAgreement)
+CREATE (aliceConsultantRel)-[:PROVEN_BY {primary: false}]->(aliceNDA)
+CREATE (bobPartnerRel)-[:PROVEN_BY {primary: true}]->(bobPartnershipAgreement)
+CREATE (charlieEmployeeRel)-[:PROVEN_BY {primary: true}]->(charlieEmploymentContract);
+
+// -----------------------------------------------------------------------------
+// 2. CORE ACCESS QUERIES
+// -----------------------------------------------------------------------------
+
+// Get all products a user can access (with inheritance)
+MATCH (u:User {user_id: $user_id})-[:HAS_ACCESS_VIA]->(rel:Relationship)
+WHERE rel.status = "active"
+
+// Direct product access
+OPTIONAL MATCH (rel)-[ip:INCLUDES_PRODUCT]->(directProducts:Product)
+
+// Inherited product access through entities (employees get all entity products)
+OPTIONAL MATCH (rel)-[ie:INCLUDES_ENTITY]->(entities:Entity)-[:OWNS]->(inheritedProducts:Product)
+
+RETURN 
+    u.name as user,
+    collect(DISTINCT {
+        product: directProducts.name,
+        access_type: "direct",
+        permissions: ip.permissions,
+        via_relationship: rel.name
+    }) + collect(DISTINCT {
+        product: inheritedProducts.name,
+        access_type: "inherited", 
+        permissions: ie.permissions,
+        via_entity: entities.name,
+        via_relationship: rel.name
+    }) as accessible_products;
+
+// Check if user can access specific product
+MATCH (u:User {user_id: $user_id})
+MATCH (p:Product {product_id: $product_id})
+
+// Check direct product access
+OPTIONAL MATCH (u)-[:HAS_ACCESS_VIA]->(rel1:Relationship)-[ip:INCLUDES_PRODUCT]->(p)
+WHERE rel1.status = "active"
+
+// Check inherited access via entity ownership
+OPTIONAL MATCH (u)-[:HAS_ACCESS_VIA]->(rel2:Relationship)-[:INCLUDES_ENTITY]->(e:Entity)-[:OWNS]->(p)
+WHERE rel2.status = "active"
+
+RETURN 
+    u.name as user,
+    p.name as product,
+    CASE 
+        WHEN ip IS NOT NULL THEN "direct_product_access"
+        WHEN e IS NOT NULL THEN "inherited_via_entity"  
+        ELSE "no_access"
+    END as access_method,
+    COALESCE(ip.permissions, ["inherited"]) as permissions;
+
+// Get user's complete access profile with proof documents
+MATCH (u:User {user_id: $user_id})-[:HAS_ACCESS_VIA]->(rel:Relationship)
+MATCH (rel)-[pb:PROVEN_BY]->(collateral:Collateral)
+OPTIONAL MATCH (rel)-[:INCLUDES_ENTITY]->(entities:Entity)
+OPTIONAL MATCH (rel)-[:INCLUDES_PRODUCT]->(products:Product)
+OPTIONAL MATCH (entities)-[:OWNS]->(ownedProducts:Product)
+
+RETURN 
+    u.name as user,
+    rel.name as relationship,
+    rel.type as access_type,
+    rel.status as relationship_status,
+    collect(DISTINCT {
+        document_type: collateral.document_type,
+        reference: collateral.reference_number,
+        status: collateral.status,
+        expiry: collateral.expiry_date,
+        is_primary: pb.primary,
+        verification: collateral.verification_status
+    }) as proof_documents,
+    collect(DISTINCT entities.name) as accessible_entities,
+    collect(DISTINCT products.name) as direct_products,
+    collect(DISTINCT ownedProducts.name) as inherited_products;
+
+// -----------------------------------------------------------------------------
+// 3. COMPLIANCE & AUDIT QUERIES
+// -----------------------------------------------------------------------------
+
+// Find relationships with expiring documents (within 30 days)
+MATCH (rel:Relationship)-[:PROVEN_BY]->(col:Collateral)
+WHERE col.expiry_date <= date() + duration('P30D')
+AND col.status = "valid"
+AND rel.status = "active"
+
+OPTIONAL MATCH (u:User)-[:HAS_ACCESS_VIA]->(rel)
+
+RETURN 
+    rel.name as relationship,
+    col.document_type as document,
+    col.reference_number as reference,
+    col.expiry_date as expires,
+    col.issuer as issued_by,
+    collect(u.name) as affected_users,
+    duration.between(date(), col.expiry_date).days as days_until_expiry
+ORDER BY col.expiry_date;
+
+// Verify user access legitimacy
+MATCH (u:User {user_id: $user_id})-[:HAS_ACCESS_VIA]->(rel:Relationship)
+MATCH (rel)-[:PROVEN_BY]->(col:Collateral)
+
+RETURN 
+    u.name as user,
+    rel.name as relationship,
+    CASE 
+        WHEN rel.status <> "active" THEN "inactive_relationship"
+        WHEN col.status <> "valid" THEN "invalid_document"
+        WHEN col.expiry_date < date() THEN "expired_document"
+        WHEN col.verification_status = "pending" THEN "unverified_document"
+        ELSE "valid_access"
+    END as access_validity,
+    col.document_type as proof_type,
+    col.reference_number as document_ref,
+    col.expiry_date as document_expiry;
+
+// Find relationships without proper documentation
+MATCH (rel:Relationship)
+WHERE rel.status = "active"
+AND NOT EXISTS((rel)-[:PROVEN_BY]->(:Collateral {status: "valid"}))
+
+OPTIONAL MATCH (u:User)-[:HAS_ACCESS_VIA]->(rel)
+
+RETURN 
+    rel.name as relationship,
+    rel.type as type,
+    collect(u.name) as users_at_risk,
+    "missing_or_invalid_collateral" as issue;
+
+// Complete audit trail for a product
+MATCH (p:Product {product_id: $product_id})
+MATCH (owner:Entity)-[:OWNS]->(p)
+
+// Find users with access via entity ownership
+OPTIONAL MATCH (entityUsers:User)-[:HAS_ACCESS_VIA]->(entityRel:Relationship)-[:INCLUDES_ENTITY]->(owner)
+WHERE entityRel.status = "active"
+
+// Find users with direct product access
+OPTIONAL MATCH (directUsers:User)-[:HAS_ACCESS_VIA]->(directRel:Relationship)-[:INCLUDES_PRODUCT]->(p)
+WHERE directRel.status = "active"
+
+// Get their proof documents
+OPTIONAL MATCH (entityRel)-[:PROVEN_BY]->(entityDocs:Collateral)
+OPTIONAL MATCH (directRel)-[:PROVEN_BY]->(directDocs:Collateral)
+
+RETURN 
+    p.name as product,
+    owner.name as owner,
+    collect(DISTINCT {
+        user: entityUsers.name,
+        access_type: "entity_inheritance",
+        relationship: entityRel.name,
+        documents: collect(entityDocs.reference_number)
+    }) + collect(DISTINCT {
+        user: directUsers.name,
+        access_type: "direct_grant",
+        relationship: directRel.name,
+        documents: collect(directDocs.reference_number)
+    }) as access_audit;
+
+// -----------------------------------------------------------------------------
+// 4. MANAGEMENT QUERIES
+// -----------------------------------------------------------------------------
+
+// Add new user with employee relationship
+// (Replace $params with actual values)
+CREATE (newUser:User {
+    name: $user_name,
+    email: $user_email,
+    user_id: $user_id,
+    created_date: date()
+})
+CREATE (newRel:Relationship {
+    name: $user_name + " Employee Access",
+    type: "employment",
+    start_date: date(),
+    status: "active",
+    created_by: $created_by
+})
+CREATE (newContract:Collateral {
+    document_type: "Employment Contract",
+    reference_number: $contract_ref,
+    issue_date: date(),
+    expiry_date: date() + duration('P1Y'),
+    issuer: $entity_name + " HR",
+    status: "valid",
+    file_path: $file_path,
+    verification_status: "pending"
+})
+CREATE (newUser)-[:HAS_ACCESS_VIA {granted_date: date(), granted_by: $created_by}]->(newRel)
+CREATE (newRel)-[:INCLUDES_ENTITY {permissions: ["read", "write", "admin"]}]->(:Entity {name: $entity_name})
+CREATE (newRel)-[:PROVEN_BY {primary: true}]->(newContract);
+
+// Revoke user access (deactivate relationship)
+MATCH (u:User {user_id: $user_id})-[:HAS_ACCESS_VIA]->(rel:Relationship {name: $relationship_name})
+SET rel.status = "inactive",
+    rel.deactivated_date = date(),
+    rel.deactivated_by = $deactivated_by;
+
+// Update document verification status
+MATCH (col:Collateral {reference_number: $ref_number})
+SET col.verification_status = $new_status,
+    col.verified_date = date(),
+    col.verified_by = $verified_by;
+
+// Get statistics dashboard
+MATCH (u:User)
+OPTIONAL MATCH (u)-[:HAS_ACCESS_VIA]->(rel:Relationship)
+OPTIONAL MATCH (rel)-[:PROVEN_BY]->(col:Collateral)
+OPTIONAL MATCH (:Entity)-[:OWNS]->(p:Product)
+
+RETURN 
+    count(DISTINCT u) as total_users,
+    count(DISTINCT rel) as total_relationships,
+    count(DISTINCT CASE WHEN rel.status = "active" THEN rel END) as active_relationships,
+    count(DISTINCT col) as total_documents,
+    count(DISTINCT CASE WHEN col.status = "valid" THEN col END) as valid_documents,
+    count(DISTINCT CASE WHEN col.expiry_date <= date() + duration('P30D') THEN col END) as expiring_documents,
+    count(DISTINCT p) as total_products;
+
+// -----------------------------------------------------------------------------
+// 5. SAMPLE USAGE WITH PARAMETERS
+// -----------------------------------------------------------------------------
+
+// Example: Get Alice's accessible products
+// MATCH (u:User {user_id: "USR001"})-[:HAS_ACCESS_VIA]->(rel:Relationship)...
+
+// Example: Check if Alice can access CRM System
+// MATCH (u:User {user_id: "USR001"})
+// MATCH (p:Product {product_id: "PROD001"})...
+
+// Example: Find documents expiring soon
+// MATCH (rel:Relationship)-[:PROVEN_BY]->(col:Collateral)
+// WHERE col.expiry_date <= date() + duration('P30D')...
