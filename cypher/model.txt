@@ -12,7 +12,7 @@ Properties:
 - created_date: Date
 ```
 
-### User
+x`### User
 **Purpose**: Individuals who access resources through relationships
 ```
 Properties:
@@ -197,4 +197,461 @@ CREATE INDEX collateral_ref FOR (c:Collateral) ON (c.reference_number);
 CREATE INDEX relationship_status FOR (r:Relationship) ON (r.status);
 CREATE INDEX collateral_status FOR (c:Collateral) ON (c.status);
 CREATE INDEX collateral_expiry FOR (c:Collateral) ON (c.expiry_date);
+```
+
+
+V2
+
+
+
+# Cash Management Graph Database Schema
+
+## Schema Overview
+
+```
+┌─────────────┐    OWNS     ┌──────────────┐
+│   Entity    ├────────────>│ CashProduct  │
+└─────┬───────┘             └──────────────┘
+      │                              ▲
+      │ INCLUDES_ENTITY              │ INCLUDES_PRODUCT
+      │                              │
+      ▼                              │
+┌─────────────────────────────────────────────┐
+│              Relationship                   │
+└─────┬─────────────────────────┬─────────────┘
+      │ HAS_ACCESS_VIA          │ PROVEN_BY
+      │                         │
+      ▼                         ▼
+┌─────────────┐           ┌─────────────┐
+│    User     │           │ Collateral  │
+└─────────────┘           └─────────────┘
+```
+
+## Node Schemas
+
+### Entity
+```cypher
+CREATE CONSTRAINT entity_legal_id IF NOT EXISTS FOR (e:Entity) REQUIRE e.legal_id IS UNIQUE;
+CREATE CONSTRAINT entity_tax_id IF NOT EXISTS FOR (e:Entity) REQUIRE e.tax_id IS UNIQUE;
+
+(:Entity {
+  name: String!,                    // Company name
+  legal_id: String! UNIQUE,         // Legal entity identifier
+  address: String?,                 // Business address
+  entity_type: String!,             // "Corporation" | "LLC" | "Partnership" | "Trust"
+  tax_id: String? UNIQUE,           // Tax identification number
+  created_date: Date!,              // Entity creation date
+  status: String DEFAULT "active"   // "active" | "inactive" | "suspended"
+})
+```
+
+### User
+```cypher
+CREATE CONSTRAINT user_id IF NOT EXISTS FOR (u:User) REQUIRE u.user_id IS UNIQUE;
+CREATE CONSTRAINT user_email IF NOT EXISTS FOR (u:User) REQUIRE u.email IS UNIQUE;
+
+(:User {
+  user_id: String! UNIQUE,          // Unique user identifier
+  name: String!,                    // Full name
+  email: String! UNIQUE,            // Email address
+  title: String?,                   // "CFO" | "Treasurer" | "Finance Manager" | "Controller"
+  phone: String?,                   // Phone number
+  employee_id: String?,             // Internal employee ID
+  department: String?,              // Finance | Treasury | Accounting
+  hire_date: Date?,                 // Employment start date
+  created_date: Date!,              // Account creation date
+  status: String DEFAULT "active"   // "active" | "inactive" | "suspended"
+})
+```
+
+### CashProduct
+```cypher
+CREATE CONSTRAINT cash_product_id IF NOT EXISTS FOR (cp:CashProduct) REQUIRE cp.product_id IS UNIQUE;
+CREATE CONSTRAINT account_number IF NOT EXISTS FOR (cp:CashProduct) REQUIRE cp.account_number IS UNIQUE;
+
+(:CashProduct {
+  product_id: String! UNIQUE,           // Unique product identifier
+  name: String!,                        // Product name
+  product_type: String!,                // Product type enum (see below)
+  account_number: String! UNIQUE,       // Bank account number
+  routing_number: String?,              // Bank routing number
+  currency: String DEFAULT "USD",       // Currency code
+  current_balance: Float DEFAULT 0.0,   // Current account balance
+  available_balance: Float?,            // Available balance (after holds)
+  interest_rate: Float DEFAULT 0.0,     // Annual interest rate percentage
+  minimum_balance: Float DEFAULT 0.0,   // Minimum required balance
+  daily_limit: Float?,                  // Daily transaction limit
+  monthly_limit: Float?,                // Monthly transaction limit
+  account_status: String! DEFAULT "active", // "active" | "inactive" | "frozen" | "closed"
+  
+  // DDA specific
+  overdraft_protection: Boolean?,       // Overdraft protection enabled
+  overdraft_limit: Float?,              // Maximum overdraft amount
+  
+  // Money Market specific
+  tier_balance_1: Float?,               // First tier balance threshold
+  tier_rate_1: Float?,                  // First tier interest rate
+  tier_balance_2: Float?,               // Second tier balance threshold  
+  tier_rate_2: Float?,                  // Second tier interest rate
+  
+  // Sweep Account specific
+  target_balance: Float?,               // Target balance to maintain
+  sweep_threshold: Float?,              // Balance threshold for sweep
+  sweep_destination: String?,           // Where excess funds go
+  sweep_frequency: String?,             // "daily" | "weekly" | "monthly"
+  
+  // Zero Balance Account specific  
+  master_account: String?,              // Master account number for funding
+  auto_funding: Boolean?,               // Automatic funding enabled
+  funding_schedule: String?,            // When funding occurs
+  
+  // Certificate of Deposit specific
+  principal_amount: Float?,             // Original deposit amount
+  maturity_date: Date?,                 // CD maturity date
+  term_months: Integer?,                // Term length in months
+  auto_renewal: Boolean?,               // Auto-renew at maturity
+  early_withdrawal_penalty: Integer?,   // Penalty in days of interest
+  
+  // Repurchase Agreement specific
+  collateral_type: String?,             // "US Treasury" | "Corporate Bond" | "Municipal"
+  counterparty: String?,                // Counterparty institution
+  haircut_percentage: Float?,           // Risk adjustment percentage
+  repo_rate: Float?,                    // Repo-specific rate
+  
+  // Audit fields
+  created_date: Date!,                  // Account opening date
+  last_updated: DateTime?,              // Last modification timestamp
+  updated_by: String?                   // Who last updated
+})
+
+// Product type enumeration
+// "Demand Deposit Account" | "Money Market Account" | "Sweep Account" | 
+// "Zero Balance Account" | "Certificate of Deposit" | "Repurchase Agreement" |
+// "Commercial Paper" | "Treasury Bill" | "Corporate Bond"
+```
+
+### Relationship
+```cypher
+CREATE CONSTRAINT relationship_name IF NOT EXISTS FOR (r:Relationship) REQUIRE r.name IS UNIQUE;
+
+(:Relationship {
+  name: String! UNIQUE,                 // Unique relationship name
+  type: String!,                        // "employment" | "consulting" | "fiduciary" | "power_of_attorney"
+  role: String?,                        // "CFO" | "Treasurer" | "Finance Manager" | "Authorized Signer"
+  authorization_level: String!,         // "Level 1" | "Level 2" | "Level 3" | "Level 4"
+  start_date: Date!,                    // Relationship start date
+  end_date: Date?,                      // Relationship end date (if applicable)
+  status: String! DEFAULT "active",     // "active" | "inactive" | "suspended" | "expired"
+  
+  // Administrative
+  created_by: String!,                  // Who created this relationship
+  created_date: Date!,                  // Creation timestamp
+  approved_by: String?,                 // Who approved this relationship
+  approval_date: Date?,                 // Approval timestamp
+  
+  // Suspension tracking
+  suspension_date: Date?,               // When suspended (if applicable)
+  suspension_reason: String?,           // Reason for suspension
+  suspended_by: String?,                // Who suspended
+  
+  // Review tracking
+  last_review_date: Date?,              // Last compliance review
+  next_review_date: Date?,              // Next scheduled review
+  review_frequency: String DEFAULT "annual" // "monthly" | "quarterly" | "annual"
+})
+```
+
+### Collateral
+```cypher
+CREATE CONSTRAINT collateral_ref IF NOT EXISTS FOR (c:Collateral) REQUIRE c.reference_number IS UNIQUE;
+
+(:Collateral {
+  document_type: String!,               // Document type (see enum below)
+  reference_number: String! UNIQUE,     // Unique document reference
+  issue_date: Date!,                    // Document issue date
+  effective_date: Date?,                // When document becomes effective
+  expiry_date: Date?,                   // Document expiration date
+  issuer: String!,                      // Who issued the document
+  status: String! DEFAULT "valid",      // "valid" | "invalid" | "pending" | "expired" | "revoked"
+  
+  // File management
+  file_path: String?,                   // Path to document file
+  file_type: String?,                   // "PDF" | "DOC" | "TIFF" | "JPG"
+  digital_signature: String?,           // Digital signature hash
+  checksum: String?,                    // File integrity checksum
+  
+  // Authorization amounts
+  authorized_amount: Float?,            // Maximum authorized amount
+  daily_limit: Float?,                  // Daily transaction limit
+  monthly_limit: Float?,                // Monthly transaction limit
+  
+  // Banking specific fields
+  signature_card_on_file: Boolean DEFAULT false,    // Physical signature card filed
+  background_check_complete: Boolean DEFAULT false, // Background check completed
+  credit_check_complete: Boolean DEFAULT false,     // Credit check completed
+  
+  // Insurance/Bonding
+  bonding_amount: Float?,               // Fidelity bond coverage amount
+  coverage_amount: Float?,              // Insurance coverage amount
+  insurance_carrier: String?,           // Insurance company name
+  policy_number: String?,               // Insurance policy number
+  
+  // Corporate resolutions
+  board_meeting_date: Date?,            // Date of board meeting
+  resolution_number: String?,           // Board resolution number
+  voting_members: Integer?,             // Number of voting members
+  unanimous_consent: Boolean?,          // Unanimous consent achieved
+  
+  // Signature requirements
+  dual_signature_required: Boolean DEFAULT false,   // Requires dual signatures
+  signature_threshold: Float?,          // Amount requiring signatures
+  authorized_signers: [String]?,        // List of authorized signer IDs
+  
+  // Verification and compliance
+  verification_status: String DEFAULT "pending",    // "verified" | "pending" | "failed" | "expired"
+  verified_date: Date?,                 // When verification completed
+  verified_by: String?,                 // Who performed verification
+  compliance_officer: String?,          // Assigned compliance officer
+  risk_rating: String?,                 // "Low" | "Medium" | "High"
+  
+  // Audit trail
+  created_date: Date!,                  // Document creation date
+  last_updated: DateTime?,              // Last update timestamp
+  updated_by: String?,                  // Who last updated
+  notes: String?                        // Additional notes
+})
+
+// Document type enumeration:
+// "Employment Agreement" | "Consulting Agreement" | "Board Resolution" | 
+// "Power of Attorney" | "Bank Signature Card" | "Fidelity Bond" | 
+// "Non-Disclosure Agreement" | "Corporate Bylaws" | "Operating Agreement" |
+// "Trust Agreement" | "Fiduciary Bond" | "Background Check" | "Credit Report"
+```
+
+## Relationship Schemas
+
+### OWNS (Entity → CashProduct)
+```cypher
+-[:OWNS {
+  account_opened: Date!,                // When account was opened
+  ownership_type: String!,              // "Primary" | "Investment" | "Subsidiary" | "Treasury" | "Escrow"
+  authorized_limit: Float?,             // Maximum authorized amount for this account
+  relationship_manager: String?,        // Bank relationship manager name
+  account_officer: String?,             // Assigned account officer
+  service_level: String?,               // "Standard" | "Premium" | "Private"
+  fee_schedule: String?,                // Fee schedule code
+  statements_frequency: String DEFAULT "monthly", // "daily" | "weekly" | "monthly"
+  online_access: Boolean DEFAULT true,  // Online banking access enabled
+  wire_cutoff_time: Time?,              // Daily wire transfer cutoff
+  created_date: Date!,                  // Relationship creation date
+  notes: String?                        // Additional notes
+}]->
+```
+
+### HAS_ACCESS_VIA (User → Relationship)
+```cypher
+-[:HAS_ACCESS_VIA {
+  granted_date: Date!,                  // When access was granted
+  granted_by: String!,                  // Who granted access
+  effective_date: Date?,                // When access becomes effective
+  
+  // Transaction authorities
+  transaction_limit: Float!,            // Maximum transaction amount
+  daily_limit: Float?,                  // Daily transaction limit
+  monthly_limit: Float?,                // Monthly transaction limit
+  wire_authority: Boolean DEFAULT false,           // Wire transfer authority
+  ach_authority: Boolean DEFAULT false,            // ACH transfer authority
+  check_signing_authority: Boolean DEFAULT false, // Check signing authority
+  investment_authority: Boolean DEFAULT false,    // Investment decision authority
+  
+  // Access controls
+  ip_restrictions: [String]?,           // Allowed IP addresses
+  time_restrictions: String?,           // Time-based access restrictions
+  mfa_required: Boolean DEFAULT true,   // Multi-factor authentication required
+  session_timeout: Integer DEFAULT 30, // Session timeout in minutes
+  
+  // Approval requirements
+  requires_dual_approval: Boolean DEFAULT false, // Requires second approval
+  dual_approval_threshold: Float?,      // Amount requiring dual approval
+  
+  // Audit
+  last_login: DateTime?,                // Last login timestamp
+  login_count: Integer DEFAULT 0,       // Number of logins
+  last_transaction: DateTime?,          // Last transaction timestamp
+  created_date: Date!,                  // Access creation date
+  notes: String?                        // Additional notes
+}]->
+```
+
+### INCLUDES_ENTITY (Relationship → Entity)
+```cypher
+-[:INCLUDES_ENTITY {
+  permissions: [String]!,               // ["read", "write", "transfer", "admin", "report"]
+  transaction_types: [String]!,         // ["wire", "ach", "check", "sweep", "investment", "reporting"]
+  daily_limit: Float!,                  // Daily transaction limit for this entity
+  monthly_limit: Float?,                // Monthly transaction limit
+  
+  // Approval requirements
+  requires_dual_approval: Boolean DEFAULT false,  // Dual approval required
+  dual_approval_threshold: Float?,      // Amount requiring dual approval
+  auto_approval_limit: Float?,          // Auto-approval threshold
+  
+  // Access restrictions
+  read_only_mode: Boolean DEFAULT false, // Read-only access
+  emergency_access: Boolean DEFAULT false, // Emergency access privileges
+  business_hours_only: Boolean DEFAULT false, // Restrict to business hours
+  
+  // Geographic restrictions
+  country_restrictions: [String]?,      // Allowed countries
+  state_restrictions: [String]?,        // Allowed states/provinces
+  
+  effective_date: Date!,                // When access becomes effective
+  expiry_date: Date?,                   // Access expiration date
+  created_date: Date!,                  // Access creation date
+  notes: String?                        // Additional notes
+}]->
+```
+
+### INCLUDES_PRODUCT (Relationship → CashProduct)
+```cypher
+-[:INCLUDES_PRODUCT {
+  permissions: [String]!,               // ["read", "write", "transfer", "advisory", "view_balance"]
+  transaction_types: [String]!,         // ["wire", "ach", "investment", "reporting", "maturity_management"]
+  daily_limit: Float!,                  // Daily transaction limit for this product
+  monthly_limit: Float?,                // Monthly transaction limit
+  
+  // Product-specific permissions
+  view_balance: Boolean DEFAULT true,   // Can view account balance
+  view_transactions: Boolean DEFAULT true, // Can view transaction history
+  view_statements: Boolean DEFAULT true, // Can view account statements
+  download_statements: Boolean DEFAULT false, // Can download statements
+  
+  // Investment-specific (CD, Repo, etc.)
+  early_redemption_authority: Boolean DEFAULT false, // Can redeem early
+  rollover_authority: Boolean DEFAULT false, // Can manage rollovers
+  rate_negotiation_authority: Boolean DEFAULT false, // Can negotiate rates
+  
+  // Sweep/ZBA specific  
+  sweep_configuration_access: Boolean DEFAULT false, // Can modify sweep settings
+  funding_schedule_access: Boolean DEFAULT false, // Can modify funding schedule
+  
+  // Risk controls
+  concentration_limit: Float?,          // Maximum position size
+  maturity_limit: Integer?,             // Maximum maturity in days
+  credit_quality_minimum: String?,      // "AAA" | "AA" | "A" | "BBB"
+  
+  effective_date: Date!,                // When access becomes effective
+  expiry_date: Date?,                   // Access expiration date
+  created_date: Date!,                  // Access creation date
+  notes: String?                        // Additional notes
+}]->
+```
+
+### PROVEN_BY (Relationship → Collateral)
+```cypher
+-[:PROVEN_BY {
+  primary: Boolean!,                    // Is this the primary supporting document
+  dependency_order: Integer DEFAULT 1, // Order of document dependency
+  required_for_activation: Boolean DEFAULT true, // Required to activate relationship
+  
+  // Document linkage
+  document_role: String!,               // "Authorization" | "Identity" | "Insurance" | "Compliance"
+  supersedes_document: String?,         // Reference number of document this replaces
+  supplements_document: String?,        // Reference number of document this supplements
+  
+  // Validation
+  validation_date: Date?,               // When document was validated
+  validated_by: String?,                // Who validated the document
+  validation_method: String?,           // "Manual" | "Electronic" | "Notarized"
+  
+  // Compliance
+  regulatory_requirement: String?,      // Which regulation requires this document
+  retention_period: Integer?,           // Document retention period in years
+  
+  created_date: Date!,                  // Link creation date
+  notes: String?                        // Additional notes
+}]->
+```
+
+## Indexes and Performance
+
+```cypher
+// Unique constraints (already defined above)
+CREATE CONSTRAINT entity_legal_id IF NOT EXISTS FOR (e:Entity) REQUIRE e.legal_id IS UNIQUE;
+CREATE CONSTRAINT entity_tax_id IF NOT EXISTS FOR (e:Entity) REQUIRE e.tax_id IS UNIQUE;
+CREATE CONSTRAINT user_id IF NOT EXISTS FOR (u:User) REQUIRE u.user_id IS UNIQUE;
+CREATE CONSTRAINT user_email IF NOT EXISTS FOR (u:User) REQUIRE u.email IS UNIQUE;
+CREATE CONSTRAINT cash_product_id IF NOT EXISTS FOR (cp:CashProduct) REQUIRE cp.product_id IS UNIQUE;
+CREATE CONSTRAINT account_number IF NOT EXISTS FOR (cp:CashProduct) REQUIRE cp.account_number IS UNIQUE;
+CREATE CONSTRAINT relationship_name IF NOT EXISTS FOR (r:Relationship) REQUIRE r.name IS UNIQUE;
+CREATE CONSTRAINT collateral_ref IF NOT EXISTS FOR (c:Collateral) REQUIRE c.reference_number IS UNIQUE;
+
+// Performance indexes
+CREATE INDEX entity_name IF NOT EXISTS FOR (e:Entity) ON (e.name);
+CREATE INDEX entity_status IF NOT EXISTS FOR (e:Entity) ON (e.status);
+CREATE INDEX user_title IF NOT EXISTS FOR (u:User) ON (u.title);
+CREATE INDEX user_status IF NOT EXISTS FOR (u:User) ON (u.status);
+CREATE INDEX cash_product_type IF NOT EXISTS FOR (cp:CashProduct) ON (cp.product_type);
+CREATE INDEX cash_product_status IF NOT EXISTS FOR (cp:CashProduct) ON (cp.account_status);
+CREATE INDEX cash_balance IF NOT EXISTS FOR (cp:CashProduct) ON (cp.current_balance);
+CREATE INDEX relationship_type IF NOT EXISTS FOR (r:Relationship) ON (r.type);
+CREATE INDEX relationship_status IF NOT EXISTS FOR (r:Relationship) ON (r.status);
+CREATE INDEX relationship_auth_level IF NOT EXISTS FOR (r:Relationship) ON (r.authorization_level);
+CREATE INDEX collateral_type IF NOT EXISTS FOR (c:Collateral) ON (c.document_type);
+CREATE INDEX collateral_status IF NOT EXISTS FOR (c:Collateral) ON (c.status);
+CREATE INDEX collateral_expiry IF NOT EXISTS FOR (c:Collateral) ON (c.expiry_date);
+CREATE INDEX collateral_verification IF NOT EXISTS FOR (c:Collateral) ON (c.verification_status);
+
+// Composite indexes for common queries
+CREATE INDEX user_access_lookup IF NOT EXISTS FOR ()-[r:HAS_ACCESS_VIA]-() ON (r.granted_date, r.transaction_limit);
+CREATE INDEX product_balance_status IF NOT EXISTS FOR (cp:CashProduct) ON (cp.current_balance, cp.account_status);
+CREATE INDEX relationship_dates IF NOT EXISTS FOR (r:Relationship) ON (r.start_date, r.end_date, r.status);
+CREATE INDEX collateral_validity IF NOT EXISTS FOR (c:Collateral) ON (c.status, c.expiry_date, c.verification_status);
+```
+
+## Data Validation Rules
+
+```cypher
+// Entity validation
+ASSERT (e:Entity) WHERE e.entity_type IN ['Corporation', 'LLC', 'Partnership', 'Trust']
+ASSERT (e:Entity) WHERE e.status IN ['active', 'inactive', 'suspended']
+
+// User validation  
+ASSERT (u:User) WHERE u.status IN ['active', 'inactive', 'suspended']
+ASSERT (u:User) WHERE u.title IN ['CFO', 'Treasurer', 'Finance Manager', 'Controller', 'Assistant Treasurer']
+
+// Cash Product validation
+ASSERT (cp:CashProduct) WHERE cp.product_type IN [
+  'Demand Deposit Account', 'Money Market Account', 'Sweep Account', 
+  'Zero Balance Account', 'Certificate of Deposit', 'Repurchase Agreement',
+  'Commercial Paper', 'Treasury Bill', 'Corporate Bond'
+]
+ASSERT (cp:CashProduct) WHERE cp.account_status IN ['active', 'inactive', 'frozen', 'closed']
+ASSERT (cp:CashProduct) WHERE cp.current_balance >= -cp.overdraft_limit
+
+// Relationship validation
+ASSERT (r:Relationship) WHERE r.type IN ['employment', 'consulting', 'fiduciary', 'power_of_attorney']
+ASSERT (r:Relationship) WHERE r.authorization_level IN ['Level 1', 'Level 2', 'Level 3', 'Level 4']
+ASSERT (r:Relationship) WHERE r.status IN ['active', 'inactive', 'suspended', 'expired']
+
+// Collateral validation
+ASSERT (c:Collateral) WHERE c.status IN ['valid', 'invalid', 'pending', 'expired', 'revoked']
+ASSERT (c:Collateral) WHERE c.verification_status IN ['verified', 'pending', 'failed', 'expired']
+```
+
+## Schema Statistics
+
+```cypher
+// Get schema overview
+CALL db.schema.visualization()
+
+// Node counts by type
+MATCH (n) RETURN labels(n)[0] as NodeType, count(n) as Count
+
+// Relationship counts by type  
+MATCH ()-[r]->() RETURN type(r) as RelationshipType, count(r) as Count
+
+// Property distribution
+CALL db.schema.nodeTypeProperties()
+CALL db.schema.relTypeProperties()
 ```

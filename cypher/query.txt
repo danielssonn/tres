@@ -1,421 +1,307 @@
-// =============================================================================
-// GRAPH DATA MODEL: Entity, User, Product, Relationship, Collateral
-// =============================================================================
+# Cash Management Graph Data Model Schema
 
-// -----------------------------------------------------------------------------
-// 1. CREATE SAMPLE DATA
-// -----------------------------------------------------------------------------
+## Node Types
 
-// Create Entities
-CREATE (acme:Entity {
-    name: "Acme Corp", 
-    legal_id: "ACME001",
-    address: "123 Business St",
-    created_date: date("2020-01-01")
-})
-CREATE (beta:Entity {
-    name: "Beta LLC", 
-    legal_id: "BETA002",
-    address: "456 Commerce Ave",
-    created_date: "2021-03-15"
-})
-CREATE (gamma:Entity {
-    name: "Gamma Inc", 
-    legal_id: "GAMMA003",
-    address: "789 Industry Blvd",
-    created_date: date("2019-06-01")
-});
+### Entity
+**Purpose**: Legal company entities that own cash management products
+```
+Properties:
+- name: String (required)
+- legal_id: String (unique, required)
+- address: String
+- entity_type: String // "Corporation", "LLC", "Partnership"
+- tax_id: String (unique)
+- created_date: Date
+```
 
-// Create Users
-CREATE (alice:User {
-    name: "Alice Smith", 
-    email: "alice@acme.com", 
-    user_id: "USR001",
-    created_date: date("2024-01-01")
-})
-CREATE (bob:User {
-    name: "Bob Jones", 
-    email: "bob@beta.com", 
-    user_id: "USR002",
-    created_date: date("2024-01-15")
-})
-CREATE (charlie:User {
-    name: "Charlie Brown", 
-    email: "charlie@gamma.com", 
-    user_id: "USR003",
-    created_date: date("2024-02-01")
-});
+### User
+**Purpose**: Authorized signers and account managers who access cash products
+```
+Properties:
+- user_id: String (unique, required)
+- name: String (required)
+- email: String (unique, required)
+- title: String // "CFO", "Treasurer", "Finance Manager"
+- phone: String
+- created_date: Date
+```
 
-// Create Products
-CREATE (crm:Product {
-    name: "CRM System", 
-    product_id: "PROD001",
-    description: "Customer Relationship Management",
-    version: "2.1"
-})
-CREATE (erp:Product {
-    name: "ERP Suite", 
-    product_id: "PROD002",
-    description: "Enterprise Resource Planning",
-    version: "3.0"
-})
-CREATE (analytics:Product {
-    name: "Analytics Platform", 
-    product_id: "PROD003",
-    description: "Business Intelligence Dashboard",
-    version: "1.5"
-})
-CREATE (hr:Product {
-    name: "HR Management", 
-    product_id: "PROD004",
-    description: "Human Resources System",
-    version: "2.0"
-});
+### CashProduct
+**Purpose**: Cash management products (accounts, investments, etc.)
+```
+Properties:
+- product_id: String (unique, required)
+- name: String (required)
+- product_type: String (required) // "Demand Deposit Account", "Money Market Account", etc.
+- account_number: String (unique, required)
+- currency: String // "USD", "EUR", etc.
+- current_balance: Float
+- interest_rate: Float
+- minimum_balance: Float
+- daily_limit: Float
+- monthly_limit: Float
+- account_status: String // "active", "inactive", "frozen"
 
-// Entity Ownership of Products
-CREATE (acme)-[:OWNS {acquired_date: date("2024-01-15"), ownership_type: "license"}]->(crm)
-CREATE (acme)-[:OWNS {acquired_date: date("2024-01-20"), ownership_type: "purchase"}]->(hr)
-CREATE (beta)-[:OWNS {acquired_date: date("2024-02-01"), ownership_type: "subscription"}]->(erp)
-CREATE (gamma)-[:OWNS {acquired_date: date("2024-03-01"), ownership_type: "license"}]->(analytics);
+// Product-specific properties:
+- overdraft_protection: Boolean (DDA)
+- target_balance: Float (Sweep Account)
+- sweep_threshold: Float (Sweep Account)
+- master_account: String (Zero Balance Account)
+- auto_funding: Boolean (Zero Balance Account)
+- maturity_date: Date (CD, Repo)
+- term_months: Integer (CD)
+- auto_renewal: Boolean (CD)
+- early_withdrawal_penalty: Integer (CD)
+- collateral_type: String (Repo)
+- counterparty: String (Repo)
+```
 
-// Create Relationships (Access Containers)
-CREATE (aliceEmployeeRel:Relationship {
-    name: "Alice Employee Access", 
-    type: "employment",
-    start_date: date("2024-01-01"),
-    status: "active",
-    created_by: "HR Department"
-})
-CREATE (aliceConsultantRel:Relationship {
-    name: "Alice Consultant Agreement",
-    type: "consulting", 
-    start_date: date("2024-03-01"),
-    end_date: date("2024-12-31"),
-    status: "active",
-    created_by: "Legal Department"
-})
-CREATE (bobPartnerRel:Relationship {
-    name: "Bob Partner Integration",
-    type: "partnership",
-    start_date: date("2024-02-15"), 
-    status: "active",
-    created_by: "Business Development"
-})
-CREATE (charlieEmployeeRel:Relationship {
-    name: "Charlie Employee Access",
-    type: "employment",
-    start_date: date("2024-02-01"),
-    status: "active",
-    created_by: "HR Department"
-});
+### Relationship
+**Purpose**: Access control container defining cash management authority
+```
+Properties:
+- name: String (required)
+- type: String (required) // "employment", "consulting", "fiduciary"
+- role: String // "CFO", "Treasurer", "Treasury Advisor"
+- authorization_level: String // "Level 1", "Level 2", "Level 3"
+- start_date: Date (required)
+- end_date: Date (optional)
+- status: String (required) // "active", "inactive", "suspended"
+- created_by: String
+- suspension_date: Date (optional)
+- suspension_reason: String (optional)
+- suspended_by: String (optional)
+```
 
-// Create Collateral (Proof Documents)
-CREATE (aliceEmploymentContract:Collateral {
-    document_type: "Employment Contract",
-    reference_number: "EMP-2024-001",
-    issue_date: date("2024-01-01"),
-    expiry_date: date("2025-01-01"),
-    issuer: "Acme Corp HR",
-    status: "valid",
-    file_path: "/documents/contracts/emp-alice-2024.pdf",
-    digital_signature: "SHA256:abc123def456",
-    verification_status: "verified"
-})
-CREATE (aliceConsultingAgreement:Collateral {
-    document_type: "Consulting Agreement", 
-    reference_number: "CONS-2024-015",
-    issue_date: date("2024-02-28"),
-    expiry_date: date("2024-12-31"),
-    issuer: "Beta LLC Legal",
-    status: "valid",
-    file_path: "/documents/agreements/cons-alice-beta-2024.pdf",
-    witness: "Legal Department",
-    verification_status: "verified"
-})
-CREATE (aliceNDA:Collateral {
-    document_type: "Non-Disclosure Agreement",
-    reference_number: "NDA-2024-007", 
-    issue_date: date("2024-02-15"),
-    expiry_date: date("2027-02-15"),
-    issuer: "Beta LLC",
-    status: "valid",
-    file_path: "/documents/ndas/nda-alice-beta.pdf",
-    verification_status: "verified"
-})
-CREATE (bobPartnershipAgreement:Collateral {
-    document_type: "Partnership Agreement",
-    reference_number: "PART-2024-003",
-    issue_date: date("2024-02-15"),
-    expiry_date: date("2025-02-15"),
-    issuer: "Acme Corp Legal",
-    status: "valid",
-    file_path: "/documents/partnerships/part-bob-acme-2024.pdf",
-    verification_status: "verified"
-})
-CREATE (charlieEmploymentContract:Collateral {
-    document_type: "Employment Contract",
-    reference_number: "EMP-2024-002",
-    issue_date: date("2024-02-01"),
-    expiry_date: date("2025-02-01"),
-    issuer: "Gamma Inc HR",
-    status: "valid",
-    file_path: "/documents/contracts/emp-charlie-2024.pdf",
-    verification_status: "verified"
-});
+### Collateral
+**Purpose**: Banking documentation that proves financial authority
+```
+Properties:
+- document_type: String (required) // "Employment Agreement", "Board Resolution", etc.
+- reference_number: String (unique, required)
+- issue_date: Date (required)
+- expiry_date: Date (optional)
+- issuer: String (required)
+- status: String (required) // "valid", "invalid", "pending"
+- file_path: String
+- authorized_amount: Float
+- signature_card_on_file: Boolean
+- background_check_complete: Boolean
+- bonding_amount: Float (for consultants)
+- coverage_amount: Float (for fidelity bonds)
+- board_meeting_date: Date (for resolutions)
+- dual_signature_required: Boolean
+- verification_status: String // "verified", "pending", "failed"
+- verified_date: Date (optional)
+- verified_by: String (optional)
+```
 
-// Link Users to Relationships
-CREATE (alice)-[:HAS_ACCESS_VIA {granted_date: date("2024-01-01"), granted_by: "HR"}]->(aliceEmployeeRel)
-CREATE (alice)-[:HAS_ACCESS_VIA {granted_date: date("2024-03-01"), granted_by: "Legal"}]->(aliceConsultantRel)
-CREATE (bob)-[:HAS_ACCESS_VIA {granted_date: date("2024-02-15"), granted_by: "Business Dev"}]->(bobPartnerRel)
-CREATE (charlie)-[:HAS_ACCESS_VIA {granted_date: date("2024-02-01"), granted_by: "HR"}]->(charlieEmployeeRel);
+## Relationship Types
 
-// Link Relationships to Entities (with inheritance to all entity's products)
-CREATE (aliceEmployeeRel)-[:INCLUDES_ENTITY {permissions: ["read", "write", "admin"]}]->(acme)
-CREATE (aliceConsultantRel)-[:INCLUDES_ENTITY {permissions: ["read"]}]->(beta)
-CREATE (bobPartnerRel)-[:INCLUDES_ENTITY {permissions: ["read", "write"]}]->(acme)
-CREATE (charlieEmployeeRel)-[:INCLUDES_ENTITY {permissions: ["read", "write", "admin"]}]->(gamma);
+### Core Ownership
+```
+Entity -[OWNS]-> CashProduct
+Properties:
+- account_opened: Date
+- ownership_type: String // "Primary", "Investment", "Subsidiary", "Treasury"
+- authorized_limit: Float
+- relationship_manager: String
+```
 
-// Link Relationships to Specific Products (for granular access)
-CREATE (aliceConsultantRel)-[:INCLUDES_PRODUCT {permissions: ["read"]}]->(analytics)
-CREATE (bobPartnerRel)-[:INCLUDES_PRODUCT {permissions: ["read", "write"]}]->(crm);
+### User Access Control
+```
+User -[HAS_ACCESS_VIA]-> Relationship
+Properties:
+- granted_date: Date (required)
+- granted_by: String (required)
+- transaction_limit: Float
+- wire_authority: Boolean
+- ach_authority: Boolean
+```
 
-// Link Relationships to Collateral (Proof Documents)
-CREATE (aliceEmployeeRel)-[:PROVEN_BY {primary: true}]->(aliceEmploymentContract)
-CREATE (aliceConsultantRel)-[:PROVEN_BY {primary: true}]->(aliceConsultingAgreement)
-CREATE (aliceConsultantRel)-[:PROVEN_BY {primary: false}]->(aliceNDA)
-CREATE (bobPartnerRel)-[:PROVEN_BY {primary: true}]->(bobPartnershipAgreement)
-CREATE (charlieEmployeeRel)-[:PROVEN_BY {primary: true}]->(charlieEmploymentContract);
+### Relationship Scope - Entities
+```
+Relationship -[INCLUDES_ENTITY]-> Entity
+Properties:
+- permissions: Array<String> // ["read", "write", "transfer", "admin"]
+- transaction_types: Array<String> // ["wire", "ach", "check", "sweep", "investment"]
+- daily_limit: Float
+- requires_dual_approval: Boolean
 
-// -----------------------------------------------------------------------------
-// 2. CORE ACCESS QUERIES
-// -----------------------------------------------------------------------------
+Note: Users automatically inherit access to ALL cash products owned by included entities
+```
 
-// Get all products a user can access (with inheritance)
-MATCH (u:User {user_id: $user_id})-[:HAS_ACCESS_VIA]->(rel:Relationship)
-WHERE rel.status = "active"
+### Relationship Scope - Cash Products (Granular)
+```
+Relationship -[INCLUDES_PRODUCT]-> CashProduct
+Properties:
+- permissions: Array<String> // ["read", "write", "transfer", "advisory"]
+- transaction_types: Array<String> // ["wire", "ach", "investment", "reporting"]
+- daily_limit: Float
+- view_balance: Boolean
+- view_transactions: Boolean
+- early_redemption_authority: Boolean (for CDs)
 
-// Direct product access
-OPTIONAL MATCH (rel)-[ip:INCLUDES_PRODUCT]->(directProducts:Product)
+Note: For specific cash product access beyond entity inheritance
+```
 
-// Inherited product access through entities (employees get all entity products)
-OPTIONAL MATCH (rel)-[ie:INCLUDES_ENTITY]->(entities:Entity)-[:OWNS]->(inheritedProducts:Product)
+### Relationship Proof
+```
+Relationship -[PROVEN_BY]-> Collateral
+Properties:
+- primary: Boolean // true for main document, false for supporting docs
+```
 
-RETURN 
-    u.name as user,
-    collect(DISTINCT {
-        product: directProducts.name,
-        access_type: "direct",
-        permissions: ip.permissions,
-        via_relationship: rel.name
-    }) + collect(DISTINCT {
-        product: inheritedProducts.name,
-        access_type: "inherited", 
-        permissions: ie.permissions,
-        via_entity: entities.name,
-        via_relationship: rel.name
-    }) as accessible_products;
+## Schema Visualization
 
-// Check if user can access specific product
-MATCH (u:User {user_id: $user_id})
-MATCH (p:Product {product_id: $product_id})
+```
+    ┌─────────────┐         ┌──────────────┐         ┌─────────────┐
+    │   Entity    │  OWNS   │ CashProduct  │         │    User     │
+    │             ├────────>│              │         │             │
+    │ - name      │         │ - product_id │         │ - user_id   │
+    │ - legal_id  │         │ - name       │         │ - name      │
+    │ - tax_id    │         │ - acct_num   │         │ - title     │
+    │             │         │ - balance    │         │ - email     │
+    └─────┬───────┘         │ - prod_type  │         └──────┬──────┘
+          │                 └──────────────┘                │
+          │ INCLUDES_ENTITY                                 │ HAS_ACCESS_VIA
+          │                                                 │
+          v                                                 v
+    ┌─────────────────────────────────────────────────────────────────┐
+    │                    Relationship                                 │
+    │                                                                 │
+    │ - name           - type            - status                     │
+    │ - role           - auth_level      - created_by                 │
+    └─────┬─────────────────────────────────────────┬─────────────────┘
+          │ INCLUDES_PRODUCT                        │ PROVEN_BY
+          │                                         │
+          v                                         v
+    ┌─────────────┐                           ┌─────────────┐
+    │ CashProduct │                           │ Collateral  │
+    │             │                           │             │
+    │ (granular   │                           │ - doc_type  │
+    │  access)    │                           │ - ref_num   │
+    └─────────────┘                           │ - auth_amt  │
+                                              │ - expiry    │
+                                              └─────────────┘
+```
 
-// Check direct product access
-OPTIONAL MATCH (u)-[:HAS_ACCESS_VIA]->(rel1:Relationship)-[ip:INCLUDES_PRODUCT]->(p)
-WHERE rel1.status = "active"
+## Cash Management Product Types
 
-// Check inherited access via entity ownership
-OPTIONAL MATCH (u)-[:HAS_ACCESS_VIA]->(rel2:Relationship)-[:INCLUDES_ENTITY]->(e:Entity)-[:OWNS]->(p)
-WHERE rel2.status = "active"
+### Demand Deposit Account (DDA)
+```
+- Primary operating accounts for daily transactions
+- Overdraft protection available
+- Higher transaction limits
+- Real-time balance access
+```
 
-RETURN 
-    u.name as user,
-    p.name as product,
-    CASE 
-        WHEN ip IS NOT NULL THEN "direct_product_access"
-        WHEN e IS NOT NULL THEN "inherited_via_entity"  
-        ELSE "no_access"
-    END as access_method,
-    COALESCE(ip.permissions, ["inherited"]) as permissions;
+### Money Market Account (MMA)
+```
+- Higher interest rates
+- Higher minimum balance requirements
+- Limited transaction frequency
+- Investment-oriented
+```
 
-// Get user's complete access profile with proof documents
-MATCH (u:User {user_id: $user_id})-[:HAS_ACCESS_VIA]->(rel:Relationship)
-MATCH (rel)-[pb:PROVEN_BY]->(collateral:Collateral)
-OPTIONAL MATCH (rel)-[:INCLUDES_ENTITY]->(entities:Entity)
-OPTIONAL MATCH (rel)-[:INCLUDES_PRODUCT]->(products:Product)
-OPTIONAL MATCH (entities)-[:OWNS]->(ownedProducts:Product)
+### Sweep Account
+```
+- Automated cash management
+- Target balance maintenance
+- Excess funds automatically invested
+- Zero manual intervention
+```
 
-RETURN 
-    u.name as user,
-    rel.name as relationship,
-    rel.type as access_type,
-    rel.status as relationship_status,
-    collect(DISTINCT {
-        document_type: collateral.document_type,
-        reference: collateral.reference_number,
-        status: collateral.status,
-        expiry: collateral.expiry_date,
-        is_primary: pb.primary,
-        verification: collateral.verification_status
-    }) as proof_documents,
-    collect(DISTINCT entities.name) as accessible_entities,
-    collect(DISTINCT products.name) as direct_products,
-    collect(DISTINCT ownedProducts.name) as inherited_products;
+### Zero Balance Account (ZBA)
+```
+- Specialized subsidiary accounts
+- Automatically funded from master account
+- Used for specific purposes (payroll, vendor payments)
+- Zero end-of-day balance
+```
 
-// -----------------------------------------------------------------------------
-// 3. COMPLIANCE & AUDIT QUERIES
-// -----------------------------------------------------------------------------
+### Certificate of Deposit (CD)
+```
+- Fixed-term investments
+- Higher interest rates
+- Early withdrawal penalties
+- Maturity date tracking
+```
 
-// Find relationships with expiring documents (within 30 days)
-MATCH (rel:Relationship)-[:PROVEN_BY]->(col:Collateral)
-WHERE col.expiry_date <= date() + duration('P30D')
-AND col.status = "valid"
-AND rel.status = "active"
+### Repurchase Agreement (Repo)
+```
+- Short-term secured investments
+- Collateralized by securities
+- Overnight or term-based
+- High-value transactions
+```
 
-OPTIONAL MATCH (u:User)-[:HAS_ACCESS_VIA]->(rel)
+## Access Inheritance Rules
 
-RETURN 
-    rel.name as relationship,
-    col.document_type as document,
-    col.reference_number as reference,
-    col.expiry_date as expires,
-    col.issuer as issued_by,
-    collect(u.name) as affected_users,
-    duration.between(date(), col.expiry_date).days as days_until_expiry
-ORDER BY col.expiry_date;
+### Employee Access Pattern (CFO, Treasurer)
+```
+User -[HAS_ACCESS_VIA]-> Relationship {type: "employment", auth_level: "Level 1"}
+     -[INCLUDES_ENTITY]-> Entity -[OWNS]-> All Cash Products
 
-// Verify user access legitimacy
-MATCH (u:User {user_id: $user_id})-[:HAS_ACCESS_VIA]->(rel:Relationship)
-MATCH (rel)-[:PROVEN_BY]->(col:Collateral)
+Result: Employee gets automatic access to ALL entity's cash management products
+Authority: Full transaction authority including wires, ACH, investments
+```
 
-RETURN 
-    u.name as user,
-    rel.name as relationship,
-    CASE 
-        WHEN rel.status <> "active" THEN "inactive_relationship"
-        WHEN col.status <> "valid" THEN "invalid_document"
-        WHEN col.expiry_date < date() THEN "expired_document"
-        WHEN col.verification_status = "pending" THEN "unverified_document"
-        ELSE "valid_access"
-    END as access_validity,
-    col.document_type as proof_type,
-    col.reference_number as document_ref,
-    col.expiry_date as document_expiry;
+### Consultant/Advisor Access Pattern
+```
+User -[HAS_ACCESS_VIA]-> Relationship {type: "consulting", auth_level: "Level 3"}
+     -[INCLUDES_PRODUCT]-> Specific Cash Products Only
 
-// Find relationships without proper documentation
-MATCH (rel:Relationship)
-WHERE rel.status = "active"
-AND NOT EXISTS((rel)-[:PROVEN_BY]->(:Collateral {status: "valid"}))
+Result: Limited access to explicitly granted products
+Authority: Read-only or advisory access, no transaction authority
+```
 
-OPTIONAL MATCH (u:User)-[:HAS_ACCESS_VIA]->(rel)
+## Banking Compliance Constraints
 
-RETURN 
-    rel.name as relationship,
-    rel.type as type,
-    collect(u.name) as users_at_risk,
-    "missing_or_invalid_collateral" as issue;
+1. **Documentation Requirements**
+   - Every active Relationship must have valid banking documentation
+   - Signature cards required for transaction authority
+   - Board resolutions for high-limit access
+   - Fidelity bonds for fiduciary roles
 
-// Complete audit trail for a product
-MATCH (p:Product {product_id: $product_id})
-MATCH (owner:Entity)-[:OWNS]->(p)
+2. **Authorization Limits**
+   - User transaction limits cannot exceed document authorization
+   - Daily limits enforced at relationship and product level
+   - Dual approval requirements for high-value transactions
+   - Wire vs ACH authority separately managed
 
-// Find users with access via entity ownership
-OPTIONAL MATCH (entityUsers:User)-[:HAS_ACCESS_VIA]->(entityRel:Relationship)-[:INCLUDES_ENTITY]->(owner)
-WHERE entityRel.status = "active"
+3. **Account Status Validation**
+   - Only "active" accounts can be accessed
+   - Suspended relationships immediately block access
+   - Document expiry invalidates authorization
+   - Background checks required for new users
 
-// Find users with direct product access
-OPTIONAL MATCH (directUsers:User)-[:HAS_ACCESS_VIA]->(directRel:Relationship)-[:INCLUDES_PRODUCT]->(p)
-WHERE directRel.status = "active"
+4. **Audit Trail Requirements**
+   - All access must be traceable to valid documentation
+   - Authorization changes logged with approver
+   - Document verification status tracked
+   - Regular compliance review cycles
 
-// Get their proof documents
-OPTIONAL MATCH (entityRel)-[:PROVEN_BY]->(entityDocs:Collateral)
-OPTIONAL MATCH (directRel)-[:PROVEN_BY]->(directDocs:Collateral)
+## Recommended Indexes for Cash Management
 
-RETURN 
-    p.name as product,
-    owner.name as owner,
-    collect(DISTINCT {
-        user: entityUsers.name,
-        access_type: "entity_inheritance",
-        relationship: entityRel.name,
-        documents: collect(entityDocs.reference_number)
-    }) + collect(DISTINCT {
-        user: directUsers.name,
-        access_type: "direct_grant",
-        relationship: directRel.name,
-        documents: collect(directDocs.reference_number)
-    }) as access_audit;
+```cypher
+// Core identifiers
+CREATE INDEX entity_legal_id FOR (e:Entity) ON (e.legal_id);
+CREATE INDEX entity_tax_id FOR (e:Entity) ON (e.tax_id);
+CREATE INDEX user_id FOR (u:User) ON (u.user_id);
+CREATE INDEX user_email FOR (u:User) ON (u.email);
+CREATE INDEX cash_product_id FOR (cp:CashProduct) ON (cp.product_id);
+CREATE INDEX account_number FOR (cp:CashProduct) ON (cp.account_number);
+CREATE INDEX collateral_ref FOR (c:Collateral) ON (c.reference_number);
 
-// -----------------------------------------------------------------------------
-// 4. MANAGEMENT QUERIES
-// -----------------------------------------------------------------------------
+// Performance optimization
+CREATE INDEX relationship_status FOR (r:Relationship) ON (r.status);
+CREATE INDEX cash_product_status FOR (cp:CashProduct) ON (cp.account_status);
+CREATE INDEX collateral_status FOR (c:Collateral) ON (c.status);
+CREATE INDEX collateral_expiry FOR (c:Collateral) ON (c.expiry_date);
+CREATE INDEX product_type FOR (cp:CashProduct) ON (cp.product_type);
 
-// Add new user with employee relationship
-// (Replace $params with actual values)
-CREATE (newUser:User {
-    name: $user_name,
-    email: $user_email,
-    user_id: $user_id,
-    created_date: date()
-})
-CREATE (newRel:Relationship {
-    name: $user_name + " Employee Access",
-    type: "employment",
-    start_date: date(),
-    status: "active",
-    created_by: $created_by
-})
-CREATE (newContract:Collateral {
-    document_type: "Employment Contract",
-    reference_number: $contract_ref,
-    issue_date: date(),
-    expiry_date: date() + duration('P1Y'),
-    issuer: $entity_name + " HR",
-    status: "valid",
-    file_path: $file_path,
-    verification_status: "pending"
-})
-CREATE (newUser)-[:HAS_ACCESS_VIA {granted_date: date(), granted_by: $created_by}]->(newRel)
-CREATE (newRel)-[:INCLUDES_ENTITY {permissions: ["read", "write", "admin"]}]->(:Entity {name: $entity_name})
-CREATE (newRel)-[:PROVEN_BY {primary: true}]->(newContract);
-
-// Revoke user access (deactivate relationship)
-MATCH (u:User {user_id: $user_id})-[:HAS_ACCESS_VIA]->(rel:Relationship {name: $relationship_name})
-SET rel.status = "inactive",
-    rel.deactivated_date = date(),
-    rel.deactivated_by = $deactivated_by;
-
-// Update document verification status
-MATCH (col:Collateral {reference_number: $ref_number})
-SET col.verification_status = $new_status,
-    col.verified_date = date(),
-    col.verified_by = $verified_by;
-
-// Get statistics dashboard
-MATCH (u:User)
-OPTIONAL MATCH (u)-[:HAS_ACCESS_VIA]->(rel:Relationship)
-OPTIONAL MATCH (rel)-[:PROVEN_BY]->(col:Collateral)
-OPTIONAL MATCH (:Entity)-[:OWNS]->(p:Product)
-
-RETURN 
-    count(DISTINCT u) as total_users,
-    count(DISTINCT rel) as total_relationships,
-    count(DISTINCT CASE WHEN rel.status = "active" THEN rel END) as active_relationships,
-    count(DISTINCT col) as total_documents,
-    count(DISTINCT CASE WHEN col.status = "valid" THEN col END) as valid_documents,
-    count(DISTINCT CASE WHEN col.expiry_date <= date() + duration('P30D') THEN col END) as expiring_documents,
-    count(DISTINCT p) as total_products;
-
-// -----------------------------------------------------------------------------
-// 5. SAMPLE USAGE WITH PARAMETERS
-// -----------------------------------------------------------------------------
-
-// Example: Get Alice's accessible products
-// MATCH (u:User {user_id: "USR001"})-[:HAS_ACCESS_VIA]->(rel:Relationship)...
-
-// Example: Check if Alice can access CRM System
-// MATCH (u:User {user_id: "USR001"})
-// MATCH (p:Product {product_id: "PROD001"})...
-
-// Example: Find documents expiring soon
-// MATCH (rel:Relationship)-[:PROVEN_BY]->(col:Collateral)
-// WHERE col.expiry_date <= date() + duration('P30D')...
+// Financial analytics
+CREATE INDEX cash_balance FOR (cp:CashProduct) ON (cp.current_balance);
+CREATE INDEX authorized_amount FOR (c:Collateral) ON (c.authorized_amount);
+```
