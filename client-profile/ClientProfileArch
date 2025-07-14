@@ -1,134 +1,153 @@
 graph TB
     %% Input Sources
-    subgraph "Input Sources"
-        CommMDM[Commercial MDM<br/>• Entity data<br/>]
-        CapMarkets[Capital Markets MDM<br/>• Entity data<br/>]
-        CityNationalMDM[CityNational MDM<br/>• Entity data<br/>]
-        DocRepo[Document Repository<br/>• Legal documents<br/>• Contracts<br/>• Regulatory filings]
+    subgraph "Data Sources"
+        MDM1[Commercial MDM<br/>• Corporate entities<br/>• Customer relationships<br/>• Vendor relationships]
+        MDM2[Capital Markets MDM<br/>• Trading accounts<br/>• Investment portfolios<br/>• Broker relationships<br/>• Fund structures]
+        MDM3[CNB MDM<br/>• Filing relationships<br/>• Compliance data<br/>• Disclosure records]
+        DocRepo[Document Repository<br/>• Trading authorizations<br/>• Investment management agreements<br/>• Custody agreements<br/>• Powers of attorney]
     end
 
-    %% Phase 1: Fact Extraction
-    subgraph "Phase 1: Entity Facts & Domain Subgraphs"
-        FactExtract[MDM Fact Extractors<br/>• Entity identification<br/>• Regulatory identifiers<br/>• Document references<br/>• Address/contact info]
+    %% Phase 1: Entity Facts Only
+    subgraph "Phase 1: Entity Facts Extraction"
+        FactExtract[Entity Fact Extractors<br/>• Entity identification<br/>• Document references<br/>• System identifiers<br/>• NO relationship extraction]
         
-        subgraph "Domain Subgraphs"
-            CommSub[Commercial Subgraph<br/>• Customer relationships<br/>• Vendor relationships<br/>• Supply chain]
-            CapMarketsSub[Capital Markets Subgraph<br/>• Legal Entities<br/>• Corporate relationships<br/>• Credit relationships]
-            CNBSub[City National Subgraph<br/>• Client relationships<br/>• Disclosure relationships]
+        subgraph "Entity Facts Output"
+            EntityFacts[Entity Facts Database<br/>• Names and identifiers<br/>• Document references<br/>• System mappings<br/>• NO cross-system relationships]
         end
     end
 
-    %% Phase 2: Proof Discovery
-    subgraph "Phase 2: Proof Document Discovery"
-        ProofDisc[Proof Document Discovery<br/>• Analyze document references<br/>• Retrieve proof documents<br/>• Extract relationship assertions]
+    %% Phase 2: Document Analysis for Assertions
+    subgraph "Phase 2: Proof Document Analysis"
+        ProofAnalyzer[Proof Document Analyzer<br/>• Extract relationship assertions<br/>• Identify entities mentioned<br/>• Parse authority scopes<br/>• Generate confidence scores]
         
-        subgraph "Proof Documents"
-            IncDoc[Incorporation Documents<br/>• Ownership percentages<br/>• Subsidiary relationships<br/>• Share structures]
-            POA[Power of Attorney<br/>• Trading authority<br/>• Operational authority<br/>• Decision-making rights]
-            CustAgree[Custody Agreements<br/>• Asset custody<br/>• Safekeeping authority<br/>• Service relationships]
-            TradAuth[Trading Authorizations<br/>• Investment authority<br/>• Discretionary powers<br/>• Account access]
+        subgraph "Assertion Output"
+            Assertions[Relationship Assertions<br/>• Raw text extractions<br/>• Entity name mentions<br/>• Trading authority indicators<br/>• Investment management scopes<br/>• NOT actual relationships]
         end
     end
 
-    %% Phase 3: Entity Resolution
-    subgraph "Phase 3: Cross-System Entity Resolution"
-        EntityRes[Entity Resolution Engine<br/>• Fingerprint creation<br/>• Similarity matching<br/>• Canonical ID assignment]
+    %% Phase 3: Human-Driven Relationship Creation
+    subgraph "Phase 3: Human-Guided Relationship Establishment"
+        UI[Assertion-Driven UI<br/>• Present assertions to operators<br/>• Guide entity resolution<br/>• Facilitate relationship creation<br/>• Validate cross-MDM mappings]
         
-        subgraph "Resolution Components"
-            Fingerprint[Entity Fingerprinting<br/>• Name normalization<br/>• Identifier matching<br/>• Jurisdiction analysis]
-            CrossRef[Cross-Reference Mapping<br/>• MDM system → Canonical ID<br/>• 1:N mapping support<br/>• Confidence scoring]
+        Operator[Operations Team<br/>• Review assertions<br/>• Resolve entity references<br/>• Define relationship parameters<br/>• Create explicit relationships]
+        
+        subgraph "UI Components"
+            AssertionReview[Assertion Review Interface<br/>• Display extracted assertions<br/>• Show confidence levels<br/>• Highlight entity mentions]
+            
+            EntityResolver[Cross-MDM Entity Resolver<br/>• Search across all MDMs<br/>• Present entity candidates<br/>• Show system mappings<br/>• Verify identity matches]
+            
+            RelBuilder[Relationship Builder<br/>• Select relationship types<br/>• Define authority scopes<br/>• Set temporal parameters<br/>• Specify trading limits]
+            
+            Validator[Relationship Validator<br/>• Check logical consistency<br/>• Verify entity mappings<br/>• Validate authority claims<br/>• Confirm proof backing]
         end
     end
 
-    %% Phase 4: Relationship Establishment
-    subgraph "Phase 4: Cross-System Relationship Establishment"
-        RelEst[Relationship Establishment<br/>• Proof analysis<br/>• Entity mapping<br/>• Relationship creation]
+    %% Phase 4: Cross-System Relationship Storage
+    subgraph "Phase 4: Explicit Relationship Management"
+        RelManager[Cross-MDM Relationship Manager<br/>• Store verified relationships<br/>• Maintain proof links<br/>• Track operator decisions<br/>• Audit relationship creation]
         
-        subgraph "Cross-System Relationships"
-            Owns[Ownership Relationships<br/>• Direct ownership<br/>• Beneficial ownership<br/>• Control percentages]
-            Operates[Operational Relationships<br/>• Trading authority<br/>• Management control<br/>• Service provision]
-            Controls[Control Relationships<br/>• Decision authority<br/>• Voting control<br/>• Operational control]
+        subgraph "Cross-MDM Relationship Types"
+            TradingAuth[has_trading_authority_for<br/>• Individual → Corporate accounts<br/>• PM → Client portfolios<br/>• Broker → Trading accounts]
+            
+            InvestMgmt[manages_investments_for<br/>• Asset manager → Client<br/>• Fund manager → Fund<br/>• Advisor → Portfolio]
+            
+            Custodial[is_custodian_for<br/>• Custodian bank → Assets<br/>• Prime broker → Securities<br/>• Clearing firm → Positions]
+            
+            Operational[operates_on_behalf_of<br/>• Trading desk → Client<br/>• Portfolio manager → Fund<br/>• Execution agent → Principal]
+        end
+        
+        subgraph "Relationship Storage"
+            RelGraph[Cross-System Relationship Graph<br/>• Canonical entity nodes<br/>• Explicit relationship edges<br/>• Proof document links<br/>• Operator audit trail]
+            
+            ProofRegistry[Proof Registry<br/>• Document metadata<br/>• Assertion extractions<br/>• Verification status<br/>• Usage tracking]
         end
     end
 
-    %% Phase 5: Unified Graph
-    subgraph "Phase 5: Unified Relationship Graph"
-        UnifiedGraph[Unified Graph Storage<br/>• MDM subgraphs<br/>• Cross-system relationships<br/>• Proof evidence links]
+    %% Phase 5: Query and Validation
+    subgraph "Phase 5: Relationship Querying"
+        QueryEngine[Query Engine<br/>• Cross-MDM relationship queries<br/>• Authority chain analysis<br/>• Proof validation<br/>• Audit trail reporting]
         
-        subgraph "Graph Components"
-            Entities[Canonical Entities<br/>• Cross-MDM references<br/>• Entity fingerprints<br/>• Primary identifiers]
-            MdmRels[Domain Relationships<br/>• Commercial relationships<br/>• Wealth relationships<br/>• Regulatory relationships]
-            CrossRels[Cross-System Relationships<br/>• Proven relationships<br/>• Evidence backing<br/>• Confidence scores]
-            ProofReg[Proof Registry<br/>• Document metadata<br/>• Verification status<br/>• Evidence chains]
+        subgraph "Query Capabilities"
+            TradingQueries["Trading Authority Queries<br/>• Who can trade for Entity X?<br/>• What accounts can Person Y access?<br/>• What trading limits apply?"]
+            
+            InvestmentQueries["Investment Management Queries<br/>• Who manages Portfolio Z?<br/>• What funds does Manager A oversee?<br/>• What investment authority exists?"]
+            
+            ProofQueries["Proof Queries<br/>• What proves this authority?<br/>• When was authority granted?<br/>• What documents support this?"]
         end
     end
 
-    %% Query Interface
-    subgraph "Query Interface"
-        QueryEngine[Query Engine<br/>• Natural language processing<br/>• Graph traversal<br/>• Evidence retrieval]
+    %% Operational Support
+    subgraph "Operational Support Systems"
+        Monitoring[Relationship Monitoring<br/>• Trading authority expiration<br/>• Investment mandate changes<br/>• Custody arrangement updates<br/>• Regulatory notifications]
         
-        subgraph "Query Types"
-            OwnerQ["Who owns Entity X?"<br/>• Ownership chains<br/>• Beneficial owners<br/>• Control percentages]
-            OperQ["Who operates for Entity Y?"<br/>• Authority relationships<br/>• Service providers<br/>• Management control]
-            ProofQ["What proves relationship Z?"<br/>• Supporting documents<br/>• Evidence strength<br/>• Verification status]
-        end
+        Compliance[Compliance Management<br/>• Trading authority reporting<br/>• Investment advisor registration<br/>• Custody rule compliance<br/>• Best execution monitoring]
+        
+        RiskMgmt[Risk Management<br/>• Trading limit enforcement<br/>• Position monitoring<br/>• Counterparty exposure<br/>• Authority scope validation]
     end
 
     %% Data Flows
-    CommMDM --> FactExtract
-    CapMarkets --> FactExtract
-    CityNationalMDM --> FactExtract
+    MDM1 --> FactExtract
+    MDM2 --> FactExtract
+    MDM3 --> FactExtract
+    DocRepo --> ProofAnalyzer
     
-    FactExtract --> CommSub
-    FactExtract --> CapMarketsSub
-    FactExtract --> CNBSub
-    FactExtract --> ProofDisc
+    FactExtract --> EntityFacts
+    ProofAnalyzer --> Assertions
     
-    DocRepo --> ProofDisc
+    EntityFacts --> UI
+    Assertions --> UI
+    UI --> Operator
     
-    ProofDisc --> IncDoc
-    ProofDisc --> POA
-    ProofDisc --> CustAgree
-    ProofDisc --> TradAuth
+    Operator --> AssertionReview
+    Operator --> EntityResolver
+    Operator --> RelBuilder
+    Operator --> Validator
     
-    FactExtract --> EntityRes
-    EntityRes --> Fingerprint
-    EntityRes --> CrossRef
+    AssertionReview --> RelManager
+    EntityResolver --> RelManager
+    RelBuilder --> RelManager
+    Validator --> RelManager
     
-    IncDoc --> RelEst
-    POA --> RelEst
-    CustAgree --> RelEst
-    TradAuth --> RelEst
-    CrossRef --> RelEst
+    RelManager --> TradingAuth
+    RelManager --> InvestMgmt
+    RelManager --> Custodial
+    RelManager --> Operational
     
-    RelEst --> Owns
-    RelEst --> Operates
-    RelEst --> Controls
+    TradingAuth --> RelGraph
+    InvestMgmt --> RelGraph
+    Custodial --> RelGraph
+    Operational --> RelGraph
+    RelManager --> ProofRegistry
     
-    CommSub --> UnifiedGraph
-    CapMarketsSub --> UnifiedGraph
-    CNBSub --> UnifiedGraph
-    Owns --> UnifiedGraph
-    Operates --> UnifiedGraph
-    Controls --> UnifiedGraph
+    RelGraph --> QueryEngine
+    ProofRegistry --> QueryEngine
     
-    UnifiedGraph --> Entities
-    UnifiedGraph --> MdmRels
-    UnifiedGraph --> CrossRels
-    UnifiedGraph --> ProofReg
+    QueryEngine --> TradingQueries
+    QueryEngine --> InvestmentQueries
+    QueryEngine --> ProofQueries
     
-    UnifiedGraph --> QueryEngine
-    QueryEngine --> OwnerQ
-    QueryEngine --> OperQ
-    QueryEngine --> ProofQ
+    RelManager --> Monitoring
+    RelManager --> Compliance
+    RelManager --> RiskMgmt
+
+    %% Critical Decision Points
+    Assertions -.->|NO AUTO-CREATION| RelManager
+    EntityFacts -.->|NO RELATIONSHIPS| RelGraph
+    UI -.->|HUMAN REQUIRED| RelManager
 
     %% Styling
     classDef inputSource fill:#e1f5fe,stroke:#01579b,stroke-width:2px
     classDef processing fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef human fill:#fff3e0,stroke:#e65100,stroke-width:3px
     classDef storage fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
-    classDef output fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef relationships fill:#f3e5ab,stroke:#f57f17,stroke-width:2px
+    classDef output fill:#fce4ec,stroke:#880e4f,stroke-width:2px
+    classDef support fill:#f1f8e9,stroke:#33691e,stroke-width:2px
     
-    class CommMDM,CapMarkets,CityNationalMDM,DocRepo inputSource
-    class FactExtract,ProofDisc,EntityRes,RelEst processing
-    class CommSub,CapMarketsSub,CNBSub,UnifiedGraph,Entities,MdmRels,CrossRels,ProofReg storage
-    class QueryEngine,OwnerQ,OperQ,ProofQ output
+    class MDM1,MDM2,MDM3,DocRepo inputSource
+    class FactExtract,ProofAnalyzer,RelManager,QueryEngine processing
+    class UI,Operator,AssertionReview,EntityResolver,RelBuilder,Validator human
+    class EntityFacts,Assertions,RelGraph,ProofRegistry storage
+    class TradingAuth,InvestMgmt,Custodial,Operational relationships
+    class TradingQueries,InvestmentQueries,ProofQueries output
+    class Monitoring,Compliance,RiskMgmt support

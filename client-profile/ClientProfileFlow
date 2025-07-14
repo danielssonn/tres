@@ -1,79 +1,141 @@
-graph TD
-    %% Phase 1 Input
-    subgraph "Raw MDM Data"
-        RawComm["Commercial MDM Raw Data<br/>────────────────────<br/>Entity: Apple Inc.<br/>External ID: COMM_12345<br/>LEI: 549300E2A4SCPW3JFF44<br/>Customers: [CUST_001, CUST_002]<br/>Incorporation Doc: apple_inc.pdf"]
+sequenceDiagram
+    participant Op as Human Operator
+    participant UI as Assertion Review UI
+    participant DA as Document Analyzer
+    participant CommMDM as Commercial MDM
+    participant CapMDM as Capital Markets MDM
+    participant RegMDM as CNB MDM
+    participant ES as Entity Search Engine
+    participant RV as Relationship Validator
+    participant RC as Relationship Creator
+    participant AT as Audit Trail System
+    participant RN as Regulatory Notifier
+
+    Note over Op,RN: Capital Markets Cross-MDM Relationship Creation Process
+
+    %% Phase 1: Document Analysis
+    UI->>+DA: analyze_document("Investment_Management_Agreement.pdf")
+    DA->>DA: extract_text_content()
+    DA->>DA: parse_investment_authority_language()
+    DA->>DA: identify_entity_mentions()
+    Note right of DA: Extracts:<br/>• "BlackRock Investment Management"<br/>• "Apple Inc. Treasury Portfolio"<br/>• "discretionary investment authority"
+
+    DA-->>-UI: relationship_assertions[]
+    Note right of UI: Assertion: Investment manager<br/>has authority over corporate portfolio
+
+    %% Phase 2: Human Review
+    UI->>+Op: present_assertion_for_review()
+    Note right of UI: Shows:<br/>• Original document text<br/>• Extracted assertion<br/>• Entity mentions highlighted<br/>• Confidence: 90%
+
+    Op->>UI: select_assertion("investment_management_authority")
+    UI->>UI: display_assertion_details()
+
+    %% Phase 3: Entity Resolution - Source Entity
+    Op->>+ES: search_entity("BlackRock Investment Management")
+    
+    ES->>+CommMDM: search("BlackRock Investment Management")
+    CommMDM-->>-ES: commercial_candidates[]
+    Note right of CommMDM: Returns:<br/>• BlackRock Investment Mgmt LLC<br/>• Match confidence: 95%<br/>• LEI: 549300XKUW1QDUGV4E08
+
+    ES->>+CapMDM: search("BlackRock Investment Management")
+    CapMDM-->>-ES: capital_markets_candidates[]
+    Note right of CapMDM: Returns:<br/>• No direct matches<br/>• (Expected - investment managers<br/>are in Commercial MDM)
+
+    ES->>+RegMDM: search("BlackRock Investment Management")
+    RegMDM-->>-ES: regulatory_candidates[]
+    Note right of RegMDM: Returns:<br/>• BlackRock Advisors LLC<br/>• SEC Registration: 801-17184<br/>• Investment Advisor status
+
+    ES-->>-Op: entity_candidates[all_systems]
+    
+    Op->>ES: select_source_entity("canonical_blackrock_ima")
+    Note right of Op: Selects:<br/>BlackRock Investment Mgmt LLC<br/>(Commercial MDM)
+
+    %% Phase 4: Entity Resolution - Target Entity
+    Op->>+ES: search_entity("Apple Inc Treasury Portfolio")
+    
+    ES->>+CommMDM: search("Apple Inc Treasury")
+    CommMDM-->>-ES: commercial_candidates[]
+    Note right of CommMDM: Returns:<br/>• Apple Inc. (corporate entity)<br/>• No specific treasury portfolio
+
+    ES->>+CapMDM: search("Apple Inc Treasury Portfolio")
+    CapMDM-->>-ES: capital_markets_candidates[]
+    Note right of CapMDM: Returns:<br/>• Apple Inc. Corporate Treasury Portfolio<br/>• Portfolio ID: AAPL-TREAS-001<br/>• Match confidence: 92%
+
+    ES->>+RegMDM: search("Apple Inc Treasury")
+    RegMDM-->>-ES: regulatory_candidates[]
+    Note right of RegMDM: Returns:<br/>• Apple Inc. (SEC filings)<br/>• CIK: 0000320193
+
+    ES-->>-Op: entity_candidates[all_systems]
+    
+    Op->>ES: select_target_entity("canonical_apple_treasury_portfolio")
+    Note right of Op: Selects:<br/>Apple Inc. Corporate Treasury Portfolio<br/>(Capital Markets MDM)
+
+    %% Phase 5: Relationship Definition
+    Op->>UI: define_relationship_parameters()
+    
+    Note over Op,UI: Operator specifies:<br/>• Type: manages_investments_for<br/>• Scope: "Discretionary investment management"<br/>• Asset classes: "Equity, Fixed Income"<br/>• Investment limits: "Max 60% equity"<br/>• Geographic scope: "Global"<br/>• Effective date: 2024-01-01
+
+    %% Phase 6: Validation
+    UI->>+RV: validate_proposed_relationship()
+    
+    RV->>RV: check_regulatory_compliance()
+    Note right of RV: Validates:<br/>• BlackRock is registered investment advisor<br/>• Apple Inc. is eligible client<br/>• Investment mandate is reasonable
+
+    RV->>RV: check_operational_consistency()
+    Note right of RV: Validates:<br/>• Cross-MDM mapping is valid<br/>• Authority scope is appropriate<br/>• No conflicting relationships
+
+    RV->>RV: check_proof_backing()
+    Note right of RV: Validates:<br/>• Document supports this relationship<br/>• Authority is clearly granted<br/>• Terms are well-defined
+
+    alt Validation Successful
+        RV-->>UI: validation_passed
         
-        RawWealth["Capital Markets MDM Raw Data<br/>────────────────────<br/>Entity: Apple Inc<br/>External ID: WM_67890<br/>LEI: 549300E2A4SCPW3JFF44<br/>Accounts: [ACC_001]<br/>Custody Agreement: custody.pdf"]
-    end
-
-    %% Phase 1 Output
-    subgraph "Entity Facts & Domain Subgraphs"
-        EntityFacts["Entity Facts<br/>────────────────────<br/>Fact: Entity identification<br/>System: commercial_mdm<br/>Entity: (commercial_mdm, COMM_12345)<br/>Statement: 'Legal name is Apple Inc.'<br/>Identifiers: {lei: 549300E2A4...}<br/>Document Refs: [apple_inc.pdf]"]
+        %% Phase 7: Relationship Creation
+        UI->>+RC: create_cross_mdm_relationship()
         
-        DomainSub["Domain Subgraphs<br/>────────────────────<br/>Commercial Subgraph:<br/>  COMM_12345 → CUST_001 (has_customer)<br/>  COMM_12345 → CUST_002 (has_customer)<br/><br/>Wealth Subgraph:<br/>  WM_67890 → ACC_001 (has_account)"]
+        RC->>RC: generate_relationship_id()
+        RC->>RC: store_relationship_data()
+        Note right of RC: Creates:<br/>• Relationship ID: rel_inv_mgmt_001<br/>• Links to proof document<br/>• Stores all parameters
+
+        RC->>+AT: create_audit_trail()
+        AT->>AT: record_operator_decision()
+        AT->>AT: capture_validation_steps()
+        AT->>AT: link_supporting_evidence()
+        AT-->>-RC: audit_trail_created
+
+        RC->>+RN: send_regulatory_notifications()
+        RN->>RN: check_notification_requirements()
+        Note right of RN: Determines:<br/>• No immediate regulatory notifications<br/>• Internal compliance team notification<br/>• Risk management system update
+
+        RN-->>-RC: notifications_sent
+
+        RC-->>-UI: relationship_created("rel_inv_mgmt_001")
+        
+        UI->>Op: display_success_confirmation()
+        Note right of UI: Shows:<br/>• Relationship ID: rel_inv_mgmt_001<br/>• Cross-MDM mapping established<br/>• Audit trail complete
+
+    else Validation Failed
+        RV-->>UI: validation_errors[]
+        Note right of RV: Returns errors:<br/>• Investment limits too broad<br/>• Missing regulatory approval<br/>• Geographic scope unclear
+
+        UI->>Op: display_validation_errors()
+        Op->>UI: revise_relationship_parameters()
+        UI->>RV: validate_proposed_relationship()
     end
 
-    %% Phase 2 Output
-    subgraph "Proof Documents"
-        ProofDocs["Discovered Proof Documents<br/>────────────────────<br/>Proof ID: proof_001<br/>Type: incorporation_document<br/>Reference: apple_inc.pdf<br/>Entities: [(commercial_mdm, COMM_12345)]<br/>Assertions: [<br/>  {type: 'owns', owner: 'John Smith', pct: 60%},<br/>  {type: 'subsidiary', name: 'Apple Retail'}<br/>]<br/>Verification: verified"]
+    %% Phase 8: Next Assertion Processing
+    alt More Assertions Available
+        UI->>Op: present_next_assertion()
+        Note right of UI: Continue with:<br/>• Trading authority assertion<br/>• Custody arrangement assertion<br/>• Prime brokerage assertion
+    else All Assertions Processed
+        UI->>Op: complete_document_processing()
+        Note right of UI: Summary:<br/>• 3 relationships created<br/>• 1 assertion skipped<br/>• Document processing complete
     end
 
-    %% Phase 3 Output
-    subgraph "Entity Resolution"
-        CanonicalMap["Canonical Entity Mapping<br/>────────────────────<br/>canonical_entity_0001: {<br/>  mdm_refs: [<br/>    (commercial_mdm, COMM_12345),<br/>    (wealth_mdm, WM_67890)<br/>  ],<br/>  primary_name: 'Apple Inc.',<br/>  strong_identifiers: {lei: 549300E2A4...}<br/>}"]
-    end
+    %% Ongoing Monitoring
+    Note over RC,RN: Post-Creation Activities
+    RC->>RC: schedule_relationship_review()
+    RN->>RN: monitor_regulatory_changes()
+    AT->>AT: maintain_audit_readiness()
 
-    %% Phase 4 Output
-    subgraph "Cross-System Relationships"
-        CrossRels["Proven Cross-System Relationships<br/>────────────────────<br/>Relationship ID: cross_rel_001<br/>Type: owns<br/>Source: canonical_entity_0002 (John Smith)<br/>Target: canonical_entity_0001 (Apple Inc.)<br/>Ownership: 60%<br/>Proof: [proof_001]<br/>Strength: 0.95<br/>Status: proven"]
-    end
-
-    %% Phase 5 Output
-    subgraph "Unified Graph"
-        GraphModel["Unified Relationship Graph<br/>────────────────────<br/>Entities: {<br/>  canonical_entity_0001: Apple Inc.<br/>  canonical_entity_0002: John Smith<br/>}<br/>MDM Subgraphs: {<br/>  commercial: [customer relationships]<br/>  wealth: [account relationships]<br/>}<br/>Cross-System Rels: [<br/>  John Smith owns 60% of Apple Inc.<br/>]<br/>Proof Registry: [incorporation_document]"]
-    end
-
-    %% Query Examples
-    subgraph "Query Responses"
-        QueryResp["Query: 'Who owns Apple Inc?'<br/>────────────────────<br/>Response: {<br/>  direct_owners: [<br/>    {<br/>      owner: 'John Smith',<br/>      ownership_percentage: 60%,<br/>      proof_strength: 0.95,<br/>      supporting_documents: 1<br/>    }<br/>  ],<br/>  proof_summary: [<br/>    {<br/>      document: 'apple_inc.pdf',<br/>      type: 'incorporation_document',<br/>      verification: 'verified'<br/>    }<br/>  ]<br/>}"]
-    end
-
-    %% Flows
-    RawComm --> EntityFacts
-    RawWealth --> EntityFacts
-    RawComm --> DomainSub
-    RawWealth --> DomainSub
-    
-    EntityFacts --> ProofDocs
-    EntityFacts --> CanonicalMap
-    
-    ProofDocs --> CrossRels
-    CanonicalMap --> CrossRels
-    
-    DomainSub --> GraphModel
-    CrossRels --> GraphModel
-    CanonicalMap --> GraphModel
-    ProofDocs --> GraphModel
-    
-    GraphModel --> QueryResp
-
-    %% Phase Labels
-    RawComm -.->|Phase 1: Extract| EntityFacts
-    EntityFacts -.->|Phase 2: Discover| ProofDocs
-    EntityFacts -.->|Phase 3: Resolve| CanonicalMap
-    ProofDocs -.->|Phase 4: Establish| CrossRels
-    CrossRels -.->|Phase 5: Unify| GraphModel
-    GraphModel -.->|Query| QueryResp
-
-    %% Styling
-    classDef rawData fill:#ffebee,stroke:#c62828,stroke-width:2px
-    classDef processed fill:#e8eaf6,stroke:#3f51b5,stroke-width:2px
-    classDef proven fill:#e1f5fe,stroke:#0277bd,stroke-width:2px
-    classDef unified fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
-    classDef query fill:#fff3e0,stroke:#f57c00,stroke-width:2px
-    
-    class RawComm,RawWealth rawData
-    class EntityFacts,DomainSub,ProofDocs,CanonicalMap processed
-    class CrossRels proven
-    class GraphModel unified
-    class QueryResp query
+    Note over Op,RN: Key Success Factors:<br/>1. Human validates every entity mapping<br/>2. Complete regulatory compliance checking<br/>3. Explicit relationship parameter definition<br/>4. Full audit trail for examination readiness<br/>5. Cross-MDM operational relationship focus
