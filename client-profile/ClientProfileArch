@@ -1,0 +1,134 @@
+graph TB
+    %% Input Sources
+    subgraph "Input Sources"
+        CommMDM[Commercial MDM<br/>• Entity data<br/>]
+        CapMarkets[Capital Markets MDM<br/>• Entity data<br/>]
+        CityNationalMDM[CityNational MDM<br/>• Entity data<br/>]
+        DocRepo[Document Repository<br/>• Legal documents<br/>• Contracts<br/>• Regulatory filings]
+    end
+
+    %% Phase 1: Fact Extraction
+    subgraph "Phase 1: Entity Facts & Domain Subgraphs"
+        FactExtract[MDM Fact Extractors<br/>• Entity identification<br/>• Regulatory identifiers<br/>• Document references<br/>• Address/contact info]
+        
+        subgraph "Domain Subgraphs"
+            CommSub[Commercial Subgraph<br/>• Customer relationships<br/>• Vendor relationships<br/>• Supply chain]
+            CapMarketsSub[Capital Markets Subgraph<br/>• Legal Entities<br/>• Corporate relationships<br/>• Credit relationships]
+            CNBSub[City National Subgraph<br/>• Client relationships<br/>• Disclosure relationships]
+        end
+    end
+
+    %% Phase 2: Proof Discovery
+    subgraph "Phase 2: Proof Document Discovery"
+        ProofDisc[Proof Document Discovery<br/>• Analyze document references<br/>• Retrieve proof documents<br/>• Extract relationship assertions]
+        
+        subgraph "Proof Documents"
+            IncDoc[Incorporation Documents<br/>• Ownership percentages<br/>• Subsidiary relationships<br/>• Share structures]
+            POA[Power of Attorney<br/>• Trading authority<br/>• Operational authority<br/>• Decision-making rights]
+            CustAgree[Custody Agreements<br/>• Asset custody<br/>• Safekeeping authority<br/>• Service relationships]
+            TradAuth[Trading Authorizations<br/>• Investment authority<br/>• Discretionary powers<br/>• Account access]
+        end
+    end
+
+    %% Phase 3: Entity Resolution
+    subgraph "Phase 3: Cross-System Entity Resolution"
+        EntityRes[Entity Resolution Engine<br/>• Fingerprint creation<br/>• Similarity matching<br/>• Canonical ID assignment]
+        
+        subgraph "Resolution Components"
+            Fingerprint[Entity Fingerprinting<br/>• Name normalization<br/>• Identifier matching<br/>• Jurisdiction analysis]
+            CrossRef[Cross-Reference Mapping<br/>• MDM system → Canonical ID<br/>• 1:N mapping support<br/>• Confidence scoring]
+        end
+    end
+
+    %% Phase 4: Relationship Establishment
+    subgraph "Phase 4: Cross-System Relationship Establishment"
+        RelEst[Relationship Establishment<br/>• Proof analysis<br/>• Entity mapping<br/>• Relationship creation]
+        
+        subgraph "Cross-System Relationships"
+            Owns[Ownership Relationships<br/>• Direct ownership<br/>• Beneficial ownership<br/>• Control percentages]
+            Operates[Operational Relationships<br/>• Trading authority<br/>• Management control<br/>• Service provision]
+            Controls[Control Relationships<br/>• Decision authority<br/>• Voting control<br/>• Operational control]
+        end
+    end
+
+    %% Phase 5: Unified Graph
+    subgraph "Phase 5: Unified Relationship Graph"
+        UnifiedGraph[Unified Graph Storage<br/>• MDM subgraphs<br/>• Cross-system relationships<br/>• Proof evidence links]
+        
+        subgraph "Graph Components"
+            Entities[Canonical Entities<br/>• Cross-MDM references<br/>• Entity fingerprints<br/>• Primary identifiers]
+            MdmRels[Domain Relationships<br/>• Commercial relationships<br/>• Wealth relationships<br/>• Regulatory relationships]
+            CrossRels[Cross-System Relationships<br/>• Proven relationships<br/>• Evidence backing<br/>• Confidence scores]
+            ProofReg[Proof Registry<br/>• Document metadata<br/>• Verification status<br/>• Evidence chains]
+        end
+    end
+
+    %% Query Interface
+    subgraph "Query Interface"
+        QueryEngine[Query Engine<br/>• Natural language processing<br/>• Graph traversal<br/>• Evidence retrieval]
+        
+        subgraph "Query Types"
+            OwnerQ["Who owns Entity X?"<br/>• Ownership chains<br/>• Beneficial owners<br/>• Control percentages]
+            OperQ["Who operates for Entity Y?"<br/>• Authority relationships<br/>• Service providers<br/>• Management control]
+            ProofQ["What proves relationship Z?"<br/>• Supporting documents<br/>• Evidence strength<br/>• Verification status]
+        end
+    end
+
+    %% Data Flows
+    CommMDM --> FactExtract
+    CapMarkets --> FactExtract
+    CityNationalMDM --> FactExtract
+    
+    FactExtract --> CommSub
+    FactExtract --> CapMarketsSub
+    FactExtract --> CNBSub
+    FactExtract --> ProofDisc
+    
+    DocRepo --> ProofDisc
+    
+    ProofDisc --> IncDoc
+    ProofDisc --> POA
+    ProofDisc --> CustAgree
+    ProofDisc --> TradAuth
+    
+    FactExtract --> EntityRes
+    EntityRes --> Fingerprint
+    EntityRes --> CrossRef
+    
+    IncDoc --> RelEst
+    POA --> RelEst
+    CustAgree --> RelEst
+    TradAuth --> RelEst
+    CrossRef --> RelEst
+    
+    RelEst --> Owns
+    RelEst --> Operates
+    RelEst --> Controls
+    
+    CommSub --> UnifiedGraph
+    CapMarketsSub --> UnifiedGraph
+    CNBSub --> UnifiedGraph
+    Owns --> UnifiedGraph
+    Operates --> UnifiedGraph
+    Controls --> UnifiedGraph
+    
+    UnifiedGraph --> Entities
+    UnifiedGraph --> MdmRels
+    UnifiedGraph --> CrossRels
+    UnifiedGraph --> ProofReg
+    
+    UnifiedGraph --> QueryEngine
+    QueryEngine --> OwnerQ
+    QueryEngine --> OperQ
+    QueryEngine --> ProofQ
+
+    %% Styling
+    classDef inputSource fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef processing fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef storage fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
+    classDef output fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    
+    class CommMDM,CapMarkets,CityNationalMDM,DocRepo inputSource
+    class FactExtract,ProofDisc,EntityRes,RelEst processing
+    class CommSub,CapMarketsSub,CNBSub,UnifiedGraph,Entities,MdmRels,CrossRels,ProofReg storage
+    class QueryEngine,OwnerQ,OperQ,ProofQ output

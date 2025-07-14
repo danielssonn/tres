@@ -1,0 +1,79 @@
+graph TD
+    %% Phase 1 Input
+    subgraph "Raw MDM Data"
+        RawComm["Commercial MDM Raw Data<br/>────────────────────<br/>Entity: Apple Inc.<br/>External ID: COMM_12345<br/>LEI: 549300E2A4SCPW3JFF44<br/>Customers: [CUST_001, CUST_002]<br/>Incorporation Doc: apple_inc.pdf"]
+        
+        RawWealth["Capital Markets MDM Raw Data<br/>────────────────────<br/>Entity: Apple Inc<br/>External ID: WM_67890<br/>LEI: 549300E2A4SCPW3JFF44<br/>Accounts: [ACC_001]<br/>Custody Agreement: custody.pdf"]
+    end
+
+    %% Phase 1 Output
+    subgraph "Entity Facts & Domain Subgraphs"
+        EntityFacts["Entity Facts<br/>────────────────────<br/>Fact: Entity identification<br/>System: commercial_mdm<br/>Entity: (commercial_mdm, COMM_12345)<br/>Statement: 'Legal name is Apple Inc.'<br/>Identifiers: {lei: 549300E2A4...}<br/>Document Refs: [apple_inc.pdf]"]
+        
+        DomainSub["Domain Subgraphs<br/>────────────────────<br/>Commercial Subgraph:<br/>  COMM_12345 → CUST_001 (has_customer)<br/>  COMM_12345 → CUST_002 (has_customer)<br/><br/>Wealth Subgraph:<br/>  WM_67890 → ACC_001 (has_account)"]
+    end
+
+    %% Phase 2 Output
+    subgraph "Proof Documents"
+        ProofDocs["Discovered Proof Documents<br/>────────────────────<br/>Proof ID: proof_001<br/>Type: incorporation_document<br/>Reference: apple_inc.pdf<br/>Entities: [(commercial_mdm, COMM_12345)]<br/>Assertions: [<br/>  {type: 'owns', owner: 'John Smith', pct: 60%},<br/>  {type: 'subsidiary', name: 'Apple Retail'}<br/>]<br/>Verification: verified"]
+    end
+
+    %% Phase 3 Output
+    subgraph "Entity Resolution"
+        CanonicalMap["Canonical Entity Mapping<br/>────────────────────<br/>canonical_entity_0001: {<br/>  mdm_refs: [<br/>    (commercial_mdm, COMM_12345),<br/>    (wealth_mdm, WM_67890)<br/>  ],<br/>  primary_name: 'Apple Inc.',<br/>  strong_identifiers: {lei: 549300E2A4...}<br/>}"]
+    end
+
+    %% Phase 4 Output
+    subgraph "Cross-System Relationships"
+        CrossRels["Proven Cross-System Relationships<br/>────────────────────<br/>Relationship ID: cross_rel_001<br/>Type: owns<br/>Source: canonical_entity_0002 (John Smith)<br/>Target: canonical_entity_0001 (Apple Inc.)<br/>Ownership: 60%<br/>Proof: [proof_001]<br/>Strength: 0.95<br/>Status: proven"]
+    end
+
+    %% Phase 5 Output
+    subgraph "Unified Graph"
+        GraphModel["Unified Relationship Graph<br/>────────────────────<br/>Entities: {<br/>  canonical_entity_0001: Apple Inc.<br/>  canonical_entity_0002: John Smith<br/>}<br/>MDM Subgraphs: {<br/>  commercial: [customer relationships]<br/>  wealth: [account relationships]<br/>}<br/>Cross-System Rels: [<br/>  John Smith owns 60% of Apple Inc.<br/>]<br/>Proof Registry: [incorporation_document]"]
+    end
+
+    %% Query Examples
+    subgraph "Query Responses"
+        QueryResp["Query: 'Who owns Apple Inc?'<br/>────────────────────<br/>Response: {<br/>  direct_owners: [<br/>    {<br/>      owner: 'John Smith',<br/>      ownership_percentage: 60%,<br/>      proof_strength: 0.95,<br/>      supporting_documents: 1<br/>    }<br/>  ],<br/>  proof_summary: [<br/>    {<br/>      document: 'apple_inc.pdf',<br/>      type: 'incorporation_document',<br/>      verification: 'verified'<br/>    }<br/>  ]<br/>}"]
+    end
+
+    %% Flows
+    RawComm --> EntityFacts
+    RawWealth --> EntityFacts
+    RawComm --> DomainSub
+    RawWealth --> DomainSub
+    
+    EntityFacts --> ProofDocs
+    EntityFacts --> CanonicalMap
+    
+    ProofDocs --> CrossRels
+    CanonicalMap --> CrossRels
+    
+    DomainSub --> GraphModel
+    CrossRels --> GraphModel
+    CanonicalMap --> GraphModel
+    ProofDocs --> GraphModel
+    
+    GraphModel --> QueryResp
+
+    %% Phase Labels
+    RawComm -.->|Phase 1: Extract| EntityFacts
+    EntityFacts -.->|Phase 2: Discover| ProofDocs
+    EntityFacts -.->|Phase 3: Resolve| CanonicalMap
+    ProofDocs -.->|Phase 4: Establish| CrossRels
+    CrossRels -.->|Phase 5: Unify| GraphModel
+    GraphModel -.->|Query| QueryResp
+
+    %% Styling
+    classDef rawData fill:#ffebee,stroke:#c62828,stroke-width:2px
+    classDef processed fill:#e8eaf6,stroke:#3f51b5,stroke-width:2px
+    classDef proven fill:#e1f5fe,stroke:#0277bd,stroke-width:2px
+    classDef unified fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
+    classDef query fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    
+    class RawComm,RawWealth rawData
+    class EntityFacts,DomainSub,ProofDocs,CanonicalMap processed
+    class CrossRels proven
+    class GraphModel unified
+    class QueryResp query

@@ -1,0 +1,200 @@
+# Graph Data Model Schema
+
+## Node Types
+
+### Entity
+**Purpose**: Legal company entities that own products
+```
+Properties:
+- name: String (required)
+- legal_id: String (unique, required)
+- address: String
+- created_date: Date
+```
+
+### User
+**Purpose**: Individuals who access resources through relationships
+```
+Properties:
+- user_id: String (unique, required)
+- name: String (required)
+- email: String (unique, required)
+- created_date: Date
+```
+
+### Product
+**Purpose**: Resources/systems owned by entities
+```
+Properties:
+- product_id: String (unique, required)
+- name: String (required)
+- description: String
+- version: String
+```
+
+### Relationship
+**Purpose**: Access control container that defines what users can access
+```
+Properties:
+- name: String (required)
+- type: String (required) // "employment", "consulting", "partnership"
+- start_date: Date (required)
+- end_date: Date (optional)
+- status: String (required) // "active", "inactive", "pending"
+- created_by: String
+- deactivated_date: Date (optional)
+- deactivated_by: String (optional)
+```
+
+### Collateral
+**Purpose**: Proof documents that validate relationships
+```
+Properties:
+- document_type: String (required) // "Employment Contract", "NDA", etc.
+- reference_number: String (unique, required)
+- issue_date: Date (required)
+- expiry_date: Date (optional)
+- issuer: String (required)
+- status: String (required) // "valid", "invalid", "pending"
+- file_path: String
+- digital_signature: String (optional)
+- verification_status: String // "verified", "pending", "failed"
+- verified_date: Date (optional)
+- verified_by: String (optional)
+- witness: String (optional)
+```
+
+## Relationship Types
+
+### Core Ownership
+```
+Entity -[OWNS]-> Product
+Properties:
+- acquired_date: Date
+- ownership_type: String // "license", "purchase", "subscription"
+```
+
+### User Access Control
+```
+User -[HAS_ACCESS_VIA]-> Relationship
+Properties:
+- granted_date: Date (required)
+- granted_by: String (required)
+```
+
+### Relationship Scope - Entities
+```
+Relationship -[INCLUDES_ENTITY]-> Entity
+Properties:
+- permissions: Array<String> // ["read", "write", "admin"]
+
+Note: Users automatically inherit access to ALL products owned by included entities
+```
+
+### Relationship Scope - Products (Granular)
+```
+Relationship -[INCLUDES_PRODUCT]-> Product
+Properties:
+- permissions: Array<String> // ["read", "write", "admin"]
+
+Note: For specific product access beyond entity inheritance
+```
+
+### Relationship Proof
+```
+Relationship -[PROVEN_BY]-> Collateral
+Properties:
+- primary: Boolean // true for main document, false for supporting docs
+```
+
+## Schema Visualization
+
+```
+    ┌─────────────┐         ┌──────────────┐         ┌─────────────┐
+    │   Entity    │  OWNS   │   Product    │         │    User     │
+    │             ├────────>│              │         │             │
+    │ - name      │         │ - product_id │         │ - user_id   │
+    │ - legal_id  │         │ - name       │         │ - name      │
+    │ - address   │         │ - description│         │ - email     │
+    └─────┬───────┘         └──────────────┘         └──────┬──────┘
+          │                                                 │
+          │ INCLUDES_ENTITY                                 │ HAS_ACCESS_VIA
+          │                                                 │
+          v                                                 v
+    ┌─────────────────────────────────────────────────────────────────┐
+    │                    Relationship                                 │
+    │                                                                 │
+    │ - name           - type            - status                     │
+    │ - start_date     - end_date        - created_by                 │
+    └─────┬─────────────────────────────────────────┬─────────────────┘
+          │ INCLUDES_PRODUCT                        │ PROVEN_BY
+          │                                         │
+          v                                         v
+    ┌─────────────┐                           ┌─────────────┐
+    │   Product   │                           │ Collateral  │
+    │             │                           │             │
+    │ (granular   │                           │ - doc_type  │
+    │  access)    │                           │ - ref_num   │
+    └─────────────┘                           │ - status    │
+                                              │ - expiry    │
+                                              └─────────────┘
+```
+
+## Access Inheritance Rules
+
+### Employee Access Pattern
+```
+User -[HAS_ACCESS_VIA]-> Relationship {type: "employment"}
+     -[INCLUDES_ENTITY]-> Entity -[OWNS]-> All Products
+
+Result: Employee gets automatic access to ALL entity's products
+```
+
+### Contractor/Partner Access Pattern
+```
+User -[HAS_ACCESS_VIA]-> Relationship {type: "consulting"}
+     -[INCLUDES_PRODUCT]-> Specific Products Only
+
+Result: Limited access to explicitly granted products
+```
+
+## Key Constraints
+
+1. **Unique Identifiers**
+   - Entity.legal_id must be unique
+   - User.user_id must be unique
+   - User.email must be unique
+   - Product.product_id must be unique
+   - Collateral.reference_number must be unique
+
+2. **Required Relationships**
+   - Every active Relationship must have at least one PROVEN_BY -> Collateral
+   - Every Relationship must have at least one INCLUDES_ENTITY or INCLUDES_PRODUCT
+
+3. **Business Rules**
+   - Entity ownership of Products is exclusive (one Entity per Product)
+   - Relationship status must be "active" for access to be valid
+   - Collateral status must be "valid" for relationship to be legitimate
+   - Users can have multiple Relationships (employee + consultant roles)
+
+4. **Access Logic**
+   - User access = Union of all active Relationships
+   - Entity inclusion grants access to ALL owned products (inheritance)
+   - Product inclusion grants specific product access (granular)
+   - Document expiry can invalidate access
+
+## Indexes Recommended
+
+```cypher
+// Performance indexes
+CREATE INDEX entity_legal_id FOR (e:Entity) ON (e.legal_id);
+CREATE INDEX user_id FOR (u:User) ON (u.user_id);
+CREATE INDEX user_email FOR (u:User) ON (u.email);
+CREATE INDEX product_id FOR (p:Product) ON (p.product_id);
+CREATE INDEX collateral_ref FOR (c:Collateral) ON (c.reference_number);
+
+// Query optimization indexes
+CREATE INDEX relationship_status FOR (r:Relationship) ON (r.status);
+CREATE INDEX collateral_status FOR (c:Collateral) ON (c.status);
+CREATE INDEX collateral_expiry FOR (c:Collateral) ON (c.expiry_date);
+```git reset --hard origin/<

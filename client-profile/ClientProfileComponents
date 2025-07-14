@@ -1,0 +1,87 @@
+sequenceDiagram
+    participant Client as Query Client
+    participant System as Discovery System
+    participant MDM1 as Commercial MDM
+    participant MDM2 as Capital Markets MDM
+    participant DocRepo as Document Repository
+    participant Graph as Unified Graph
+
+    Note over Client,Graph: System Initialization & Data Loading
+
+    System->>+MDM1: extract_entity_facts_and_subgraph()
+    MDM1-->>-System: EntityFacts[] + MDMSubgraph
+    Note right of MDM1: Returns:<br/>• Entity identification facts<br/>• Regulatory identifiers<br/>• Document references<br/>• Domain relationships
+
+    System->>+MDM2: extract_entity_facts_and_subgraph()
+    MDM2-->>-System: EntityFacts[] + MDMSubgraph
+    Note right of MDM2: Returns:<br/>• Account ownership facts<br/>• Investment relationships<br/>• Service arrangements
+
+    System->>System: discover_proof_documents(EntityFacts[])
+    Note right of System: Analyzes document references<br/>from entity facts
+
+    System->>+DocRepo: retrieve_document(doc_reference)
+    DocRepo-->>-System: Document content
+    Note right of DocRepo: Returns actual document<br/>content for analysis
+
+    System->>System: analyze_document_for_relationships()
+    Note right of System: Extracts relationship<br/>assertions from documents
+
+    System->>System: resolve_entities_across_mdms()
+    Note right of System: Creates canonical entity IDs<br/>using fingerprinting
+
+    System->>System: establish_cross_system_relationships()
+    Note right of System: Maps proof assertions to<br/>canonical entities
+
+    System->>+Graph: load_mdm_subgraphs(subgraphs)
+    Graph-->>-System: Success
+    Note right of Graph: Stores domain-specific<br/>relationships
+
+    System->>+Graph: load_cross_system_relationships()
+    Graph-->>-System: Success
+    Note right of Graph: Stores proven cross-system<br/>relationships with evidence
+
+    Note over Client,Graph: Query Processing
+
+    Client->>+System: query_entity("commercial_mdm", "APPLE_INC")
+    System->>System: resolve_to_canonical_id()
+    System->>+Graph: query_entity_complete_view(canonical_id)
+    
+    Graph->>Graph: get_mdm_subgraph_relationships()
+    Graph->>Graph: get_cross_system_relationships()
+    Graph->>Graph: get_supporting_proofs()
+    
+    Graph-->>-System: Complete entity view
+    Note right of Graph: Returns:<br/>• MDM domain relationships<br/>• Cross-system relationships<br/>• Supporting proof documents
+
+    System-->>-Client: EntityCompleteView
+    Note left of Client: {<br/>  canonical_id,<br/>  mdm_references,<br/>  mdm_relationships,<br/>  cross_system_relationships,<br/>  proof_documents<br/>}
+
+    Note over Client,Graph: Natural Language Query
+
+    Client->>+System: ask_question("Who owns Apple Inc?")
+    System->>System: parse_question_type()
+    System->>+Graph: find_ownership_relationships()
+    
+    Graph->>Graph: traverse_ownership_edges()
+    Graph->>Graph: collect_proof_evidence()
+    
+    Graph-->>-System: Ownership data + proofs
+    System->>System: format_natural_language_response()
+    System-->>-Client: Structured answer
+    Note left of Client: {<br/>  question,<br/>  answer_type: "ownership",<br/>  direct_owners: [...],<br/>  proof_summary: [...]<br/>}
+
+    Note over Client,Graph: Proof Validation
+
+    Client->>+System: validate_relationship_proofs(rel_id)
+    System->>+Graph: get_relationship(rel_id)
+    Graph-->>-System: Relationship + proof_ids
+    
+    System->>+Graph: get_proof_documents(proof_ids)
+    Graph-->>-System: ProofDocument[]
+    
+    System->>System: validate_proof_authenticity()
+    System->>System: check_document_integrity()
+    System->>System: verify_relationship_consistency()
+    
+    System-->>-Client: Validation results
+    Note left of Client: {<br/>  valid: true,<br/>  proof_count: 2,<br/>  verification_status,<br/>  strength_analysis,<br/>  consistency_check<br/>}
