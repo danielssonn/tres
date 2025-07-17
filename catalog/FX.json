@@ -1,0 +1,373 @@
+{
+“platformConfig”: {
+“version”: “1.0.0”,
+“banks”: [
+{
+“bankId”: “BANK001”,
+“name”: “Global Commerce Bank”,
+“currencies”: [“USD”, “EUR”, “GBP”, “JPY”, “CAD”, “AUD”],
+“jurisdictions”: [“US”, “UK”, “EU”, “APAC”],
+“productRestrictions”: {
+“maxTransactionAmount”: 50000000,
+“restrictedCountries”: [“XX”, “YY”],
+“complianceLevel”: “TIER1”
+},
+“fxLimits”: {
+“globalExposureLimit”: 1000000000,
+“currencyExposureLimit”: {
+“USD”: 500000000,
+“EUR”: 300000000,
+“GBP”: 200000000
+},
+“counterpartyExposureLimit”: 100000000,
+“concentrationLimit”: 0.25
+}
+}
+]
+},
+“productCatalog”: {
+“version”: “2.1.0”,
+“products”: [
+{
+“id”: “FX_SPOT_TRADE”,
+“name”: “FX Spot Trading”,
+“category”: “FOREIGN_EXCHANGE”,
+“bankConfigurations”: {
+“BANK001”: {
+“isEnabled”: true,
+“featureConfigs”: {
+“REAL_TIME_PRICING”: {
+“isEnabled”: true,
+“configuration”: {
+“refreshInterval”: 500,
+“marketDataProvider”: “REUTERS”,
+“pricingEngine”: “INTERNAL”
+}
+},
+“MULTI_CURRENCY_SETTLEMENT”: {
+“isEnabled”: true,
+“configuration”: {
+“supportedCurrencies”: [“USD”, “EUR”, “GBP”, “JPY”],
+“settlementNetworks”: [“SWIFT”, “FEDWIRE”, “TARGET2”]
+}
+}
+},
+“ruleConfigs”: {
+“TRANSACTION_LIMITS”: {
+“configuration”: {
+“minAmount”: 1000,
+“maxAmount”: 50000000,
+“dailyLimit”: 100000000,
+“monthlyLimit”: 500000000
+}
+},
+“COMPLIANCE_CHECKS”: {
+“configuration”: {
+“kycRequired”: true,
+“sanctionsScreening”: true,
+“amlMonitoring”: true
+}
+}
+},
+“workflowConfigs”: {
+“APPROVAL_WORKFLOW”: {
+“configuration”: {
+“autoApprovalLimit”: 1000000,
+“manualApprovalRequired”: 10000000,
+“seniorApprovalRequired”: 25000000
+}
+}
+}
+}
+},
+“baseFeatures”: [
+{
+“id”: “SPOT_EXECUTION”,
+“name”: “Spot Trade Execution”,
+“description”: “Immediate currency exchange at current market rates”
+},
+{
+“id”: “RATE_LOCKING”,
+“name”: “Rate Locking”,
+“description”: “Lock in exchange rates for short periods”
+}
+],
+“fxProductConfig”: {
+“productType”: “SPOT”,
+“supportedCurrencyPairs”: [
+{
+“baseCurrency”: “USD”,
+“quoteCurrency”: “EUR”,
+“isActive”: true,
+“tradingHours”: {
+“startTime”: “08:00”,
+“endTime”: “17:00”,
+“timezone”: “UTC”,
+“tradingDays”: [“MONDAY”, “TUESDAY”, “WEDNESDAY”, “THURSDAY”, “FRIDAY”],
+“holidays”: [“2025-01-01”, “2025-12-25”]
+},
+“minimumAmount”: 1000,
+“maximumAmount”: 50000000
+},
+{
+“baseCurrency”: “EUR”,
+“quoteCurrency”: “GBP”,
+“isActive”: true,
+“tradingHours”: {
+“startTime”: “08:00”,
+“endTime”: “17:00”,
+“timezone”: “UTC”,
+“tradingDays”: [“MONDAY”, “TUESDAY”, “WEDNESDAY”, “THURSDAY”, “FRIDAY”],
+“holidays”: [“2025-01-01”, “2025-12-25”]
+},
+“minimumAmount”: 1000,
+“maximumAmount”: 25000000
+}
+],
+“accountEnrollments”: [
+{
+“enrollmentId”: “ENR001”,
+“accounts”: [
+{
+“accountId”: “ACC001”,
+“accountNumber”: “1234567890”,
+“accountType”: “CURRENT”,
+“currency”: “USD”,
+“customerId”: “CUST001”,
+“isActive”: true,
+“accountLimits”: {
+“dailyTransactionLimit”: 5000000,
+“monthlyTransactionLimit”: 50000000,
+“singleTransactionLimit”: 1000000,
+“exposureLimit”: 10000000,
+“overrideApprovalRequired”: false
+}
+},
+{
+“accountId”: “ACC002”,
+“accountNumber”: “1234567891”,
+“accountType”: “CURRENT”,
+“currency”: “EUR”,
+“customerId”: “CUST001”,
+“isActive”: true,
+“accountLimits”: {
+“dailyTransactionLimit”: 4000000,
+“monthlyTransactionLimit”: 40000000,
+“singleTransactionLimit”: 800000,
+“exposureLimit”: 8000000,
+“overrideApprovalRequired”: false
+}
+}
+],
+“enrollmentType”: “MULTIPLE_ACCOUNTS”,
+“status”: “ACTIVE”,
+“effectiveDate”: “2025-01-01”,
+“expiryDate”: “2025-12-31”,
+“restrictions”: {
+“allowedCurrencies”: [“USD”, “EUR”, “GBP”],
+“restrictedCountries”: [],
+“maxExposure”: 20000000
+}
+}
+],
+“transactionTypes”: [
+{
+“typeId”: “PAYABLE”,
+“name”: “Outbound Payment”,
+“direction”: “PAYABLE”,
+“isEnabled”: true,
+“processingRules”: {
+“cutoffTime”: “15:00”,
+“sameDay”: true,
+“requiresApproval”: false
+},
+“validationRules”: {
+“beneficiaryValidation”: true,
+“purposeCodeRequired”: true,
+“documentationRequired”: false
+}
+},
+{
+“typeId”: “RECEIVABLE”,
+“name”: “Inbound Receipt”,
+“direction”: “RECEIVABLE”,
+“isEnabled”: true,
+“processingRules”: {
+“autoProcessing”: true,
+“holdForReview”: false,
+“notificationRequired”: true
+},
+“validationRules”: {
+“remitterValidation”: true,
+“amountValidation”: true,
+“currencyValidation”: true
+}
+}
+],
+“pricingStructure”: {
+“structureId”: “PRICING_001”,
+“basePricing”: {
+“currencyPair”: {
+“baseCurrency”: “USD”,
+“quoteCurrency”: “EUR”
+},
+“baseSpread”: 0.0025,
+“baseMargin”: 0.0015,
+“marketDataSource”: “REUTERS”,
+“pricingMethod”: “MARKET_PLUS_SPREAD”
+},
+“exceptionPricing”: [
+{
+“exceptionId”: “EXC001”,
+“accountId”: “ACC001”,
+“currencyPair”: {
+“baseCurrency”: “USD”,
+“quoteCurrency”: “EUR”
+},
+“spread”: 0.0020,
+“margin”: 0.0010,
+“minimumAmount”: 100000,
+“maximumAmount”: 10000000,
+“effectiveDate”: “2025-07-01”,
+“expiryDate”: “2025-12-31”,
+“approvalLevel”: “RELATIONSHIP_MANAGER”,
+“reason”: “High volume customer discount”
+}
+],
+“relationshipPricing”: {
+“relationshipId”: “REL001”,
+“customerId”: “CUST001”,
+“tierLevel”: “GOLD”,
+“volumeDiscounts”: [
+{
+“discountId”: “VOL001”,
+“volumeThreshold”: 1000000,
+“discountRate”: 0.0005,
+“measurementPeriod”: “MONTHLY”,
+“currencyPair”: {
+“baseCurrency”: “USD”,
+“quoteCurrency”: “EUR”
+}
+}
+],
+“crossProductBenefits”: [
+{
+“benefitId”: “CPB001”,
+“productType”: “TRADE_FINANCE”,
+“benefitType”: “RATE_DISCOUNT”,
+“discountRate”: 0.0002,
+“conditions”: {
+“minimumRelationshipValue”: 5000000,
+“activeProducts”: [“FX”, “TRADE_FINANCE”]
+}
+}
+],
+“negotiatedRates”: [
+{
+“rateId”: “NEG001”,
+“currencyPair”: {
+“baseCurrency”: “USD”,
+“quoteCurrency”: “EUR”
+},
+“rate”: 0.0018,
+“effectiveDate”: “2025-07-01”,
+“expiryDate”: “2025-12-31”,
+“conditions”: {
+“minimumVolume”: 5000000,
+“exclusiveToCustomer”: true
+}
+}
+],
+“reviewFrequency”: “QUARTERLY”
+},
+“pricingTiers”: [
+{
+“tierId”: “TIER1”,
+“minAmount”: 0,
+“maxAmount”: 100000,
+“spread”: 0.0030,
+“margin”: 0.0020,
+“conditions”: {
+“applicableToNewCustomers”: true,
+“maxTransactionsPerDay”: 5
+}
+},
+{
+“tierId”: “TIER2”,
+“minAmount”: 100001,
+“maxAmount”: 1000000,
+“spread”: 0.0025,
+“margin”: 0.0015,
+“conditions”: {
+“relationshipRequired”: false,
+“maxTransactionsPerDay”: 20
+}
+},
+{
+“tierId”: “TIER3”,
+“minAmount”: 1000001,
+“maxAmount”: 999999999,
+“spread”: 0.0020,
+“margin”: 0.0010,
+“conditions”: {
+“relationshipRequired”: true,
+“approvalRequired”: true
+}
+}
+],
+“effectiveDate”: “2025-07-01”,
+“reviewDate”: “2025-10-01”
+},
+“settlementOptions”: [
+{
+“optionId”: “SETTLEMENT_001”,
+“settlementType”: “REAL_TIME”,
+“valueDate”: “TODAY”,
+“cutoffTime”: “15:00”,
+“instructions”: {
+“network”: “FEDWIRE”,
+“priority”: “HIGH”,
+“confirmationRequired”: true
+}
+},
+{
+“optionId”: “SETTLEMENT_002”,
+“settlementType”: “SAME_DAY”,
+“valueDate”: “TODAY”,
+“cutoffTime”: “12:00”,
+“instructions”: {
+“network”: “SWIFT”,
+“priority”: “NORMAL”,
+“confirmationRequired”: false
+}
+},
+{
+“optionId”: “SETTLEMENT_003”,
+“settlementType”: “SPOT”,
+“valueDate”: “SPOT”,
+“cutoffTime”: “10:00”,
+“instructions”: {
+“network”: “SWIFT”,
+“priority”: “NORMAL”,
+“confirmationRequired”: false
+}
+}
+],
+“riskLimits”: {
+“dailyLimit”: 10000000,
+“monthlyLimit”: 100000000,
+“counterpartyLimit”: 25000000,
+“concentrationLimit”: 0.15,
+“stopLossLimit”: 0.02,
+“monitoringRules”: {
+“realTimeMonitoring”: true,
+“alertThreshold”: 0.8,
+“escalationLevel”: “TREASURY”,
+“reportingFrequency”: “DAILY”
+}
+}
+}
+}
+]
+}
+}
