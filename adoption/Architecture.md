@@ -8,9 +8,35 @@ This document outlines a foundational enterprise architecture approach built on 
 
 ### The Four-Layer Model
 
-![Enterprise Architecture Layers](enterprise_architecture_layers)
-
 The architecture is structured as a dependency stack where each layer builds upon the capabilities of the layer below while defining constraints for the layer above.
+
+**Architecture Visualization:**
+
+```
+┌─────────────────────────────────────────────────────────┐
+│ Common Data Layer                                        │
+│ Taxonomies, Data Models, Shared Language               │
+│ • Consistency  • Interoperability  • Usability        │
+└─────────────────────────────────────────────────────────┘
+                           ↓
+┌─────────────────────────────────────────────────────────┐
+│ Business Architecture Layer                             │
+│ Features, Rules, Capabilities                          │
+│ • Agility  • Flexibility  • Testability               │
+└─────────────────────────────────────────────────────────┘
+                           ↓
+┌─────────────────────────────────────────────────────────┐
+│ Orchestration Layer                                     │
+│ APIs, Workflows, Coordination                          │
+│ • Maintainability  • Observability  • Composability   │
+└─────────────────────────────────────────────────────────┘
+                           ↓
+┌─────────────────────────────────────────────────────────┐
+│ Infrastructure Layer                                    │
+│ Compute, Storage, Network                              │
+│ • Scalability  • Performance  • Reliability           │
+└─────────────────────────────────────────────────────────┘
+```
 
 ### Layer Breakdown
 
