@@ -318,7 +318,7 @@ Interviewing with Head of Transformation for MD role reporting to COO, focused o
 ### **Must-Have Examples:**
 - Complex program delivered on-time/budget with metrics proof
 - Recovery from delivery challenges using objective data
-- Stakeholder management through transparent reporting
+- Stakeholder management through transparent reporting 
 
 ### **Questions to Ask:**
 - "What's the current delivery predictability and how do you measure it?"

@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Onboarding Business Architecture</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: 300;
+        }
+
+        .value-proposition {
+            display: flex;
+            margin: 0;
+        }
+
+        .client-value,
+        .bank-value {
+            flex: 1;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .client-value {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .bank-value {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .value-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .value-items {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+
+        .value-item {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 5px;
+            min-width: 120px;
+            backdrop-filter: blur(10px);
+        }
+
+        .architecture-layers {
+            padding: 40px;
+        }
+
+        .layer {
+            margin-bottom: 30px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .layer-header {
+            padding: 20px;
+            font-weight: bold;
+            font-size: 1.3rem;
+            color: white;
+            text-align: center;
+        }
+
+        .experience-layer {
+            background: linear-gradient(45deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .intelligence-layer {
+            background: linear-gradient(45deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        .processing-layer {
+            background: linear-gradient(45deg, #fa709a 0%, #fee140 100%);
+        }
+
+        .foundation-layer {
+            background: linear-gradient(45deg, #a8edea 0%, #fed6e3 100%);
+        }
+
+        .core-systems-layer {
+            background: linear-gradient(45deg, #ffecd2 0%, #fcb69f 100%);
+        }
+
+        .ledger-layer {
+            background: linear-gradient(45deg, #a18cd1 0%, #fbc2eb 100%);
+        }
+
+        .layer-content {
+            padding: 25px;
+            background: white;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .onboarding-track {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            border-left: 5px solid #667eea;
+        }
+
+        .track-title {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .component {
+            background: white;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 6px;
+            border-left: 3px solid #667eea;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease;
+            position: relative;
+        }
+
+        .component:hover {
+            transform: translateX(5px);
+        }
+
+        .integration-flow {
+            margin: 40px 0;
+            padding: 30px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 10px;
+        }
+
+        .flow-title {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        .flow-diagram {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .flow-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 1200px;
+            flex-wrap: wrap;
+        }
+
+        .flow-step {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            min-width: 180px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin: 10px 5px;
+            position: relative;
+            border-top: 4px solid #667eea;
+            transition: transform 0.3s ease;
+        }
+
+        .flow-step:hover {
+            transform: translateY(-3px);
+        }
+
+        .core-systems-step {
+            border-top-color: #fcb69f;
+        }
+
+        .ledger-step {
+            border-top-color: #a18cd1;
+        }
+
+        .flow-arrow {
+            font-size: 2rem;
+            color: #667eea;
+            font-weight: bold;
+            align-self: center;
+            animation: pulse-arrow 2s infinite;
+        }
+
+        @keyframes pulse-arrow {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.6;
+            }
+        }
+
+        .vertical-arrow {
+            transform: rotate(90deg);
+        }
+
+        .systems-integration {
+            background: #f8f9fa;
+            padding: 30px;
+            margin: 20px 0;
+            border-radius: 10px;
+            border-left: 5px solid #fcb69f;
+        }
+
+        .integration-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #fcb69f;
+            margin-bottom: 20px;
+        }
+
+        .integration-points {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .integration-point {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 3px solid #fcb69f;
+            transition: transform 0.2s ease;
+        }
+
+        .integration-point:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .metrics-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .metrics-title {
+            font-size: 2rem;
+            margin-bottom: 30px;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .metric {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 25px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease;
+        }
+
+        .metric:hover {
+            transform: scale(1.05);
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .metric-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .layer-content {
+                grid-template-columns: 1fr;
+            }
+
+            .flow-section {
+                flex-direction: column;
+            }
+
+            .flow-arrow {
+                transform: rotate(90deg);
+            }
+
+            .value-proposition {
+                flex-direction: column;
+            }
+
+            .integration-points {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .highlight {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.02);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .data-flow-indicator {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: #28a745;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            animation: blink 1.5s infinite;
+        }
+
+        @keyframes blink {
+
+            0%,
+            50% {
+                opacity: 1;
+            }
+
+            51%,
+            100% {
+                opacity: 0.3;
+            }
+        }
+
+        .architecture-overview {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            padding: 30px;
+            margin: 20px 0;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .overview-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1976d2;
+            margin-bottom: 15px;
+        }
+
+        .overview-description {
+            color: #424242;
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Client Onboarding Business Architecture</h1>
+            <p>End-to-End Value-Driven Design with Complete Core Banking Integration</p>
+        </div>
+
+        <div class="value-proposition">
+            <div class="client-value">
+                <div class="value-title">CLIENT VALUE</div>
+                <div class="value-items">
+                    <div class="value-item">
+                        <strong>SPEED</strong><br>
+                        <small>Accelerated Time-to-Market</small>
+                    </div>
+                    <div class="value-item">
+                        <strong>SIMPLICITY</strong><br>
+                        <small>Streamlined Experience</small>
+                    </div>
+                    <div class="value-item">
+                        <strong>TRANSPARENCY</strong><br>
+                        <small>Clear Process Visibility</small>
+                    </div>
+                </div>
+            </div>
+            <div class="bank-value">
+                <div class="value-title">BANK VALUE</div>
+                <div class="value-items">
+                    <div class="value-item">
+                        <strong>REVENUE</strong><br>
+                        <small>Product Extension</small>
+                    </div>
+                    <div class="value-item">
+                        <strong>DEPOSITS</strong><br>
+                        <small>Lending Enablement</small>
+                    </div>
+                    <div class="value-item">
+                        <strong>NIM</strong><br>
+                        <small>Margin Optimization</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="architecture-overview">
+            <div class="overview-title">Architecture Overview</div>
+            <div class="overview-description">
+                This architecture transforms traditional compliance-focused onboarding into a strategic revenue engine,
+                delivering mutual value through speed, simplicity, and profitability optimization while ensuring
+                seamless integration with core banking systems and real-time financial recording.
+            </div>
+        </div>
+
+        <div class="architecture-layers">
+            <div class="layer">
+                <div class="layer-header experience-layer">CLIENT EXPERIENCE LAYER</div>
+                <div class="layer-content">
+                    <div class="onboarding-track">
+                        <div class="track-title">CLIENT-FACING CAPABILITIES</div>
+                        <div class="component">Digital-First Interface</div>
+                        <div class="component">Real-Time Progress Tracking</div>
+                        <div class="component">AI-Powered Guidance</div>
+                        <div class="component">Mobile Optimization</div>
+                        <div class="component">Transparent Dashboards</div>
+                    </div>
+                    <div class="onboarding-track">
+                        <div class="track-title">VALUE DELIVERY</div>
+                        <div class="component">⚡ Speed: Self-service capabilities</div>
+                        <div class="component">🎯 Simplicity: Intuitive workflows</div>
+                        <div class="component">👁️ Transparency: Live status updates</div>
+                        <div class="component">📱 Accessibility: Multi-device support</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layer">
+                <div class="layer-header intelligence-layer">REVENUE INTELLIGENCE LAYER</div>
+                <div class="layer-content">
+                    <div class="onboarding-track">
+                        <div class="track-title">REVENUE OPTIMIZATION</div>
+                        <div class="component">Opportunity Scoring Engine</div>
+                        <div class="component">Product Affinity Models</div>
+                        <div class="component">Dynamic Pricing Optimization</div>
+                        <div class="component">Wallet Share Analysis</div>
+                        <div class="component">Cross-Sell Intelligence</div>
+                    </div>
+                    <div class="onboarding-track">
+                        <div class="track-title">BANK VALUE CREATION</div>
+                        <div class="component">💰 Revenue: Real-time opportunity assessment</div>
+                        <div class="component">🏦 Deposits: Liquidity solution targeting</div>
+                        <div class="component">📊 NIM: Risk-adjusted pricing</div>
+                        <div class="component">🎯 Growth: Portfolio optimization</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layer">
+                <div class="layer-header processing-layer">ACCELERATED PROCESSING CORE</div>
+                <div class="layer-content">
+                    <div class="onboarding-track">
+                        <div class="track-title">ENTITY ONBOARDING</div>
+                        <div class="component">KYC Intelligence Layer</div>
+                        <div class="component">Risk & Compliance Engine</div>
+                        <div class="component">Legal Structure Mapping</div>
+                        <div class="component">Authorization Management</div>
+                        <div class="component">Automated Decision Engine</div>
+                    </div>
+                    <div class="onboarding-track">
+                        <div class="track-title">PRODUCT ONBOARDING</div>
+                        <div class="component">Product Catalog Engine</div>
+                        <div class="component">Solution Curation Layer</div>
+                        <div class="component">Enrollment Platform</div>
+                        <div class="component">Syndication Hub</div>
+                        <div class="component">Deposit Mobilization Platform</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layer">
+                <div class="layer-header foundation-layer">OPERATIONAL FOUNDATION</div>
+                <div class="layer-content">
+                    <div class="onboarding-track">
+                        <div class="track-title">SHARED INFRASTRUCTURE</div>
+                        <div class="component">Unified Client Repository</div>
+                        <div class="component">Workflow Orchestration Engine</div>
+                        <div class="component">Integration Platform</div>
+                        <div class="component">Real-Time Monitoring</div>
+                        <div class="component">Exception Management</div>
+                    </div>
+                    <div class="onboarding-track">
+                        <div class="track-title">LIFECYCLE MANAGEMENT</div>
+                        <div class="component">Continuous KYC Monitoring</div>
+                        <div class="component">Risk Re-evaluation</div>
+                        <div class="component">Entity Change Management</div>
+                        <div class="component">Product Impact Assessment</div>
+                        <div class="component">Compliance Automation</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layer">
+                <div class="layer-header core-systems-layer">CORE BANKING SYSTEMS</div>
+                <div class="layer-content">
+                    <div class="onboarding-track">
+                        <div class="track-title">ACCOUNT & PRODUCT SYSTEMS</div>
+                        <div class="component">Customer Information System (CIS)
+                            <div class="data-flow-indicator">●</div>
+                        </div>
+                        <div class="component">Deposit Account System</div>
+                        <div class="component">Lending Platform</div>
+                        <div class="component">Treasury Management System</div>
+                        <div class="component">Trade Finance Platform</div>
+                        <div class="component">Payment Processing Engine</div>
+                    </div>
+                    <div class="onboarding-track">
+                        <div class="track-title">VALUE ENABLEMENT</div>
+                        <div class="component">🏦 Account Setup: Immediate deposit capability</div>
+                        <div class="component">💰 Loan Origination: Credit facility activation</div>
+                        <div class="component">💳 Payment Rails: Transaction processing</div>
+                        <div class="component">📊 Liquidity Management: Cash optimization</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layer">
+                <div class="layer-header ledger-layer">GENERAL LEDGER & ACCOUNTING</div>
+                <div class="layer-content">
+                    <div class="onboarding-track">
+                        <div class="track-title">FINANCIAL RECORDING SYSTEMS</div>
+                        <div class="component">General Ledger System
+                            <div class="data-flow-indicator">●</div>
+                        </div>
+                        <div class="component">Sub-Ledger Accounting</div>
+                        <div class="component">Chart of Accounts Management</div>
+                        <div class="component">Regulatory Reporting Engine</div>
+                        <div class="component">Financial Controls Framework</div>
+                        <div class="component">Profit & Loss Attribution</div>
+                    </div>
+                    <div class="onboarding-track">
+                        <div class="track-title">BANK PROFITABILITY TRACKING</div>
+                        <div class="component">📈 Revenue Recognition: Real-time P&L impact</div>
+                        <div class="component">💹 NIM Calculation: Spread tracking</div>
+                        <div class="component">🎯 Deposit Costing: Funding cost allocation</div>
+                        <div class="component">📋 Regulatory Capital: Risk-weighted assets</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="integration-flow">
+            <div class="flow-title">End-to-End Integration Flow</div>
+            <div class="flow-diagram">
+                <div class="flow-section">
+                    <div class="flow-step">
+                        <strong>Client Initiation</strong><br>
+                        <small>Digital engagement</small>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">
+                        <strong>Intelligence Gathering</strong><br>
+                        <small>KYC + Revenue opportunity</small>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">
+                        <strong>Parallel Processing</strong><br>
+                        <small>Entity + Product onboarding</small>
+                    </div>
+                </div>
+
+                <div class="flow-arrow vertical-arrow">↓</div>
+
+                <div class="flow-section">
+                    <div class="flow-step core-systems-step">
+                        <strong>Core System Integration</strong><br>
+                        <small>CIS setup + Account creation</small>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step ledger-step">
+                        <strong>GL Posting</strong><br>
+                        <small>Financial recording + Revenue tracking</small>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">
+                        <strong>Service Activation</strong><br>
+                        <small>Immediate banking capability</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="systems-integration">
+            <div class="integration-title">Critical Integration Points</div>
+            <div class="integration-points">
+                <div class="integration-point">
+                    <strong>CIS Integration</strong><br>
+                    Real-time client data synchronization from onboarding to core banking systems
+                </div>
+                <div class="integration-point">
+                    <strong>Account Provisioning</strong><br>
+                    Automated account setup across deposit, lending, and treasury platforms
+                </div>
+                <div class="integration-point">
+                    <strong>GL Automation</strong><br>
+                    Immediate posting of setup fees, deposits, and revenue recognition
+                </div>
+                <div class="integration-point">
+                    <strong>Regulatory Compliance</strong><br>
+                    Automated regulatory reporting and capital allocation updates
+                </div>
+                <div class="integration-point">
+                    <strong>Real-time P&L</strong><br>
+                    Immediate visibility into client profitability and NIM contribution
+                </div>
+                <div class="integration-point">
+                    <strong>Service Enablement</strong><br>
+                    Instant activation of payment rails, liquidity management, and trade finance
+                </div>
+            </div>
+        </div>
+
+        <div class="metrics-section">
+            <div class="metrics-title">End-to-End Performance Targets</div>
+            <div class="metrics-grid">
+                <div class="metric highlight">
+                    <div class="metric-value">70%</div>
+                    <div class="metric-label">Reduction in Onboarding Time</div>
+                </div>
+                <div class="metric highlight">
+                    <div class="metric-value">3.2x</div>
+                    <div class="metric-label">Revenue per Client Increase</div>
+                </div>
+                <div class="metric highlight">
+                    <div class="metric-value">85%</div>
+                    <div class="metric-label">Client Satisfaction Score</div>
+                </div>
+                <div class="metric highlight">
+                    <div class="metric-value">40%</div>
+                    <div class="metric-label">Deposit Mobilization Improvement</div>
+                </div>
+                <div class="metric highlight">
+                    <div class="metric-value">25bp</div>
+                    <div class="metric-label">NIM Enhancement</div>
+                </div>
+                <div class="metric highlight">
+                    <div class="metric-value">95%</div>
+                    <div class="metric-label">Straight-Through Processing Rate</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
